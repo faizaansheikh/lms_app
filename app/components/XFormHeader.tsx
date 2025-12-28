@@ -28,8 +28,8 @@ function XFormHeader(props: formHeader) {
             </div>
             <div className='flex items-center gap-4'>
 
-                <span><XButton label={'Cancel'} icon={false} type='transparent' Click={() => { }} /></span>
-                <span><XButton label={showLabel()} icon={false} type='' btntype="submit" /></span>
+                <span><XButton label={'Cancel'} icon={false}  Click={() => { }} /></span>
+                <span><XButton label={showLabel()} icon={false}  btntype="submit" /></span>
 
 
 

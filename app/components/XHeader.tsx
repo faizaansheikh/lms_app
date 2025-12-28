@@ -50,7 +50,7 @@ function XHeader(props: headerProps) {
             <div className='flex items-center gap-0'>
               
                 <span> <Input style={{ width: '300px', padding: '7px 7px' }} placeholder="Search" prefix={<CiSearch className='mx-1' size={20} />} /></span>
-                <span className='px-3'><XButton label='Add New' icon={true} type='' Click={() => handleAddNew()} /></span>
+                <span className='px-3'><XButton label='Add New' icon={true}  Click={() => handleAddNew()} /></span>
 
                 <Popover trigger='click' className=' cursor-pointer  px-0 py-2 flex items-center gap-2 rounded-lg' placement="bottom" title={"Columns"} content={
                     <div className='flex flex-col gap-2'>
