@@ -7,7 +7,8 @@ function ProductCard(props: any) {
     const { product } = props
     const router = useRouter()
     const handleProduct = () => {
-        router.push('/home/products/new')
+        
+        router.push(`/home/products/${product?.title}`)
     }
     return (
 
