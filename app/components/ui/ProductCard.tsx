@@ -1,4 +1,5 @@
 'use client'
+import { slugify } from '@/app/utility'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React from 'react'
@@ -7,8 +8,8 @@ function ProductCard(props: any) {
     const { product } = props
     const router = useRouter()
     const handleProduct = () => {
-        
-        router.push(`/home/products/${product?.title}`)
+         const slug = slugify(product?.title) || ''
+        router.push(`/home/products/${slug}`)
     }
     return (
 

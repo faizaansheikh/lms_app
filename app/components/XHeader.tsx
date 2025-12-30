@@ -33,9 +33,8 @@ function XHeader(props: headerProps) {
             ])
         }
     };
-    const handleAddNew = () => {
-        const url = path.split('/')[2] ?? 'undefined'
-        router.push(`${url}/new`)
+    const handleAddNew = () => {    
+        router.push(`${path}/new`)
     }
 
 
@@ -50,7 +49,7 @@ function XHeader(props: headerProps) {
             <div className='flex items-center gap-0'>
               
                 <span> <Input style={{ width: '300px', padding: '7px 7px' }} placeholder="Search" prefix={<CiSearch className='mx-1' size={20} />} /></span>
-                <span className='px-3'><XButton label='Add New' icon={true}  Click={() => handleAddNew()} /></span>
+                <span className='px-3'><XButton label='Add New'   Click={() => handleAddNew()} /></span>
 
                 <Popover trigger='click' className=' cursor-pointer  px-0 py-2 flex items-center gap-2 rounded-lg' placement="bottom" title={"Columns"} content={
                     <div className='flex flex-col gap-2'>

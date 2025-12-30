@@ -75,8 +75,8 @@ function FormElement(props: FormElems) {
                     elements?.map((x: any, i: number) => {
                         return (
                             <Col key={i} span={x.col}>
-                                <div className='bg-secondary rounded-xl p-4 my-4 shadow-lg'>
-                                    {x.title && <Divider style={{ fontSize: '23px', height: '20px', color: theme === 'light' ? "black" : "white" }}  orientationMargin='7px'>{x.title}</Divider>}
+                                <div className='bg-gray-200 rounded-xl p-4 my-4 shadow-lg'>
+                                    {x.title && <Divider style={{ fontSize: '23px', height: '20px', color: theme === 'light' ? "black" : "white" }}  >{x.title}</Divider>}
                                     <Row >
                                         {
                                             x.fields?.map((y: any, index: number) => {

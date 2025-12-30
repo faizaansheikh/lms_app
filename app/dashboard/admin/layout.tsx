@@ -10,7 +10,7 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { Popover } from 'antd';
 import { useTheme } from 'next-themes';
 import { GrBladesVertical } from "react-icons/gr";
-function Appbar({
+function page({
     children,
 }: Readonly<{
     children: React.ReactNode;
@@ -32,6 +32,26 @@ function Appbar({
         {
             label: 'Users',
             icon: (s: number, c: string) => <FaUsers size={s} color={c} />
+        },
+        {
+            label: 'Courses',
+            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
+        },
+        {
+            label: 'Lessons',
+            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
+        },
+        {
+            label: 'Enrollment',
+            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
+        },
+        {
+            label: 'Quiz',
+            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
+        },
+        {
+            label: 'Certificate',
+            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
         }
     ]
     const handleTheme = (theme: string) => {
@@ -50,11 +70,15 @@ function Appbar({
     }
     const handleRoutes = (label: string) => {
         if (label === 'Dashboard') {
-            router.replace('/dashboard')
+            router.replace('/dashboard/admin')
         } else if (label === 'Users') {
-            router.push('dashboard/users')
+            router.push('/dashboard/admin/users')
         }
         return
+    }
+    const handleLogout = () => {
+        localStorage.removeItem('user')
+        router.push('/home')
     }
     return (
 
@@ -65,7 +89,7 @@ function Appbar({
                         !isHide ? <>
                             <div className='flex justify-end mt-2 items-center'>
                                 {/* <p className=' text-2xl my-3'>Logo</p> */}
-                                <span className='text-text cursor-pointer' onClick={()=>setIsHide(true)}><GrBladesVertical size={20}/></span>
+                                <span className='text-text cursor-pointer' onClick={() => setIsHide(true)}><GrBladesVertical size={20} /></span>
                             </div>
                             <p className=' text-[13px] pb-4 text-gray-600'>Menu</p>
                             {
@@ -78,7 +102,7 @@ function Appbar({
                             }
                         </> :
                             <div className='flex flex-col items-center justify-center'>
-                                <span className='py-4 cursor-pointer' onClick={()=>setIsHide(false)}><GrBladesVertical size={20}/></span>
+                                <span className='py-4 cursor-pointer' onClick={() => setIsHide(false)}><GrBladesVertical size={20} /></span>
                                 <span className='mt-4'>
                                     {
                                         menues.map((x, i) => (
@@ -99,7 +123,7 @@ function Appbar({
                 {/* Topbar */}
                 <header className="bg-secondary h-16 shadow px-6 flex items-center justify-between">
                     {/* <h1 className="text-xl font-semibold text-white"></h1> */}
-                    <h1 className="text-[22px] font-semibold   text-black tracking-normal">Management System</h1>
+                    <h1 className="text-[22px] font-semibold   text-black tracking-normal">Admin Panel</h1>
                     <div className="mx-2">
 
                         <Popover trigger='click' className=' cursor-pointer px-4 ' placement="bottom" title={<div className='flex items-center text-[17px] gap-2 text-[grey]'><FaRegUserCircle /><span>Admin</span></div>} content={
@@ -111,12 +135,12 @@ function Appbar({
                                 </div>
                                 <div className='cursor-pointer gap-2 w-full flex  items-center mt-4 hover:bg-[#f6f4f4] px-2 pt-1 border-t-1 border-[lightgrey] ' >
                                     <span className='my-1'><GoSignOut /></span>
-                                    <span className='text-[16px] my-1'>Sign out</span>
+                                    <span onClick={handleLogout} className='text-[16px] my-1'>Sign out</span>
                                 </div>
                             </div>
                         }>
 
-                            <span className='bg-black border text-sm w-full h-full text-white p-3 rounded-[100%]' >A</span>
+                            <span className='bg-black border text-sm w-full h-full text-white px-4 py-3 rounded-full cursor-pointer' >A</span>
 
                         </Popover>
 
@@ -133,4 +157,4 @@ function Appbar({
     )
 }
 
-export default Appbar
+export default page

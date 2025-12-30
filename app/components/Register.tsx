@@ -1,5 +1,5 @@
 'use client'
-import '@ant-design/v5-patch-for-react-19';
+// import '@ant-design/v5-patch-for-react-19';
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { IoEyeOutline } from "react-icons/io5";
 import { data } from './data';
@@ -36,10 +36,10 @@ function Register(props: registerProps) {
 
     useLayoutEffect(() => {
         const cols = Object.keys(data[0]) ?? []
-        const [id, ...othersCols] = cols
+        const [id, name, address, phone, website, ...othersCols] = cols
+        let arr = ['username','email','password']
 
-
-        setColumn(othersCols)
+        setColumn(arr)
     }, [])
     return (
         <>
@@ -52,14 +52,14 @@ function Register(props: registerProps) {
             <div className='mt-0  border-1 border-[#a7a5a5] rounded-2xl w-full h-[590px] overflow-y-scroll'>
 
 
-                <div className='w-full h-[70px] bg-secondary sticky top-0 z-20' >
+                <div className='w-full h-[70px] bg-gray-200 sticky top-0 z-20' >
                     <XHeader title={formName || ''} selectedRows={selectedRow} rowData={rowData} setColumns={setColumn} column={column} />
                 </div>
                 <div className='w-full '>
                     <table className='w-full'>
                         <thead className=''>
 
-                            <tr className='bg-primary' >
+                            <tr className='bg-gray-300' >
                                 <td className='pr-4 pl-4 '><Checkbox onChange={onChangeAll}></Checkbox></td>
                                 {
                                     column?.map((x, i) => (
@@ -95,10 +95,10 @@ function Register(props: registerProps) {
                         </tbody>
                     </table>
                 </div>
-                <div className='w-full bg-primary flex justify-end items-center h-[auto] py-0  sticky bottom-0 z-20' >
-                     <XPagination />
+                <div className='w-full bg-gray-300 flex justify-end items-center h-[auto] py-0  sticky bottom-0 z-20' >
+                    <XPagination />
                 </div>
-              
+
             </div>
         </>
     )
