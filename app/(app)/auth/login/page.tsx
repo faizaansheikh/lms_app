@@ -2,7 +2,7 @@
 
 import { GeneralCoreService } from '@/app/config/GeneralCoreService';
 import { UserOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
-import { Input, Spin } from 'antd';
+import { Input, message, Spin } from 'antd';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -20,24 +20,25 @@ function page() {
     defaultValues: { email: '', password: '' },
   })
 
- 
-  
+
+
   const save = (values: any) => {
-   
+
     GeneralCoreService('users/login').Save(values)
       .then((res) => {
         console.log(res);
+        if (res?.status === 200) {
 
+          message.success(res?.message)
+          localStorage.setItem('token', res?.token)
+          localStorage.setItem('userInfo', JSON.stringify(res?.user))
+          router.push('/home')
+        } else {
+          message.error(res?.message)
+        }
       }).catch((err) => console.log('error', err))
 
 
-    // if (user === 'admin') {
-    //   localStorage.setItem('user', user)
-    //   router.push('/dashboard/admin')
-    // } else {
-    //   localStorage.setItem('user', user)
-    //   router.push('/home')
-    // }
 
   }
   const handleSignup = () => {
@@ -114,13 +115,12 @@ function page() {
 
               }}
               render={({ field }) => (
-                <Input
+                <Input.Password
                   {...field}
                   className='my-2'
                   size="large"
                   placeholder="Password"
                   type="password"
-                  suffix={<EyeInvisibleOutlined />}
                   aria-invalid={errors['password'] ? true : false}
 
                 />
