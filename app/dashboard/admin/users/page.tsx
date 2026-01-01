@@ -5,7 +5,7 @@ import React from 'react'
 function Users() {
   return (
     <div>
-      <Register formName={'Users'}/>
+      <Register formName={'users'}/>
     </div>
   )
 }

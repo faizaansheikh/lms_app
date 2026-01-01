@@ -1,22 +1,43 @@
 'use client'
 
+import { GeneralCoreService } from '@/app/config/GeneralCoreService';
 import { UserOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
-import { Input } from 'antd';
+import { Input, Spin } from 'antd';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 function page() {
-  const [user, setUser] = useState('')
-  const [pass, setPass] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const router = useRouter()
-  const save = () => {
-    if (user === 'admin') {
-      localStorage.setItem('user', user)
-      router.push('/dashboard/admin')
-    } else {
-      localStorage.setItem('user', user)
-      router.push('/home')
-    }
+  const {
+    control,
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting }
+  } = useForm<any>({
+    defaultValues: { email: '', password: '' },
+  })
+
+ 
+  
+  const save = (values: any) => {
+   
+    GeneralCoreService('users/login').Save(values)
+      .then((res) => {
+        console.log(res);
+
+      }).catch((err) => console.log('error', err))
+
+
+    // if (user === 'admin') {
+    //   localStorage.setItem('user', user)
+    //   router.push('/dashboard/admin')
+    // } else {
+    //   localStorage.setItem('user', user)
+    //   router.push('/home')
+    // }
 
   }
   const handleSignup = () => {
@@ -49,32 +70,81 @@ function page() {
             See your support, enter your credentials to login
           </p>
           {/* <h2 className='text-white my-2 text-2xl'>Login</h2> */}
-          <Input
-            className='my-2'
-            size="large"
-            placeholder="User Name"
-            suffix={<UserOutlined />}
-            value={user}
-            onChange={(e) => setUser(e.target.value)}
-          />
+          <form onSubmit={handleSubmit(save)}>
 
-          <Input
-            className='my-2'
-            size="large"
-            placeholder="Password"
-            type="password"
-            suffix={<EyeInvisibleOutlined />}
-            value={pass}
-            onChange={(e) => setPass(e.target.value)}
-          />
+            <Controller
+              name={'email'}
+              control={control}
+              rules={{
+                required: "Email is required",
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Invalid email address",
+                },
+                maxLength: {
+                  value: 50,
+                  message: "Email cannot exceed 50 characters",
+                },
+              }}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  className='my-2'
+                  size="large"
+                  placeholder="Email"
+                  suffix={<UserOutlined />}
 
-          <button
-            className='w-full mt-6 text-white rounded-lg bg-primary cursor-pointer hover:bg-[#da1c07]'
-            style={{ padding: '10px 10px', backgroundColor: '' }}
-            onClick={save}
-          >
-            Login
-          </button>
+                  aria-invalid={errors['email'] ? true : false}
+                />
+
+
+              )}
+            />
+
+            {
+              errors['email'] && <p className='text-red-600 text-sm px-1' role='alert'>{errors['email']?.message as string}</p>
+            }
+
+
+            <Controller
+              name={'password'}
+              control={control}
+              rules={{
+                required: "Password is required",
+
+              }}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  className='my-2'
+                  size="large"
+                  placeholder="Password"
+                  type="password"
+                  suffix={<EyeInvisibleOutlined />}
+                  aria-invalid={errors['password'] ? true : false}
+
+                />
+              )}
+            />
+
+            {
+              errors['password'] && <p className='text-red-600 text-sm px-1' role='alert'>{errors['password']?.message as string}</p>
+            }
+
+
+
+            <button
+              className='w-full mt-6 text-white rounded-lg bg-primary cursor-pointer hover:bg-[#da1c07]'
+              style={{ padding: '10px 10px', backgroundColor: '' }}
+              type='submit'
+              disabled={isSubmitting}
+            >
+              {
+                isSubmitting ? <Spin /> : 'Login'
+              }
+
+            </button>
+          </form>
           <p className='text-center pt-4'>Don’t have an account? <span onClick={handleSignup} className='cursor-pointer text-primary'>Sign Up</span></p>
         </div>
       </div>

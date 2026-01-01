@@ -53,7 +53,7 @@ function XHeader(props: headerProps) {
 
                 <Popover trigger='click' className=' cursor-pointer  px-0 py-2 flex items-center gap-2 rounded-lg' placement="bottom" title={"Columns"} content={
                     <div className='flex flex-col gap-2'>
-                        {Object.keys(rowData[0])?.map((x, i) => (
+                        {column?.map((x:string, i:number) => (
                             <span key={i}>
                                 <span className='pr-3'><Checkbox onChange={(e) => onChangeAll(e, x)}></Checkbox></span>
                                 <span>{x}</span>

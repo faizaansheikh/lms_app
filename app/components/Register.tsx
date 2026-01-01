@@ -8,13 +8,15 @@ import type { CheckboxProps } from 'antd';
 import { CiEdit } from "react-icons/ci";
 import XHeader from './XHeader';
 import XPagination from './XPagination';
+import { GeneralCoreService } from '../config/GeneralCoreService';
+
 interface registerProps {
     formName: string
 }
 function Register(props: registerProps) {
     const { formName } = props
     const [column, setColumn] = useState<string[]>([])
-    const [rowData, setRowData] = useState([...data])
+    const [rowData, setRowData] = useState<string[]>([])
     const [selectedRow, setSelectedRow] = useState<string[]>([])
     const onChangeAll: CheckboxProps['onChange'] = (e) => {
         console.log(`checked = ${e.target.checked}`);
@@ -33,13 +35,27 @@ function Register(props: registerProps) {
 
     };
 
+    const getAllRec = () => {
 
-    useLayoutEffect(() => {
-        const cols = Object.keys(data[0]) ?? []
-        const [id, name, address, phone, website, ...othersCols] = cols
-        let arr = ['username','email','password']
+        GeneralCoreService(formName).GetAll()
+            .then((res: any) => {
+              
+                if (res?.status === 200) {
+                    console.log('res', res.data);
+                    const cols =  Object.keys(res?.data[0]) ?? []
+                    // const [id, name, address, phone, website, ...othersCols] = cols
+                    setColumn(cols)
+                    setRowData([...res?.data])
+                }
 
-        setColumn(arr)
+
+            }).catch((err: any) => console.log('error', err))
+
+    }
+
+    useEffect(() => {
+        getAllRec()
+       
     }, [])
     return (
         <>
