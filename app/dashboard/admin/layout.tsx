@@ -77,7 +77,8 @@ function page({
         return
     }
     const handleLogout = () => {
-        localStorage.removeItem('user')
+        localStorage.removeItem('userInfo')
+        localStorage.removeItem('token')
         router.push('/home')
     }
     return (

@@ -1,14 +1,44 @@
 'use client'
 
+import { GeneralCoreService } from '@/app/config/GeneralCoreService';
 import { UserOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
-import { Input } from 'antd';
+import { Input, message, Spin } from 'antd';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 function page() {
+  const [loader, setLoader] = useState(false)
   const router = useRouter()
-  const save = () => {
-      
-   }
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<any>({
+    defaultValues: { name: '', email: '', password: '', role: 'student' },
+  })
+
+
+
+  const save = (values: any) => {
+    setLoader(true)
+    GeneralCoreService('users/register').Save(values)
+      .then((res) => {
+
+        if (res?.status === 201) {
+
+          message.success(res?.message)
+          router.push('/login')
+        } else {
+          message.error(res?.message)
+        }
+      })
+      .catch((err) => console.log('error', err))
+      .finally(() => setLoader(false))
+
+
+
+  }
   const handleSignup = () => {
     router.push('/auth/login')
   }
@@ -36,48 +66,115 @@ function page() {
             Welcome to XYZ <br /> Academy
           </h2>
           <p className='mb-4 '>
-            create your account to continue
+            Create your account
           </p>
           {/* <h2 className='text-white my-2 text-2xl'>Login</h2> */}
-          <Input
-            className='my-2'
-            size="large"
-            placeholder="User Name"
-            suffix={<UserOutlined />}
+          <form onSubmit={handleSubmit(save)}>
 
-          />
-          <Input
-            className='my-2'
-            size="large"
-            placeholder="Email"
-            suffix={<UserOutlined />}
+            <Controller
+              name={'name'}
+              control={control}
+              rules={{
+                required: "Username is required",
+                maxLength: {
+                  value: 15,
+                  message: "Username cannot exceed from 15 characters",
+                },
+              }}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  className='my-2'
+                  size="large"
+                  placeholder="Username"
+                  suffix={<UserOutlined />}
 
-          />
+                  aria-invalid={errors['name'] ? true : false}
+                />
 
-          <Input
-            className='my-2'
-            size="large"
-            placeholder="Password"
-            type="password"
 
-            suffix={<EyeInvisibleOutlined />}
-          />
-          <Input
-            className='my-2'
-            size="large"
-            placeholder="Confirm Password"
-            type="password"
+              )}
+            />
 
-            suffix={<EyeInvisibleOutlined />}
-          />
+            {
+              errors['name'] && <p className='text-red-600 text-sm px-1' role='alert'>{errors['name']?.message as string}</p>
+            }
+            <Controller
+              name={'email'}
+              control={control}
+              rules={{
+                required: "Email is required",
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Invalid email address",
+                },
+                maxLength: {
+                  value: 50,
+                  message: "Email cannot exceed 50 characters",
+                },
+              }}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  className='my-2'
+                  size="large"
+                  placeholder="Email"
+                  suffix={<UserOutlined />}
 
-          <button
-            className='w-full mt-6 text-white rounded-lg bg-primary cursor-pointer hover:bg-[#da1c07]'
-            style={{ padding: '10px 10px', backgroundColor: '' }}
-            onClick={save}
-          >
-            Register
-          </button>
+                  aria-invalid={errors['email'] ? true : false}
+                />
+
+
+              )}
+            />
+
+            {
+              errors['email'] && <p className='text-red-600 text-sm px-1' role='alert'>{errors['email']?.message as string}</p>
+            }
+
+            <Controller
+              name={'password'}
+              control={control}
+              rules={{
+                required: "Password is required",
+                minLength: {
+                  value: 8,
+                  message: "Password must have at least 8 characters"
+                },
+                
+              }}
+              render={({ field }) => (
+                <Input.Password
+                  {...field}
+                  className='my-2'
+                  size="large"
+                  placeholder="Password"
+                  type="password"
+                  aria-invalid={errors['password'] ? true : false}
+
+                />
+              )}
+            />
+
+            {
+              errors['password'] && <p className='text-red-600 text-sm px-1' role='alert'>{errors['password']?.message as string}</p>
+            }
+
+
+
+
+            <button
+              className='w-full mt-6 text-white rounded-lg bg-primary cursor-pointer hover:bg-[#da1c07]'
+              style={{ padding: '10px 10px', backgroundColor: '' }}
+              type='submit'
+              disabled={loader}
+            >
+              {
+                loader ? <Spin /> : 'Register'
+              }
+
+            </button>
+          </form>
           <p className='text-center pt-4'>Already have an account? <span onClick={handleSignup} className='cursor-pointer text-primary'>Sign In</span></p>
         </div>
       </div>

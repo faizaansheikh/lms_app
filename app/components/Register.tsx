@@ -9,12 +9,14 @@ import { CiEdit } from "react-icons/ci";
 import XHeader from './XHeader';
 import XPagination from './XPagination';
 import { GeneralCoreService } from '../config/GeneralCoreService';
+import { useRouter } from 'next/navigation';
 
 interface registerProps {
     formName: string
 }
 function Register(props: registerProps) {
     const { formName } = props
+    const router = useRouter()
     const [column, setColumn] = useState<string[]>([])
     const [rowData, setRowData] = useState<string[]>([])
     const [selectedRow, setSelectedRow] = useState<string[]>([])
@@ -35,14 +37,18 @@ function Register(props: registerProps) {
 
     };
 
+    const handleUpdateRec = (id:number) => {
+        console.log(id);
+        router.push(`${formName}/${id}`)
+    }
     const getAllRec = () => {
 
         GeneralCoreService(formName).GetAll()
             .then((res: any) => {
-              
+
                 if (res?.status === 200) {
                     console.log('res', res.data);
-                    const cols =  Object.keys(res?.data[0]) ?? []
+                    const cols = Object.keys(res?.data[0]) ?? []
                     // const [id, name, address, phone, website, ...othersCols] = cols
                     setColumn(cols)
                     setRowData([...res?.data])
@@ -55,7 +61,7 @@ function Register(props: registerProps) {
 
     useEffect(() => {
         getAllRec()
-       
+
     }, [])
     return (
         <>
@@ -100,7 +106,7 @@ function Register(props: registerProps) {
 
                                         <td className='text-[14px] text-start py-3'>
                                             <span className='flex gap-2 items-center r'>
-                                                <CiEdit size={20} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />
+                                                <CiEdit onClick={() => handleUpdateRec(x?._id)} size={20} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />
                                                 <IoEyeOutline size={18} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />
 
                                             </span>

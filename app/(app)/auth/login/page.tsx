@@ -8,8 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 function page() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [loader, setLoader] = useState(false)
   const router = useRouter()
   const {
     control,
@@ -23,20 +22,22 @@ function page() {
 
 
   const save = (values: any) => {
-
+    setLoader(true)
     GeneralCoreService('users/login').Save(values)
       .then((res) => {
-        console.log(res);
+
         if (res?.status === 200) {
 
           message.success(res?.message)
           localStorage.setItem('token', res?.token)
           localStorage.setItem('userInfo', JSON.stringify(res?.user))
-          router.push('/home')
+          router.push(res?.user?.role === 'admin' ? '/dashboard/admin' : '/home')
         } else {
           message.error(res?.message)
         }
-      }).catch((err) => console.log('error', err))
+      })
+      .catch((err) => console.log('error', err))
+      .finally(() => setLoader(false))
 
 
 
@@ -137,10 +138,10 @@ function page() {
               className='w-full mt-6 text-white rounded-lg bg-primary cursor-pointer hover:bg-[#da1c07]'
               style={{ padding: '10px 10px', backgroundColor: '' }}
               type='submit'
-              disabled={isSubmitting}
+              disabled={loader}
             >
               {
-                isSubmitting ? <Spin /> : 'Login'
+                loader ? <Spin /> : 'Login'
               }
 
             </button>

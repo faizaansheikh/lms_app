@@ -3,14 +3,14 @@ import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 
-interface lookup {
+interface input {
     value: any
     control: any
     validations: any
     placeholder: any
     errors: any
 }
-function XInput(props: lookup) {
+function XInput(props: input) {
     const { value, control, validations, placeholder, errors } = props
     return (
         <>
