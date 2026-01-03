@@ -28,7 +28,7 @@ function page() {
         if (res?.status === 201) {
 
           message.success(res?.message)
-          router.push('/login')
+          router.push('/auth/login')
         } else {
           message.error(res?.message)
         }

@@ -1,16 +1,17 @@
 'use client'
 // import '@ant-design/v5-patch-for-react-19';
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { IoEyeOutline } from "react-icons/io5";
 import { data } from './data';
-import { Checkbox } from 'antd';
+import { Checkbox, message } from 'antd';
 import type { CheckboxProps } from 'antd';
 import { CiEdit } from "react-icons/ci";
 import XHeader from './XHeader';
 import XPagination from './XPagination';
 import { GeneralCoreService } from '../config/GeneralCoreService';
 import { useRouter } from 'next/navigation';
-
+import { MdDeleteOutline } from "react-icons/md";
+import XModal from './XModal';
 interface registerProps {
     formName: string
 }
@@ -19,6 +20,8 @@ function Register(props: registerProps) {
     const router = useRouter()
     const [column, setColumn] = useState<string[]>([])
     const [rowData, setRowData] = useState<string[]>([])
+    const [openModal, setOpenModal] = useState<boolean>(false)
+    const [delId, setDelId] = useState<any>(null)
     const [selectedRow, setSelectedRow] = useState<string[]>([])
     const onChangeAll: CheckboxProps['onChange'] = (e) => {
         console.log(`checked = ${e.target.checked}`);
@@ -37,8 +40,8 @@ function Register(props: registerProps) {
 
     };
 
-    const handleUpdateRec = (id:number) => {
-        console.log(id);
+    const handleUpdateRec = (id: number) => {
+
         router.push(`${formName}/${id}`)
     }
     const getAllRec = () => {
@@ -58,6 +61,27 @@ function Register(props: registerProps) {
             }).catch((err: any) => console.log('error', err))
 
     }
+    const handleDeleteRec = (id: number) => {
+        setOpenModal(true)
+        setDelId(id)
+
+    }
+    const deleteRec = () => {
+
+        GeneralCoreService(formName).Delete(delId)
+            .then((res: any) => {
+                if (res?.status === 200) {
+                    message.success(res?.message)
+                    getAllRec()
+                }else{
+                    message.error(res?.message)
+                }
+
+
+            }).catch((err: any) => console.log('error', err))
+            .finally(() => setOpenModal(false))
+
+    }
 
     useEffect(() => {
         getAllRec()
@@ -66,7 +90,9 @@ function Register(props: registerProps) {
     return (
         <>
 
-
+            <XModal  okText='Delete' open={openModal} setOpen={setOpenModal} title='Confirmation' content={<>
+                <p>Are you sure you want to delete this record from table?</p>
+            </>} onOk={deleteRec} />
 
 
             {/* ====================================table==================================== */}
@@ -107,7 +133,8 @@ function Register(props: registerProps) {
                                         <td className='text-[14px] text-start py-3'>
                                             <span className='flex gap-2 items-center r'>
                                                 <CiEdit onClick={() => handleUpdateRec(x?._id)} size={20} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />
-                                                <IoEyeOutline size={18} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />
+                                                <MdDeleteOutline onClick={() => handleDeleteRec(x?._id)} size={18} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />
+
 
                                             </span>
                                         </td>

@@ -32,6 +32,7 @@ function FormElement(props: FormElems) {
         formState: { errors }
     } = useForm<any>({
         defaultValues: { ...model },
+        values: { ...model }
     })
 
     const FormComponent = (x: any) => {
@@ -45,6 +46,7 @@ function FormElement(props: FormElems) {
                         validations={x.validations}
                         placeholder={x.placeholder}
                         errors={errors}
+                        disable={x.disable}
                     />
 
                 </>
@@ -84,14 +86,14 @@ function FormElement(props: FormElems) {
         <form onSubmit={handleSubmit(save)}>
             <XFormHeader title='Users' />
             <div className="relative">
-               
+
                 {loading && (
                     <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/60 rounded-xl">
                         <Spin size="large" />
                     </div>
                 )}
 
-           
+
                 <div className={loading ? 'blur-[1px] pointer-events-none' : ''}>
                     <Row className="pb-6">
                         {elements?.map((x: any, i: number) => (

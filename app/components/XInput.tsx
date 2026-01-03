@@ -8,10 +8,11 @@ interface input {
     control: any
     validations: any
     placeholder: any
-    errors: any
+    errors: any,
+    disable:boolean
 }
 function XInput(props: input) {
-    const { value, control, validations, placeholder, errors } = props
+    const { value, control, validations, placeholder, errors,disable } = props
     return (
         <>
             <Controller
@@ -21,6 +22,7 @@ function XInput(props: input) {
                 render={({ field }) => (
                     <Input
                         {...field}
+                        disabled={disable}
                         placeholder={placeholder}
                         style={{ padding: '8px', fontSize: '16px', background: '#F5F5F0' }}
                         aria-invalid={errors[value] ? true : false}

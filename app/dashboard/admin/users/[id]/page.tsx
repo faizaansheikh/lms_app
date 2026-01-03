@@ -2,8 +2,8 @@
 import FormElement from '@/app/components/FormElement'
 import { GeneralCoreService } from '@/app/config/GeneralCoreService';
 import { message } from 'antd';
-import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import { useParams, useRouter } from 'next/navigation';
+import React, { useEffect, useEffectEvent, useState } from 'react'
 
 interface model {
     name: string;
@@ -13,9 +13,10 @@ interface model {
 
 }
 function UsersForm() {
-    const [loader, setLoader] = useState(false)
+    const params = useParams()
     const router = useRouter()
-
+    const [loader, setLoader] = useState(false)
+    const [userData, setUserData] = useState(null);
     const [model, setModel] = useState<model>({
         name: '',
         email: '',
@@ -70,6 +71,7 @@ function UsersForm() {
                     ChangeEv: () => { },
                     type: 'input',
                     required: true,
+                    disable: params.id !== 'new',
                     validations: {
                         required: "Password is required",
                         minLength: {
@@ -107,7 +109,7 @@ function UsersForm() {
     ]
     const handleSave = (values: any) => {
         setLoader(true)
-        GeneralCoreService('users/register').Save(values)
+        GeneralCoreService('users/register').Save(values, params?.id === 'new' ? '' : params?.id)
             .then((res) => {
 
                 if (res?.status === 201) {
@@ -121,9 +123,33 @@ function UsersForm() {
             .catch((err) => console.log('error', err))
             .finally(() => setLoader(false))
     }
+    const getSingleRec = (id: number) => {
+        setLoader(true)
+        GeneralCoreService(`users`).GetAll(id)
+            .then((res) => {
+
+                if (res?.status === 200) {
+                    setModel(res?.data)
+                } else {
+                    message.error(res?.message)
+                }
+            })
+            .catch((err) => console.log('error', err))
+            .finally(() => setLoader(false))
+    }
+
+
+
+    useEffect(() => {
+        if (params.id !== 'new') {
+            console.log('id ');
+
+            getSingleRec(Number(params.id))
+        }
+    }, [])
     return (
         <div>
-           <FormElement save={handleSave} setModel={setModel} model={model} elements={elems} loading={loader}/>
+            <FormElement save={handleSave} setModel={setModel} model={model} elements={elems} loading={loader} />
         </div>
     )
 }

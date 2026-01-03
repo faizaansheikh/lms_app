@@ -59,9 +59,7 @@ export const GeneralCoreService = (formName?: string) => {
         },
         Delete: async (id: any) => {
             try {
-                const response = await axiosInstance.delete(`/${formName}`, {
-                    params: { id: id }
-                });
+                const response = await axiosInstance.delete(`/${formName}/${id}`);
                 return { ...response?.data, status: response.status }
 
             } catch (err: any) {
