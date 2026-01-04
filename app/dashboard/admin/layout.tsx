@@ -10,6 +10,7 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { Popover } from 'antd';
 import { useTheme } from 'next-themes';
 import { GrBladesVertical } from "react-icons/gr";
+import { removeAuthToken } from '@/app/components/authToken';
 function page({
     children,
 }: Readonly<{
@@ -73,12 +74,14 @@ function page({
             router.replace('/dashboard/admin')
         } else if (label === 'Users') {
             router.push('/dashboard/admin/users')
+        }else if (label === 'Courses') {
+            router.push('/dashboard/admin/courses')
         }
         return
     }
     const handleLogout = () => {
         localStorage.removeItem('userInfo')
-        localStorage.removeItem('token')
+        removeAuthToken()
         router.push('/home')
     }
     return (

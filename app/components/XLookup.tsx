@@ -3,7 +3,6 @@ import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { CiViewTable } from "react-icons/ci";
 import XModal from './XModal';
-import { data, lookupData } from './data';
 
 interface lookup {
     value: any
@@ -16,10 +15,10 @@ function XLookup(props: lookup) {
     const { value, control, validations, placeholder, errors } = props
     const [openModal, setOpenModal] = useState(false)
     const [column, setColumn] = useState<string[]>([])
-    const [rowData, setRowData] = useState([...lookupData])
+    const [rowData, setRowData] = useState([{name:'test'}])
     const handleLookup = () => {
         setOpenModal(true)
-        const cols = Object.keys(lookupData[0]) ?? []
+        const cols = Object.keys(rowData[0]) ?? []
         const [id, ...othersCols] = cols
 
 

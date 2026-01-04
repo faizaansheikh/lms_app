@@ -1,5 +1,7 @@
 'use client'
 
+
+import { setAuthToken } from '@/app/components/authToken';
 import { GeneralCoreService } from '@/app/config/GeneralCoreService';
 import { UserOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { Input, message, Spin } from 'antd';
@@ -27,11 +29,11 @@ function page() {
       .then((res) => {
 
         if (res?.status === 200) {
-
           message.success(res?.message)
-          localStorage.setItem('token', res?.token)
+     
+          setAuthToken(res?.token)
           localStorage.setItem('userInfo', JSON.stringify(res?.user))
-          router.push(res?.user?.role === 'admin' ? '/dashboard/admin' : '/home')
+          router.push(res?.user?.role === 'admin' ? '/dashboard/admin' : '/dashboard/client')
         } else {
           message.error(res?.message)
         }

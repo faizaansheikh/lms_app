@@ -1,8 +1,6 @@
 'use client'
 // import '@ant-design/v5-patch-for-react-19';
 import { useEffect, useState } from 'react'
-import { IoEyeOutline } from "react-icons/io5";
-import { data } from './data';
 import { Checkbox, message } from 'antd';
 import type { CheckboxProps } from 'antd';
 import { CiEdit } from "react-icons/ci";

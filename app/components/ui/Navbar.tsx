@@ -4,9 +4,9 @@ import XButton from '../XButton'
 import { useRouter } from 'next/navigation'
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Popover } from 'antd';
-function Navbar() {
+import { removeAuthToken } from '../authToken';
+function Navbar({ dashboard }: any) {
   const router = useRouter()
-  const [isLogged, setIsLogged] = useState(false)
   const [username, setUsername] = useState('')
   const [userrole, setUserRole] = useState('')
   const handleLogin = () => router.push('/auth/login')
@@ -15,27 +15,20 @@ function Navbar() {
   const handleBrowse = () => router.push('/home/products')
   const handleLogout = () => {
     localStorage.removeItem('userInfo')
-    localStorage.removeItem('token')
-    window.location.reload()
+    removeAuthToken()
+    router.push('/home')
 
   }
   useEffect(() => {
     try {
       const userInfo = localStorage.getItem('userInfo');
-      const token = localStorage.getItem('token');
-
-      if (token && userInfo) {
+      if (userInfo) {
         const user = JSON.parse(userInfo);
         setUsername(user?.name || '');
         setUserRole(user?.role || '');
-
-        setIsLogged(true);
-      } else {
-        setIsLogged(false);
       }
     } catch (error) {
       console.error('Invalid localStorage data', error);
-      setIsLogged(false);
     }
   }, []);
 
@@ -43,7 +36,7 @@ function Navbar() {
     <div className='bg-white w-full h-16 flex justify-between px-32 items-center shadow-md'>
       <div onClick={handleHome} className='cursor-pointer text-2xl'>Logo</div>
       <div className='flex items-center gap-2'>
-        {isLogged && userrole === 'student' ?
+        {dashboard && userrole === 'student' ?
           <>
             <span className='text-primary text-lg px-0 cursor-pointer' onClick={handleBrowse}>Browse Products</span>
             <span className='text-xl px-3'>{username}</span>

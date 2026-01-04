@@ -1,34 +1,41 @@
-import { NextRequest, NextResponse } from 'next/server'
-
-const protectedRoutes = ['/', '/dashboard']
-const authRoutes = ['/', '/login']
+import jwt from "jsonwebtoken";
+import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
-      const { pathname } = request.nextUrl
-    //   const token = request.cookies.get('token')?.value
-    //   let paths = pathname.split('/')
+  const { pathname } = request.nextUrl;
+  const token = request.cookies.get("token")?.value;
 
-    // if (protectedRoutes.some(route => pathname.startsWith(route)) && !token) {
-    //   return NextResponse.redirect(new URL('/login', request.url))
-    // }
+  const decoded = token ? (jwt.decode(token) as any) : null;
 
-    // if (authRoutes.some(route => pathname.startsWith(route)) && token) {
-    //   return NextResponse.redirect(new URL('/dashboard', request.url))
-    // }
-
-
-    //   if ((paths.includes('dashboard') || pathname === '/') && !token) {
-    //     return NextResponse.redirect(new URL('/login', request.url))
-    //   }
-    //   if (token && authRoutes.includes(pathname)) {
-    //     return NextResponse.redirect(new URL('/dashboard', request.url))
-    //   }
-    if (pathname === '/') {
-        return NextResponse.redirect(new URL('/home', request.url))
+  if (token && (pathname === "/" || pathname === "/home" || pathname === "/login")) {
+    // Redirect based on role
+    if (decoded?.role === "admin") {
+      return NextResponse.redirect(new URL("/dashboard/admin", request.url));
     }
-    return NextResponse.next()
+    return NextResponse.redirect(new URL("/dashboard/client", request.url));
+  }
+
+ 
+  if (!token && pathname.startsWith("/dashboard")) {
+    return NextResponse.redirect(new URL("/home", request.url));
+  }
+
+  if (token && decoded?.role === "student" && pathname.startsWith("/dashboard/admin")) {
+    return NextResponse.redirect(new URL("/dashboard/client", request.url));
+  }
+
+  if (token && decoded?.role === "admin" && pathname.startsWith("/dashboard/client")) {
+    return NextResponse.redirect(new URL("/dashboard/admin", request.url));
+  }
+
+  
+  if (decoded?.exp && decoded.exp * 1000 < Date.now()) {
+    return NextResponse.redirect(new URL("/home", request.url));
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
-    matcher: ['/', '/dashboard/:path*', '/login'],
-}
+  matcher: ["/", "/home", "/login", "/dashboard/:path*"],
+};

@@ -7,16 +7,18 @@ import XFormHeader from './XFormHeader';
 import XLookup from './XLookup';
 import XInput from './XInput';
 import XSelect from './XSelect';
+import XUpload from './XUpload';
 interface FormElems {
     elements: any,
     setModel: any,
     model: any,
     save: any,
-    loading: boolean
+    loading: boolean,
+    title: string
 }
 function FormElement(props: FormElems) {
-    const { elements, setModel, model, save, loading } = props
-    const { theme, setTheme, systemTheme } = useTheme();
+    const { elements, setModel, model, save, loading, title } = props
+    const { theme } = useTheme();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -71,6 +73,10 @@ function FormElement(props: FormElems) {
                         options={x.options}
                     />
                 </>
+            case 'imageFile':
+                return <>
+                    <XUpload/>
+                </>
 
             default:
                 break;
@@ -84,7 +90,7 @@ function FormElement(props: FormElems) {
     }
     return (
         <form onSubmit={handleSubmit(save)}>
-            <XFormHeader title='Users' />
+            <XFormHeader title={title || ''} />
             <div className="relative">
 
                 {loading && (

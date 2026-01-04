@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import XButton from "../XButton";
 import { useRouter } from "next/navigation";
-import { MdOutlineGamepad } from "react-icons/md";
+
 function Hero() {
   const [user, setUser] = useState('')
   const [userrole, setUserRole] = useState('')
@@ -28,15 +28,7 @@ function Hero() {
   }, []);
   return (
     <>
-      {isLogged && userrole === 'student' ? <div className="mt-12 px-42">
-        <p className="text-center text-3xl font-bold">Welcome back {user}. Let's learn something today! </p>
-        <p className=" text-xl py-2 font-bold">My library</p>
-        <div className="w-full h-[300px] bg-gray-200 flex flex-col gap-3 items-center justify-center">
-          <span className="w-11 h-11 rounded-full bg-primary flex items-center justify-center"><MdOutlineGamepad color="white" size={22} /></span>
-          <p className="text-xl">You're not enrolled in any products</p>
-        </div>
-      </div>
-        :
+      
         <section
           className="relative h-125 w-full bg-cover bg-center"
           style={{
@@ -64,7 +56,9 @@ function Hero() {
             </div>
           </div>
         </section>
-      }
+      
+
+      
     </>
   );
 }

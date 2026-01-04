@@ -6,8 +6,8 @@ interface ModalProps {
     setOpen: any,
     title: string
     content: any,
-    onOk: any,
-    okText: string
+    onOk?: any,
+    okText?: string
 }
 const XModal: React.FC<ModalProps> = (props) => {
     const { open, setOpen, title, content, onOk, okText } = props
@@ -18,9 +18,9 @@ const XModal: React.FC<ModalProps> = (props) => {
             <Modal
                 title={title ?? ''}
                 centered
-                okText={okText}
+                okText={okText || 'Ok'}
                 open={open}
-                onOk={onOk}
+                onOk={onOk || setOpen(false)}
                 onCancel={() => setOpen(false)}
                 // width={{
                 //     xs: '90%',
