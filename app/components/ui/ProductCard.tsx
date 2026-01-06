@@ -8,7 +8,7 @@ function ProductCard(props: any) {
     const { product } = props
     const router = useRouter()
     const handleProduct = () => {
-         const slug = slugify(product?.title) || ''
+        const slug = slugify(product?.title) || ''
         router.push(`/home/products/${slug}`)
     }
     return (
@@ -17,10 +17,10 @@ function ProductCard(props: any) {
             {/* Image */}
             <div className="relative h-64 w-full">
                 <Image
-                    src="/hero.jpg"
-                    alt="Jewellery Product"
+                    src={product?.thumbnail ? product?.thumbnail : '/noimg.png'}
+                    alt={product?.title}
                     fill
-                    className="object-cover"
+                    className="object-cover p-2"
                 />
             </div>
 
@@ -31,7 +31,7 @@ function ProductCard(props: any) {
                 </h3>
 
                 <p className="mt-2 text-sm text-gray-600">
-                    {product?.desc}
+                    {product?.description}
                 </p>
 
                 <div className="mt-8 flex items-center justify-between">

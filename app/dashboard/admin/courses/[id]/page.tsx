@@ -119,7 +119,7 @@ function CoursesForm() {
         formData.append("description", values.description);
         formData.append("author", values.author);
         formData.append("price", values.price);
-        formData.append("lessons", JSON.stringify([]));
+        formData.append("lessons", JSON.stringify(lessons));
 
         try {
             setLoader(true);
@@ -156,7 +156,7 @@ function CoursesForm() {
                 formData.append("description", values.description);
                 formData.append("author", values.author);
                 formData.append("price", values.price);
-                formData.append("lessons", JSON.stringify([]));
+                formData.append("lessons", JSON.stringify(lessons));
                 const res = await axiosInstance.put(`/courses/${params.id}`, formData,
                     {
                         headers: {
@@ -167,7 +167,7 @@ function CoursesForm() {
                 message.success(res?.data?.message);
                 router.back()
             } else {
-                GeneralCoreService('courses').Save({ ...values, lessons: JSON.stringify([]) }, params.id)
+                GeneralCoreService('courses').Save({ ...values, lessons: JSON.stringify(lessons) }, params.id)
                     .then((res) => {
                         if (res?.status === 201) {
 
@@ -197,6 +197,7 @@ function CoursesForm() {
 
                 if (res?.status === 200) {
                     setModel(res?.data)
+                    setLessons(JSON.parse(res?.data?.lessons))
                 } else {
                     message.error(res?.message)
                 }
@@ -212,6 +213,7 @@ function CoursesForm() {
             getSingleRec(Number(params.id))
         }
     }, [])
+
     console.log(lessons);
 
     return (
@@ -219,10 +221,10 @@ function CoursesForm() {
             <FormElement title="Course Form" save={params.id === 'new' ? handleSave : handleUpdate} setModel={setModel} model={model} elements={elems} loading={loader} />
             <GridTableForm
                 title="Lessons"
-                cols={[{label:"Title",col:10}, {label:"Duration",col:4}, {label:"URL",col:8}]}
+                cols={[{ label: "Title", col: 10 }, { label: "Duration", col: 4 }, { label: "URL", col: 8 }]}
                 name="lessons"
-                defaultValues={{ lessons: [{ title: "", duration: 0, url: "" }] }}
-                setData={(data: any) => console.log("Form Data:", data)}
+                defaultValues={{ lessons: lessons.length ? lessons : [{ title: "", duration: 0, url: "" }] }}
+                setData={(data: any) => setLessons(data)}
                 fieldsConfig={[
                     { key: "title", placeholder: "Title", rules: { required: "Title required" }, col: 10 },
                     { key: "duration", type: "number", placeholder: "Duration", rules: { required: "Duration required" }, col: 4 },

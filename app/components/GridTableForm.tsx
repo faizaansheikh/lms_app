@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { Row, Col, Input, InputNumber, Button } from "antd";
 import { IoIosAddCircle } from "react-icons/io";
@@ -12,14 +12,21 @@ export default function GridTableForm({
     fieldsConfig,
     name,
     defaultValues,
-    setData,
+    setData
 }: any) {
+  
+
     const { control, handleSubmit, formState: { errors } } = useForm<any>({
         defaultValues,
+
     });
 
-    const { fields, append, remove } = useFieldArray({ control, name });
-
+    const { fields, append, remove, replace } = useFieldArray({ control, name });
+    useEffect(() => {
+        if (defaultValues?.[name]?.length) {
+            replace(defaultValues[name]);
+        }
+    }, [defaultValues, name, replace]);
     const onSubmit = (data: any) => setData(data[name]);
 
     return (
@@ -32,7 +39,7 @@ export default function GridTableForm({
                     {cols.map((col: any, i: any) => (
                         <Col key={i} xs={24} sm={8} md={col?.col}>{col?.label}</Col>
                     ))}
-                  
+
                 </Row>
 
                 {/* ROWS */}
@@ -53,7 +60,7 @@ export default function GridTableForm({
                                                 min={0}
                                                 className="w-full"
                                                 onChange={(value) => controllerField.onChange(value ?? 0)}
-                                                 style={{ width:'100%',padding: '7px', fontSize: '10px', background: '#F5F5F0' }}
+                                                style={{ width: '100%', padding: '7px', fontSize: '10px', background: '#F5F5F0' }}
                                             />
                                         ) : field.type === 'lookup' ?
                                             <XLookup

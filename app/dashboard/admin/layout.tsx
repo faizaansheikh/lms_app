@@ -39,10 +39,6 @@ function page({
             icon: (s: number, c: string) => <FaUsers size={s} color={c} />
         },
         {
-            label: 'Lessons',
-            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
-        },
-        {
             label: 'Enrollment',
             icon: (s: number, c: string) => <FaUsers size={s} color={c} />
         },
