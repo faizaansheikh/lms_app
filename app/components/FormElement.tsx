@@ -75,7 +75,11 @@ function FormElement(props: FormElems) {
                 </>
             case 'imageFile':
                 return <>
-                    <XUpload/>
+                    <XUpload
+                        onChange={x.ChangeEv}
+                        file={x.file}
+                        previewUrl={model?.thumbnail}
+                    />
                 </>
 
             default:

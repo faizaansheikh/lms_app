@@ -2,15 +2,12 @@
 
 import React, { useState, useEffect } from 'react'
 import { Image } from 'antd'
+import { useParams } from 'next/navigation'
 
-function XUpload() {
-    const [file, setFile] = useState<File | null>(null)
+function XUpload(props: any) {
+    const { onChange, file, previewUrl } = props
+    const params = useParams()
     const [preview, setPreview] = useState<string>('')
-
-    const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedFile = e.target.files?.[0] || null
-        setFile(selectedFile)
-    }
 
 
     useEffect(() => {
@@ -26,18 +23,24 @@ function XUpload() {
         return () => URL.revokeObjectURL(objectUrl)
     }, [file])
 
-
+    useEffect(() => {
+        if (params?.id !== 'new') {
+            setPreview(previewUrl)
+        }
+    }, [previewUrl])
+  
+    
     return (
         <div className='w-full h-[full]'>
-            
-            <input type="file"  onChange={handleFile} accept="image/*" className='border text-center cursor-pointer p-4 rounded-lg'/>
+
+            <input type="file" onChange={onChange} accept="image/*" className='border text-center cursor-pointer p-4 rounded-lg' />
 
             {preview && (
-                <div style={{ marginTop: 20, textAlign: 'center' }} className=''>
+                <div style={{ marginTop: 20 }} className=''>
                     <Image
                         src={preview}
                         alt="preview"
-                        style={{ borderRadius: 8 }}
+                        style={{ borderRadius: 8, width: 200 }}
                     />
                 </div>
             )}

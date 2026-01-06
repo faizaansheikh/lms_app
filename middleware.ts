@@ -6,7 +6,9 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
 
   const decoded = token ? (jwt.decode(token) as any) : null;
-
+  if(pathname === '/'){
+      return NextResponse.redirect(new URL("/home", request.url));
+  }
   if (token && (pathname === "/" || pathname === "/home" || pathname === "/login")) {
     // Redirect based on role
     if (decoded?.role === "admin") {

@@ -10,6 +10,7 @@ import { GeneralCoreService } from '../config/GeneralCoreService';
 import { useRouter } from 'next/navigation';
 import { MdDeleteOutline } from "react-icons/md";
 import XModal from './XModal';
+import Image from 'next/image';
 interface registerProps {
     formName: string
 }
@@ -50,7 +51,7 @@ function Register(props: registerProps) {
                 if (res?.status === 200) {
                     console.log('res', res.data);
                     const cols = Object.keys(res?.data[0]) ?? []
-                    // const [id, name, address, phone, website, ...othersCols] = cols
+                    const [lessons, ...othersCols] = cols
                     setColumn(cols)
                     setRowData([...res?.data])
                 }
@@ -71,7 +72,7 @@ function Register(props: registerProps) {
                 if (res?.status === 200) {
                     message.success(res?.message)
                     getAllRec()
-                }else{
+                } else {
                     message.error(res?.message)
                 }
 
@@ -80,7 +81,15 @@ function Register(props: registerProps) {
             .finally(() => setOpenModal(false))
 
     }
+    const updatedRows = (col: any, row: any) => {
+        if (col === 'thumbnail') {
+            return row[col] ? <Image src={row[col]} alt="" width={45} height={45} className='w-[45] h-[45]'/> : ''
+        } else {
+            return row[col]
+        }
 
+
+    }
     useEffect(() => {
         getAllRec()
 
@@ -88,7 +97,7 @@ function Register(props: registerProps) {
     return (
         <>
 
-            <XModal  okText='Delete' open={openModal} setOpen={setOpenModal} title='Confirmation' content={<>
+            <XModal okText='Delete' open={openModal} setOpen={setOpenModal} title='Confirmation' content={<>
                 <p>Are you sure you want to delete this record from table?</p>
             </>} onOk={deleteRec} />
 
@@ -124,7 +133,7 @@ function Register(props: registerProps) {
                                         <td className='pl-4'><Checkbox onChange={(e) => handleCheckbox(e, x, i)}></Checkbox></td>
                                         {
                                             column.map((z, ind) => (
-                                                <td className='font-normal text-[13px] text-start py-2 ' key={ind}>{x[z]}</td>
+                                                <td className='font-normal text-[13px] text-start py-2 ' key={ind}>{updatedRows(z, x)}</td>
                                             ))
                                         }
 
