@@ -21,7 +21,7 @@ function CoursesForm() {
     const router = useRouter()
     const [loader, setLoader] = useState(false)
     const [file, setFile] = useState<File | null>(null)
-    const [lessons, setLessons] = useState([])
+    const [lessons, setLessons] = useState<any>([])
     const [model, setModel] = useState<model>({
         title: '',
         description: '',
@@ -30,6 +30,7 @@ function CoursesForm() {
         thumbnail: '',
         lessons: '',
     })
+    // console.log(model);
 
     const elems = [
         {
@@ -52,7 +53,7 @@ function CoursesForm() {
                 },
 
                 {
-                    col: 12,
+                    col: 10,
                     label: 'Author',
                     key: 'author',
                     placeholder: 'Course author',
@@ -63,7 +64,7 @@ function CoursesForm() {
                     validations: {}
                 },
                 {
-                    col: 12,
+                    col: 6,
                     label: 'Price',
                     key: 'price',
                     placeholder: 'Course Price',
@@ -75,6 +76,22 @@ function CoursesForm() {
                         required: { value: true, message: 'Please fill this field' },
                         // minLength: { value: 2, message: 'Min length at least 3' },
                     }
+                },
+                {
+                    col: 8,
+                    label: 'Lessons',
+                    key: 'lessons',
+                    placeholder: 'Add Lessons',
+                    type: 'lookup',
+                    multiple: true,
+                    formName: 'lessons',
+                    required: true,
+                
+                    vals: params?.id ? lessons : '',
+                        getData : (data: any) => {
+                            setLessons(data)
+                        },
+
                 },
                 {
                     col: 24,
@@ -108,6 +125,9 @@ function CoursesForm() {
 
     ]
     const handleSave = async (values: any) => {
+
+
+
         if (!file) {
             return message.error("Please upload thumbnail");
         }
@@ -196,8 +216,8 @@ function CoursesForm() {
             .then((res) => {
 
                 if (res?.status === 200) {
-                    setModel(res?.data)
-                    setLessons(JSON.parse(res?.data?.lessons))
+                    setModel({ ...res?.data })
+                    setLessons(res?.data?.lessons)
                 } else {
                     message.error(res?.message)
                 }
@@ -214,12 +234,13 @@ function CoursesForm() {
         }
     }, [])
 
-    console.log(lessons);
+
+
 
     return (
         <div>
             <FormElement title="Course Form" save={params.id === 'new' ? handleSave : handleUpdate} setModel={setModel} model={model} elements={elems} loading={loader} />
-            <GridTableForm
+            {/* <GridTableForm
                 title="Lessons"
                 cols={[{ label: "Title", col: 10 }, { label: "Duration", col: 4 }, { label: "URL", col: 8 }]}
                 name="lessons"
@@ -230,7 +251,7 @@ function CoursesForm() {
                     { key: "duration", type: "number", placeholder: "Duration", rules: { required: "Duration required" }, col: 4 },
                     { key: "url", placeholder: "URL", rules: { required: "URL required" }, col: 8 },
                 ]}
-            />
+            /> */}
 
         </div>
     )

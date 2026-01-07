@@ -8,6 +8,8 @@ import XLookup from './XLookup';
 import XInput from './XInput';
 import XSelect from './XSelect';
 import XUpload from './XUpload';
+import CustomLookup from './CustomLookup';
+import LookupInput from './CustomLookup';
 interface FormElems {
     elements: any,
     setModel: any,
@@ -31,6 +33,7 @@ function FormElement(props: FormElems) {
         control,
         handleSubmit,
         register,
+        setValue,
         formState: { errors }
     } = useForm<any>({
         defaultValues: { ...model },
@@ -54,13 +57,14 @@ function FormElement(props: FormElems) {
                 </>
             case 'lookup':
                 return <>
-                    <XLookup
-                        value={x.key}
-                        control={control}
-                        validations={x.validations}
-                        placeholder={x.placeholder}
-                        errors={errors}
+                    {/* <LookupInput value={selectedIds} onChange={setSelectedIds} getData={x.getData} multiple={x.multiple} formName={x.formName} /> */}
+                    <CustomLookup
+                        getData={x.getData}
+                        formName={x.formName}
+                        multiple={x?.multiple}
+                        vals={x.vals}
                     />
+
                 </>
             case 'dropdown':
                 return <>

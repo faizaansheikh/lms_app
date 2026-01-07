@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { MdDeleteOutline } from "react-icons/md";
 import XModal from './XModal';
 import Image from 'next/image';
+import CustomModal from './CustomModal';
 interface registerProps {
     formName: string
 }
@@ -97,7 +98,7 @@ function Register(props: registerProps) {
     return (
         <>
 
-            <XModal okText='Delete' open={openModal} setOpen={setOpenModal} title='Confirmation' content={<>
+            <CustomModal okText='Delete' open={openModal} setOpen={setOpenModal} title='Confirmation' content={<>
                 <p>Are you sure you want to delete this record from table?</p>
             </>} onOk={deleteRec} />
 

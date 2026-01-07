@@ -39,6 +39,10 @@ function page({
             icon: (s: number, c: string) => <FaUsers size={s} color={c} />
         },
         {
+            label: 'Lessons',
+            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
+        },
+        {
             label: 'Enrollment',
             icon: (s: number, c: string) => <FaUsers size={s} color={c} />
         },
@@ -72,6 +76,8 @@ function page({
             router.push('/dashboard/admin/users')
         }else if (label === 'Courses') {
             router.push('/dashboard/admin/courses')
+        }else if (label === 'Lessons') {
+            router.push('/dashboard/admin/lessons')
         }
         return
     }

@@ -53,7 +53,7 @@ function Courses() {
             <div className='my-8 mx-8 md:mx-12 lg:mx-38'>
                 <Row justify="center" gutter="2rem">
                     {
-                        course.length > 0 ? course?.map((x, i) => (
+                        course?.length > 0 ? course?.map((x, i) => (
                             <Col className="gutter-row my-4" xs={24} md={12} lg={8} key={i}>
                                 <ProductCard product={x} />
                             </Col>

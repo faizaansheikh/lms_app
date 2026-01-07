@@ -1,40 +1,43 @@
-import React from 'react';
-import {  Modal } from 'antd';
+import React from 'react'
+import { Modal } from 'antd'
 
 interface ModalProps {
-    open: boolean
-    setOpen: any,
-    title: string
-    content: any,
-    onOk?: any,
-    okText?: string
+  open: boolean
+  setOpen: (val: boolean) => void
+  title: string
+  content: React.ReactNode
+  onOk?: () => void
+  okText?: string
 }
-const XModal: React.FC<ModalProps> = (props) => {
-    const { open, setOpen, title, content, onOk, okText } = props
-    return (
-        <>
 
+const XModal: React.FC<ModalProps> = ({
+  open,
+  setOpen,
+  title,
+  content,
+  onOk,
+  okText
+}) => {
 
-            <Modal
-                title={title ?? ''}
-                centered
-                okText={okText || 'Ok'}
-                open={open}
-                onOk={onOk || setOpen(false)}
-                onCancel={() => setOpen(false)}
-                // width={{
-                //     xs: '90%',
-                //     sm: '80%',
-                //     md: '50%',
-                //     lg: '50%',
-                //     xl: '40%',
-                //     xxl: '40%',
-                // }}
-            >
-                {content ?? ''}
-            </Modal>
-        </>
-    );
-};
+  const handleOk = () => {
+    if (onOk) onOk()
+    else setOpen(false)
+  }
 
-export default XModal;
+  return (
+    <Modal
+      title={title}
+      centered
+      open={open}
+      okText={okText || 'Ok'}
+      onOk={handleOk}
+      onCancel={() => setOpen(false)}
+      destroyOnHidden
+      forceRender={false}
+    >
+      {content}
+    </Modal>
+  )
+}
+
+export default React.memo(XModal)
