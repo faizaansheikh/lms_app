@@ -5,6 +5,7 @@ import { Row, Col, Input, InputNumber, Button } from "antd";
 import { IoIosAddCircle } from "react-icons/io";
 import { CiCircleMinus } from "react-icons/ci";
 import XLookup from "./XLookup";
+import CustomLookup from "./CustomLookup";
 
 export default function GridTableForm({
     title,
@@ -14,7 +15,7 @@ export default function GridTableForm({
     defaultValues,
     setData
 }: any) {
-  
+
 
     const { control, handleSubmit, formState: { errors } } = useForm<any>({
         defaultValues,
@@ -63,13 +64,15 @@ export default function GridTableForm({
                                                 style={{ width: '100%', padding: '7px', fontSize: '10px', background: '#F5F5F0' }}
                                             />
                                         ) : field.type === 'lookup' ?
-                                            <XLookup
-                                                value={field.key}
-                                                control={control}
-                                                validations={field.rules}
-                                                placeholder={field.placeholder}
-                                                errors={errors}
+                                            <CustomLookup
+                                                getData={(data: any) => {
+                                                   console.log(data)
+                                                }}
+                                                formName={'lessons'}
+                                                multiple={false}
+                                                vals={'lessons'}
                                             />
+
                                             : (
                                                 <Input
                                                     {...controllerField}

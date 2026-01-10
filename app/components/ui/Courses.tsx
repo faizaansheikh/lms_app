@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import ProductCard from './ProductCard'
 import { GeneralCoreService } from '@/app/config/GeneralCoreService'
 
-function Courses() {
+function Courses({ allProd }: any) {
     const router = useRouter()
     const [course, setCourse] = useState([])
     const handleViewProd = () => {
@@ -49,7 +49,7 @@ function Courses() {
     ]
     return (
         <div className='mt-12'>
-            <p className='text-3xl text-center'>Featured Courses</p>
+            {!allProd && <p className='text-3xl text-center'>Featured Courses</p>}
             <div className='my-8 mx-8 md:mx-12 lg:mx-38'>
                 <Row justify="center" gutter="2rem">
                     {
@@ -60,7 +60,7 @@ function Courses() {
                         )) : <p>No courses to show</p>
                     }
                 </Row>
-                <div onClick={handleViewProd} className='flex justify-center items-center mt-8' > <XButton label='View All Products' /></div>
+                {!allProd && <div onClick={handleViewProd} className='flex justify-center items-center mt-8' > <XButton label='View All Products' /></div>}
 
 
             </div>

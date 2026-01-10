@@ -12,10 +12,10 @@ function CustomProd() {
     return (
         <div className='bg-gray-100 w-full h-auto px-12 lg:px-62 '>
             {/* start */}
-            <div className=' flex flex-col items-center justify-center lg:px-18 pt-20'>
-                <p className='text-4xl lg:text-6xl py-4 text-center leading-snug'>Sterile Processing / Central <br /> Service Comprehensive Training Course</p>
+            <div className=' flex flex-col md:items-center justify-center lg:px-18 pt-20'>
+                <p className='text-4xl lg:text-6xl py-4 md:text-center leading-snug'>Sterile Processing / Central <br /> Service Comprehensive Training Course</p>
                 <p className='py-3'>Sat, Feb 07  |  Secaucus</p>
-                <p className='text-sm font-lighter py-4'>Sterile Processing Technician Certification Course <br />
+                <p className='text-sm font-lighter py-4 mb-2'>Sterile Processing Technician Certification Course <br />
                     Launch Your Healthcare Career in Just 8 Weeks</p>
                 <Btn title='RSVP' />
                 {/* end */}
@@ -23,13 +23,13 @@ function CustomProd() {
                 {/* start */}
                 <div className='mt-18'>
                     <Image
-                        src='/hero.jpg'
+                        src='/c1.jpg'
                         alt='hero'
-                        width={800}
+                        width={900}
                         height={200}
                     />
                 </div>
-                <div className='mt-14 '>
+                <div className='md:mt-14 '>
 
 
 
@@ -154,16 +154,16 @@ function CustomProd() {
                 </div>
 
                 <div className='text-center'>
-                    <p className='text-2xl '>  Kruah Consultants LLC </p>
+                    <p className='text-2xl '>Italien Techsol LLC</p>
                     <br />
                     <p className='text-[#605e5e] leading-loose '>
-                        tekruahjr@kruahconsultantsllc.com <br />
+                        i@italientechsollc.net <br />
 
-                        +12292966402 <br />
+                        + 1 (317) 985-1254<br />
 
-                        Ernest T. Kruah Jr <br />
+                        Indiana, USA<br />
 
-                        Kruah Consultants LLC <br />
+                       Italien Techsol LLC <br />
                     </p>
 
 

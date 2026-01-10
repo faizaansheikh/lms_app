@@ -42,13 +42,13 @@ function page() {
     }
   ]
   return (
-    <div className='bg-blude-400 w-full  px-32 mt-6'>
-      <p className='text-2xl font-medium'>Browse Products</p>
-      <div className='w-125 mt-2'>
+    <div className='bg-blude-400 w-full  mt-6'>
+      <div className='w-full mt-4 px-8 lg:px-32'>
+        <p className='text-2xl font-medium mb-2'>Browse Products</p>
         <Input size="large" placeholder="Search Product names" prefix={<CiSearch />} />
       </div>
-
-      <Row justify="center" gutter="2rem" className='my-5'>
+      <Courses allProd={true} />
+      {/* <Row justify="center" gutter="2rem" className='my-5'>
         {
           arr.map((x, i) => (
             <Col className="gutter-row my-4" xs={24} md={12} lg={8} key={i}>
@@ -56,7 +56,7 @@ function page() {
             </Col>
           ))
         }
-      </Row>
+      </Row> */}
     </div>
   )
 }

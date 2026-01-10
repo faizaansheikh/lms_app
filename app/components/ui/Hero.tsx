@@ -43,7 +43,7 @@ function Hero() {
             <div className="max-w-3xl px-6 text-white flex flex-col items-center">
               <h1 className="text-4xl md:text-6xl font-bold leading-tight">
 
-                <span className="block text-secondary"> Welcome to Elite Medical Academy</span>
+                <span className="block text-secondary"> Welcome to Chrissy Medical Academy</span>
               </h1>
 
               {/* <p className="mt-4 text-lg md:text-xl text-gray-200">

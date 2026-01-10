@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Popover } from 'antd';
 import { removeAuthToken } from '../authToken';
+import Image from 'next/image';
 function Navbar({ dashboard }: any) {
   const router = useRouter()
   const [username, setUsername] = useState('')
@@ -33,8 +34,16 @@ function Navbar({ dashboard }: any) {
   }, []);
 
   return (
-    <div className='bg-white w-full h-16 flex justify-between px-32 items-center shadow-md'>
-      <div onClick={handleHome} className='cursor-pointer text-2xl'>Logo</div>
+    <div className='bg-white w-full h-22 flex justify-between px-4 lg:px-32 items-center shadow-md'>
+      <div onClick={handleHome} className='cursor-pointer text-2xl'>
+        <Image
+        src='/logo.png'
+        alt='logo'
+        width={90}
+        height={90}
+        
+        />
+      </div>
       <div className='flex items-center gap-2'>
         {dashboard && userrole === 'student' ?
           <>
