@@ -165,13 +165,13 @@ const LookupInput: React.FC<LookupInputProps> = ({
                         {/* Buttons */}
                         <div className="mt-4 flex justify-end gap-2">
                             <button
-                                className="px-4 py-2 bg-gray-200 rounded"
+                                className="px-4 py-2 bg-gray-200 rounded cursor-pointer"
                                 onClick={() => setModalOpen(false)}
                             >
                                 Cancel
                             </button>
                             <button
-                                className="px-4 py-2 bg-blue-500 text-white rounded"
+                                className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
                                 onClick={handleSave}
                             >
                                 Save

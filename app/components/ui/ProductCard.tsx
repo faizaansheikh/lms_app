@@ -9,7 +9,7 @@ function ProductCard(props: any) {
     const router = useRouter()
     const handleProduct = () => {
         const slug = slugify(product?.title) || ''
-        router.push(`/home/products/${slug}`)
+        router.push(`/home/products/${slug}?q=${product._id}`)
     }
     return (
 
