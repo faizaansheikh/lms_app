@@ -13,7 +13,7 @@ interface model {
     author: string;
     price: string;
     thumbnail: string;
-    lessons: string;
+    lessons: any;
 
 }
 function CoursesForm() {
@@ -89,6 +89,7 @@ function CoursesForm() {
                 
                     vals: params?.id ? lessons : '',
                         getData : (data: any) => {
+                            console.log(data)
                             setLessons(data)
                         },
 
@@ -162,7 +163,7 @@ function CoursesForm() {
     }
 
     const handleUpdate = async (values: any) => {
-
+        console.log(lessons)
 
         try {
             setLoader(true);

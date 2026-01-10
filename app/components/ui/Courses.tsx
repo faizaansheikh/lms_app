@@ -26,30 +26,17 @@ function Courses({ allProd }: any) {
     const arr = [
 
         {
-            img: '',
-            title: 'Online 2 Hour Med Tech Class Renewal',
-            desc: 'Featured Courses Online 2 Hour Med Tech Class Renewal',
+            img: '/noimg.png',
+            title: 'Sterile Processing / Central Service Comprehensive Training',
+            desc: 'Sterile Processing Technician Certification Course Launch Your Healthcare Career in Just 8 Weeks',
             author: 'Brandum Marcom',
-            price: '$60',
+            price: '$500',
         },
-        {
-            img: '',
-            title: 'Online 2 Hour Med Tech Class Renewal',
-            desc: 'Featured Courses Online 2 Hour Med Tech Class Renewal',
-            author: 'Brandum Marcom',
-            price: '$60',
-        },
-        {
-            img: '',
-            title: 'Online 2 Hour Med Tech Class Renewal',
-            desc: 'Featured Courses Online 2 Hour Med Tech Class Renewal',
-            author: 'Brandum Marcom',
-            price: '$60',
-        }
+       
     ]
     return (
         <div className='mt-12'>
-            {!allProd && <p className='text-3xl text-center'>Featured Courses</p>}
+            {!allProd && <p className='text-2xl md:text-3xl text-center'>{course?.length ? "Featured Courses" :'No courses available right now'}</p>}
             <div className='my-8 mx-8 md:mx-12 lg:mx-38'>
                 <Row justify="center" gutter="2rem">
                     {
@@ -57,10 +44,18 @@ function Courses({ allProd }: any) {
                             <Col className="gutter-row my-4" xs={24} md={12} lg={8} key={i}>
                                 <ProductCard product={x} />
                             </Col>
-                        )) : <p>No courses to show</p>
+                        )) : <div>
+
+                            <Image
+                                src='/noitems.jpg'
+                                alt='no items'
+                                width={500}
+                                height={500}
+                            />
+                        </div>
                     }
                 </Row>
-                {!allProd && <div onClick={handleViewProd} className='flex justify-center items-center mt-8' > <XButton label='View All Products' /></div>}
+                {(!allProd && course?.length) && <div onClick={handleViewProd} className='flex justify-center items-center mt-8' > <XButton label='View All Products' /></div>}
 
 
             </div>
