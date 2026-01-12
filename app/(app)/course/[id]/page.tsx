@@ -2,6 +2,10 @@
 import { titleFromSlug } from '@/app/utility'
 import { useSearchParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
+import { useLessonContext } from '@/app/context/LessonContext'
+import LessonDashboard from '@/app/components/ui/LessonDashboard'
+import { GeneralCoreService } from '@/app/config/GeneralCoreService'
+import { useEffect, useState } from 'react'
 // import VideoPlayer from '@/app/components/ui/VideoPlayer'
 
 const VideoPlayer = dynamic(() => import('@/app/components/ui/VideoPlayer'), {
@@ -9,16 +13,29 @@ const VideoPlayer = dynamic(() => import('@/app/components/ui/VideoPlayer'), {
     loading: () => <p>Loading video...</p>
 })
 function page() {
-    const param = useSearchParams()
-    const search = param.get('q') || ''
-    const title = titleFromSlug(search);
+
+
+    const searchParams = useSearchParams()
+    const [course, setCourse] = useState([])
+
+    const getSingleRec = (id: number) => {
+        GeneralCoreService('courses/lessons').GetAll(id)
+            .then((res) => {
+                const data = res?.data?.lessons
+              
+                setCourse(data)
+
+            }).catch((err) => console.log(err)).finally(() => { })
+    }
+    useEffect(() => {
+        getSingleRec(Number(searchParams?.get('q')))
+    }, [])
 
 
     return (
-        <>
-            <p className='text-xl font-bold'> {title}</p>
-            <VideoPlayer vimeoId={'1150647491'} />
-        </>
+        <LessonDashboard data={course} />
+
+
     )
 }
 

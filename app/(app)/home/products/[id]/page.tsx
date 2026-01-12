@@ -2,6 +2,7 @@
 import CustomProd from '@/app/components/ui/CustomProd';
 import XButton from '@/app/components/XButton'
 import { GeneralCoreService } from '@/app/config/GeneralCoreService';
+import { useLessonContext } from '@/app/context/LessonContext';
 import { slugify } from '@/app/utility';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
@@ -14,13 +15,12 @@ interface SingleData {
 
 function page() {
     const searchParams = useSearchParams()
-    const [record, setRecord] = useState<SingleData | null>(null)
-    console.log(searchParams?.get('q'));
-
+    const [record, setRecord] = useState<any>({})
     const router = useRouter()
-    const handleVideoClick = (title: string) => {
-        const slug = slugify(title) || ''
-        router.push(`/course/lecture?q=${slug}`)
+    const handleVideoClick = () => {
+        const coursId = Number(searchParams?.get('q')) || null
+        // const slug = slugify(title) || ''
+        router.push(`/course/lectures?q=${coursId}`)
     }
     const arr = [
         {
@@ -78,12 +78,12 @@ function page() {
                         <div className="px-6 text-white w-[700px]">
                             <h1 className="text-3xl md:text-6xl font-bold wrap-break-word">
                                 <span className="text-secondary">
-                                    Online 2 Hour Med Tech Class Renewal
+                                    {record?.title}
                                 </span>
                             </h1>
-                            <p className="text-xl md:text-3xl mt-2 wrap-break-word">Featured Courses Online 2 Hour Med Tech Class Renewal</p>
+                            <p className="text-xl md:text-3xl mt-2 wrap-break-word"> {record?.description}</p>
                             <div className="mt-4 flex justify-center">
-                                <XButton icon={<IoIosCart />} label="Enroll in course for $60" />
+                                <XButton icon={<IoIosCart />} label={`Enroll in course for ${record?.price}`} />
                             </div>
                         </div>
                     </div>
@@ -104,7 +104,7 @@ function page() {
                                     className="object-cover"
                                 />
                             </div>
-                            <p className='font-bold text-xl'>Brandon Marcum</p>
+                            <p className='font-bold text-xl'>{record?.author}</p>
                         </div>
 
 
@@ -122,9 +122,22 @@ function page() {
                     {/* curriculam */}
                     <div className='flex w-full h-full mt-14 md:mt-22'>
                         <div className='bg-grdeen-300 w-full h-full'>
-                            <p className='text-3xl'> Course Curriculum</p>
+                            <p className='text-3xl' onClick={() => handleVideoClick()}> Course Curriculum</p>
 
-                            {arr.map((x, i) => (
+                            {/* {
+                                record?.lessons_data?.map((x: any, i: number) => (
+                                    <div key={i} onClick={() => handleVideoClick(x?.title)} className='flex justify-between items-center my-1 rounded-lg p-2 bg-gray-200 cursor-pointer hover:bg-red-200' >
+
+                                        <p className='flex items-center gap-2 justify-center pl-1'><span><FaFileAlt /></span>{x?.title}</p>
+                                        <button className='bg-red-400 px-4 py-1 text-white rounded-lg cursor-pointer'>Start</button>
+                                    </div>
+                                ))
+                            } */}
+
+
+
+
+                            {/* {arr.map((x, i) => (
                                 <div className=' w-full h-full my-4 text-sm md:text-[16px]' key={i}>
                                     <div className='bg-gray-300 w-full p-4 font-bold rounded-t-lg'>{x.head}</div>
                                     {x?.videos?.map((v, ind) => (
@@ -135,7 +148,7 @@ function page() {
                                         </div>
                                     ))}
                                 </div>
-                            ))}
+                            ))} */}
                         </div>
                         {/* <div className='bg-green-600 w-full h-full'></div> */}
                     </div>

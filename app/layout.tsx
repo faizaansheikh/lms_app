@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { LessonsProvider } from "./context/LessonContext";
 
 
 
@@ -31,9 +32,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         cz-shortcut-listen="true"
       >
-    
-        {children}
-         
+        <LessonsProvider>
+
+          {children}
+        </LessonsProvider>
+
       </body>
     </html>
   );
