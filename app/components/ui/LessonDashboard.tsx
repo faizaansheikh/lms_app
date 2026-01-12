@@ -16,11 +16,7 @@ interface ld {
 function LessonDashboard(props: ld) {
     const { data } = props
     const router = useRouter()
-    const [index, setIndex] = useState(0)
-    const [links, setLinks] = useState({
-        title: '',
-        video: ''
-    })
+   
     console.log(data);
     const arr = [
         {
@@ -98,8 +94,8 @@ function LessonDashboard(props: ld) {
                 <div className='bg-redd-300 w-full h-20 border-b border-gray-400 '></div>
                 {/* content */}
                 <div className=' w-full  p-4'>
-                    <p className='text-xl font-bold'> {data[index]?.title}</p>
-                    <VideoPlayer vimeoId={data[index]?.video} />
+                    <p className='text-xl font-bold'> title</p>
+                    <VideoPlayer vimeoId={'312312'} />
                 </div>
             </div>
         </div>

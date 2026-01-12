@@ -78,6 +78,8 @@ function page({
             router.push('/dashboard/admin/courses')
         }else if (label === 'Lessons') {
             router.push('/dashboard/admin/lessons')
+        }else if (label === 'Enrollment') {
+            router.push('/dashboard/admin/enrollment')
         }
         return
     }

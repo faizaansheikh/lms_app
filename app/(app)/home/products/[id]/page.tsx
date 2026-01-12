@@ -1,9 +1,11 @@
 'use client'
 import CustomProd from '@/app/components/ui/CustomProd';
+import Xloader from '@/app/components/ui/Xloader';
 import XButton from '@/app/components/XButton'
 import { GeneralCoreService } from '@/app/config/GeneralCoreService';
 import { useLessonContext } from '@/app/context/LessonContext';
 import { slugify } from '@/app/utility';
+import { message, Spin } from 'antd';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -16,6 +18,7 @@ interface SingleData {
 function page() {
     const searchParams = useSearchParams()
     const [record, setRecord] = useState<any>({})
+    const [loading, setLoading] = useState<any>(false)
     const router = useRouter()
     const handleVideoClick = () => {
         const coursId = Number(searchParams?.get('q')) || null
@@ -59,9 +62,37 @@ function page() {
 
             }).catch((err) => console.log(err)).finally(() => { })
     }
+
+    const handleEnrollment = () => {
+        const userInfo = localStorage.getItem('userInfo')
+        if (userInfo) {
+            setLoading(true)
+            const coursId = Number(searchParams?.get('q')) || null
+            const user = JSON.parse(userInfo);
+            let payload = {
+                user_id: user?.id,
+                course_id: coursId,
+            }
+            GeneralCoreService('enrollment').Save(payload)
+                .then((res) => {
+
+                    console.log(res?.data);
+                    router.back()
+                }).catch((err) => console.log(err)).finally(() => setLoading(false))
+        } else {
+            message.error('You need to sign in first to enroll in this course!')
+        }
+    }
+
     useEffect(() => {
         getSingleRec(Number(searchParams?.get('q')))
+
     }, [])
+
+    if (loading) {
+        return <Xloader />
+    }
+
     return (
 
         record?._id === 15 ? <CustomProd /> :
@@ -83,7 +114,7 @@ function page() {
                             </h1>
                             <p className="text-xl md:text-3xl mt-2 wrap-break-word"> {record?.description}</p>
                             <div className="mt-4 flex justify-center">
-                                <XButton icon={<IoIosCart />} label={`Enroll in course for ${record?.price}`} />
+                                <XButton Click={handleEnrollment} icon={<IoIosCart />} label={`Enroll in course for ${record?.price}`} />
                             </div>
                         </div>
                     </div>
@@ -122,17 +153,19 @@ function page() {
                     {/* curriculam */}
                     <div className='flex w-full h-full mt-14 md:mt-22'>
                         <div className='bg-grdeen-300 w-full h-full'>
-                            <p className='text-3xl' onClick={() => handleVideoClick()}> Course Curriculum</p>
+                            <p className='text-3xl py-3' onClick={() => handleVideoClick()}> Course Curriculum</p>
 
-                            {/* {
+
+                            {
                                 record?.lessons_data?.map((x: any, i: number) => (
-                                    <div key={i} onClick={() => handleVideoClick(x?.title)} className='flex justify-between items-center my-1 rounded-lg p-2 bg-gray-200 cursor-pointer hover:bg-red-200' >
+                                    <div key={i} className='flex justify-between items-center rounded-lg p-2 bg-gray-200 my-2' >
 
                                         <p className='flex items-center gap-2 justify-center pl-1'><span><FaFileAlt /></span>{x?.title}</p>
-                                        <button className='bg-red-400 px-4 py-1 text-white rounded-lg cursor-pointer'>Start</button>
+                                        {/* <button className='bg-red-400 px-4 py-1 text-white rounded-lg cursor-pointer'>Start</button> */}
                                     </div>
                                 ))
-                            } */}
+                            }
+
 
 
 

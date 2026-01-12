@@ -45,7 +45,7 @@ function Navbar({ dashboard }: any) {
         />
       </div>
       <div className='flex items-center gap-2'>
-        {dashboard && userrole === 'student' ?
+        {userrole === 'student' ?
           <>
             <span className='text-primary text-lg px-0 cursor-pointer' onClick={handleBrowse}>Browse Products</span>
             <span className='text-xl px-3'>{username}</span>

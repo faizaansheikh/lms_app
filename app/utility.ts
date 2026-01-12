@@ -25,3 +25,10 @@ export const titleFromSlug = (slug: string) => {
 };
 
 
+export const getUser = () => {
+    const userInfo = localStorage.getItem('userInfo')
+    if (userInfo) {
+        return JSON.parse(userInfo);
+    }
+    return null
+}
