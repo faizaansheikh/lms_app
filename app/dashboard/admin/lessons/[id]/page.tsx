@@ -9,6 +9,7 @@ interface model {
     title: string;
     url: string;
     quizId: string;
+    type:string
 
 }
 function LessonsForm() {
@@ -19,7 +20,8 @@ function LessonsForm() {
     const [model, setModel] = useState<model>({
         title: '',
         url: '',
-        quizId: ''
+        quizId: '',
+        type:''
     })
 
     const elems = [
@@ -59,9 +61,28 @@ function LessonsForm() {
                     label: 'Quiz',
                     key: 'quizId',
                     placeholder: 'Select Quiz',
-                    ChangeEv: () => { },
-                    type: 'lookup'
+                    type: 'lookup',
+                    multiple: false,
+                    formName: 'quiz',
+                    required: true,
+                    vals: '',
+                    getData: (data: any) => {
+                        console.log(data)
+                    },
                 },
+                {
+                    col: 12,
+                    label: 'Lesson Type',
+                    key: 'type',
+                    placeholder: 'Select Lesson Type',
+                    type: 'dropdown',
+                    required: true,
+                    options: [
+                        {label:'Video',value:'video'},
+                        {label:'Exam',value:'exam'},
+                    ]
+                },
+               
 
             ]
         },

@@ -40,9 +40,13 @@ function Register(props: registerProps) {
 
     };
 
-    const handleUpdateRec = (id: number) => {
+    const handleUpdateRec = (x:any) => {
+        if (formName === 'course_lessons') {
+            router.push(`${formName}/${x?.course_id}`)
+        } else {
+            router.push(`${formName}/${x?._id}`)
+        }
 
-        router.push(`${formName}/${id}`)
     }
     const getAllRec = () => {
 
@@ -84,7 +88,7 @@ function Register(props: registerProps) {
     }
     const updatedRows = (col: any, row: any) => {
         if (col === 'thumbnail') {
-            return row[col] ? <Image src={row[col]} alt="" width={45} height={45} className='w-[45] h-[45]'/> : ''
+            return row[col] ? <Image src={row[col]} alt="" width={45} height={45} className='w-[45] h-[45]' /> : ''
         } else {
             return row[col]
         }
@@ -140,7 +144,7 @@ function Register(props: registerProps) {
 
                                         <td className='text-[14px] text-start py-3'>
                                             <span className='flex gap-2 items-center r'>
-                                                <CiEdit onClick={() => handleUpdateRec(x?._id)} size={20} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />
+                                                <CiEdit onClick={() => handleUpdateRec(x)} size={20} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />
                                                 <MdDeleteOutline onClick={() => handleDeleteRec(x?._id)} size={18} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />
 
 

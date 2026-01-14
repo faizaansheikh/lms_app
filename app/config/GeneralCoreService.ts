@@ -2,14 +2,14 @@ import axiosInstance from "./axiosInstance";
 
 
 export const GeneralCoreService = (formName?: string) => {
-    
+
     return {
-        GetAll: async (id?: number) => {
+        GetAll: async (payload?: any,id?: number) => {
 
             try {
-                const response = await axiosInstance.get(`/${formName}/${id ? id : ''}`);
-                return { data:response?.data, status: response.status }
-           
+                const response = await axiosInstance.get(`/${formName}/${id ? id : ''}`, { ...payload });
+                return { data: response?.data, status: response.status }
+
             } catch (err: any) {
                 return {
                     success: false,
@@ -30,9 +30,9 @@ export const GeneralCoreService = (formName?: string) => {
                     };
                 }
             } else {
-                
+
                 try {
-                    
+
                     const response = await axiosInstance.post(`/${formName}`, { ...payload });
                     return { ...response?.data, status: response?.status }
 
@@ -59,6 +59,7 @@ export const GeneralCoreService = (formName?: string) => {
         },
         Delete: async (id: any) => {
             try {
+
                 const response = await axiosInstance.delete(`/${formName}/${id}`);
                 return { ...response?.data, status: response.status }
 

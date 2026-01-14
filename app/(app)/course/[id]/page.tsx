@@ -1,5 +1,5 @@
 'use client'
-import { titleFromSlug } from '@/app/utility'
+import { getUser, titleFromSlug } from '@/app/utility'
 import { useSearchParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { useLessonContext } from '@/app/context/LessonContext'
@@ -19,13 +19,20 @@ function page() {
     const [course, setCourse] = useState([])
 
     const getSingleRec = (id: number) => {
-        GeneralCoreService('courses/lessons').GetAll(id)
-            .then((res) => {
-                const data = res?.data?.lessons
-              
-                setCourse(data)
+        const user = getUser()
+        if (user) {
+            const payload = {
+                userId: user?.id,
+                courseId: id
+            }
+            GeneralCoreService('courses/lessons').Save(payload)
+                .then((res) => {
+                    // const data = res?.data?.lessons
+                    // setCourse(data)
+                    console.log(res?.data)
 
-            }).catch((err) => console.log(err)).finally(() => { })
+                }).catch((err) => console.log(err)).finally(() => { })
+        }
     }
     useEffect(() => {
         getSingleRec(Number(searchParams?.get('q')))

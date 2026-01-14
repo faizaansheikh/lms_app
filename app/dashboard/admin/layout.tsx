@@ -43,6 +43,14 @@ function page({
             icon: (s: number, c: string) => <FaUsers size={s} color={c} />
         },
         {
+            label: 'Add lessons in courses',
+            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
+        },
+        {
+            label: 'Progress',
+            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
+        },
+        {
             label: 'Enrollment',
             icon: (s: number, c: string) => <FaUsers size={s} color={c} />
         },
@@ -74,12 +82,16 @@ function page({
             router.replace('/dashboard/admin')
         } else if (label === 'Users') {
             router.push('/dashboard/admin/users')
-        }else if (label === 'Courses') {
+        } else if (label === 'Courses') {
             router.push('/dashboard/admin/courses')
-        }else if (label === 'Lessons') {
+        } else if (label === 'Lessons') {
             router.push('/dashboard/admin/lessons')
-        }else if (label === 'Enrollment') {
+        } else if (label === 'Add lessons in courses') {
+            router.push('/dashboard/admin/course_lessons')
+        } else if (label === 'Enrollment') {
             router.push('/dashboard/admin/enrollment')
+        } else if (label === 'Progress') {
+            router.push('/dashboard/admin/lesson_progress')
         }
         return
     }

@@ -1,13 +1,12 @@
 
 'use client'
 import { FaRegCircle } from "react-icons/fa";
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { FaFileAlt } from "react-icons/fa";
 import { PiVideoBold } from "react-icons/pi";
 import { IoHome } from "react-icons/io5";
 import { useRouter } from "next/navigation";
-import { slugify } from "@/app/utility";
-import { useLessonContext } from "@/app/context/LessonContext";
+
 import VideoPlayer from "./VideoPlayer";
 interface ld {
     data: any
@@ -16,7 +15,11 @@ interface ld {
 function LessonDashboard(props: ld) {
     const { data } = props
     const router = useRouter()
-   
+    const [showVideo, setShowVideo] = useState<any>(false)
+    const [video, setVideo] = useState<any>({
+        title: "",
+        id: ''
+    })
     console.log(data);
     const arr = [
         {
@@ -53,14 +56,28 @@ function LessonDashboard(props: ld) {
         }
     ]
 
-    const handleLinks = (title: string) => {
+    const handleLinks = (x: any) => {
+        setVideo({
+            title: x.title,
+            id: x.url
+        })
 
-        const slug = slugify(title)
-        router.push(`/course/lecture?q=${slug}`)
     }
 
+
     const handleHome = () => router.back()
+
     
+    useEffect(() => {
+    if (data && data.length > 0) {
+        setVideo({
+            title: data[0].title,
+            id: data[0].url,
+        });
+        setShowVideo(true);
+    }
+}, [data]);
+
     return (
         <div className='flex'>
             <div className='bg-rded-300 w-[25%] h-screen border-r border-gray-400'>
@@ -82,7 +99,7 @@ function LessonDashboard(props: ld) {
                     // ))
                 }
                 {data?.map((v: any, ind: number) => (
-                    <li onClick={() => handleLinks(v.title)} className='list-none p-4 border-t border-b border-gray-400 flex items-center gap-3 text-sm cursor-pointer hover:bg-red-300' key={ind}>
+                    <li onClick={() => handleLinks(v)} className='list-none p-4 border-t border-b border-gray-400 flex items-center gap-3 text-sm cursor-pointer hover:bg-red-300' key={ind}>
                         <span className=''><FaRegCircle size={20} className="text-primary mr-2" /></span>
                         <span className=''>{v?.icon}</span>
                         {v.title}
@@ -93,10 +110,10 @@ function LessonDashboard(props: ld) {
             <div className='w-full h-screen'>
                 <div className='bg-redd-300 w-full h-20 border-b border-gray-400 '></div>
                 {/* content */}
-                <div className=' w-full  p-4'>
-                    <p className='text-xl font-bold'> title</p>
-                    <VideoPlayer vimeoId={'312312'} />
-                </div>
+                {showVideo && <div className=' w-full  p-4'>
+                    <p className='text-xl font-bold'> {video?.title}</p>
+                    <VideoPlayer vimeoId={video?.id} />
+                </div>}
             </div>
         </div>
 

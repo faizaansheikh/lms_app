@@ -1,7 +1,7 @@
 'use client'
 
 type Props = {
-  vimeoId: string
+  vimeoId: string | null
 }
 
 export default function VideoPlayer({ vimeoId }: Props) {
