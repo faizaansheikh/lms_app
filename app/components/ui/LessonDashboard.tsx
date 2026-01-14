@@ -5,78 +5,81 @@ import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { FaFileAlt } from "react-icons/fa";
 import { PiVideoBold } from "react-icons/pi";
 import { IoHome } from "react-icons/io5";
-import { useRouter } from "next/navigation";
-
-import VideoPlayer from "./VideoPlayer";
+import { useRouter, useSearchParams } from "next/navigation";
+import { GoRepoLocked } from "react-icons/go";
+import { MdOutlineDone } from "react-icons/md";
+const VideoPlayer = dynamic(() => import('./VideoPlayer'), {
+    ssr: false,
+    loading: () => <p>Loading video...</p>
+})
+import { ImUnlocked } from "react-icons/im";
+import { getUser } from "@/app/utility";
+import { GeneralCoreService } from "@/app/config/GeneralCoreService";
+import dynamic from "next/dynamic";
 interface ld {
-    data: any
-
+    data: any,
+    getApi: any
 }
 function LessonDashboard(props: ld) {
-    const { data } = props
+    const { data, getApi } = props
+    const searchParams = useSearchParams()
     const router = useRouter()
     const [showVideo, setShowVideo] = useState<any>(false)
+    const [complete, setComplete] = useState<any>(false)
     const [video, setVideo] = useState<any>({
+        id: '',
         title: "",
-        id: ''
+        url: "",
+        is_completed: false
     })
     console.log(data);
-    const arr = [
-        {
-            head: 'Introduction',
-            videos: [
-                {
-                    title: 'Welcome',
-                    icon: <FaFileAlt size={18} className="text-[#3c3b3b]" />
-                }
-            ]
-        },
-        {
-            head: 'First Aide Video',
-            videos: [
-                {
-                    title: 'First Aide Video #1 (56:37)',
-                    icon: <PiVideoBold size={22} className="text-[#3c3b3b]" />
-                },
-                {
-                    title: 'First Aide Video #2 (64:15)',
-                    icon: <PiVideoBold size={22} className="text-[#3c3b3b]" />
-                }
-            ]
-        },
-        {
-            head: 'Final Exam',
-            videos: [
-                {
-                    title: 'Final Exam',
-                    icon: <FaFileAlt size={18} className="text-[#3c3b3b]" />
-                },
 
-            ]
-        }
-    ]
 
     const handleLinks = (x: any) => {
+
         setVideo({
-            title: x.title,
-            id: x.url
+            id: x?.lesson_id,
+            title: x?.title,
+            url: x?.url,
+            is_completed: x?.is_completed
         })
 
     }
 
 
-    const handleHome = () => router.back()
+    const handleHome = () => router.push('/dashboard/client')
 
-    
     useEffect(() => {
-    if (data && data.length > 0) {
-        setVideo({
-            title: data[0].title,
-            id: data[0].url,
-        });
-        setShowVideo(true);
-    }
-}, [data]);
+        if (complete) {
+            const user = getUser()
+            const payload = {
+                user_id: user?.id,
+                course_id: Number(searchParams?.get('q')),
+                lesson_id: video?.id
+            }
+            GeneralCoreService('lesson_progress').Save(payload)
+                .then((res) => {
+                    console.log(res)
+                    if (res?.status === 201) {
+                        getApi(Number(searchParams?.get('q')))
+                    }
+                }).catch((err) => console.log(err)).finally(() => { })
+            setComplete(false)
+            console.log(complete, video)
+        }
+    }, [complete])
+
+    useEffect(() => {
+        if (data && data.length > 0) {
+            setVideo({
+                id: data[0]?.lesson_id,
+                title: data[0]?.title,
+                url: data[0]?.url,
+                is_completed: data[0]?.is_completed
+            })
+            setShowVideo(true);
+        }
+    }, [data]);
 
     return (
         <div className='flex'>
@@ -99,8 +102,8 @@ function LessonDashboard(props: ld) {
                     // ))
                 }
                 {data?.map((v: any, ind: number) => (
-                    <li onClick={() => handleLinks(v)} className='list-none p-4 border-t border-b border-gray-400 flex items-center gap-3 text-sm cursor-pointer hover:bg-red-300' key={ind}>
-                        <span className=''><FaRegCircle size={20} className="text-primary mr-2" /></span>
+                    <li onClick={v?.locked ? () => { } : () => handleLinks(v)} className={`list-none p-4 border-t border-b border-gray-400 flex items-center gap-3 text-sm ${v?.locked ? 'cursor-not-allowed bg-gray-300' : 'cursor-pointer hover:bg-red-300'} `} key={ind}>
+                        <span className=''>{v?.locked ? <GoRepoLocked size={20} className="text-primary mr-2" /> : <ImUnlocked size={20} className="text-primary mr-2" />}</span>
                         <span className=''>{v?.icon}</span>
                         {v.title}
                     </li>
@@ -111,11 +114,18 @@ function LessonDashboard(props: ld) {
                 <div className='bg-redd-300 w-full h-20 border-b border-gray-400 '></div>
                 {/* content */}
                 {showVideo && <div className=' w-full  p-4'>
-                    <p className='text-xl font-bold'> {video?.title}</p>
-                    <VideoPlayer vimeoId={video?.id} />
+                    <div className="flex justify-between items-center">
+                        <p className='text-xl font-bold p-3'> {video?.title}</p>
+                        {video?.is_completed && <p className='text-lg font-normal p-3 flex items-center justify-center gap-3'>Completed <MdOutlineDone color="green" size={25} /> </p>}
+                    </div>
+                    <VideoPlayer
+                        vimeoId={video?.url}
+                        setComplete={setComplete}
+                        videoDetails={video}
+                    />
                 </div>}
             </div>
-        </div>
+        </div >
 
     )
 }

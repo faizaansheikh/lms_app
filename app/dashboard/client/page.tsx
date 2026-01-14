@@ -17,7 +17,7 @@ function page() {
         if (user) {
             setLoader(true)
             setUserInfo(user)
-            GeneralCoreService('enrollment/courses').GetAll(user?.id)
+            GeneralCoreService('enrollment/courses').GetAll(null,user?.id)
                 .then((res) => {
                     if (res?.data) {
                         setData(res?.data)

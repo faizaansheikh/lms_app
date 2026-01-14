@@ -8,15 +8,13 @@ import { GeneralCoreService } from '@/app/config/GeneralCoreService'
 import { useEffect, useState } from 'react'
 // import VideoPlayer from '@/app/components/ui/VideoPlayer'
 
-const VideoPlayer = dynamic(() => import('@/app/components/ui/VideoPlayer'), {
-    ssr: false,
-    loading: () => <p>Loading video...</p>
-})
+
 function page() {
 
 
     const searchParams = useSearchParams()
-    const [course, setCourse] = useState([])
+    const [course, setCourse] = useState<any>([])
+   
 
     const getSingleRec = (id: number) => {
         const user = getUser()
@@ -28,19 +26,22 @@ function page() {
             GeneralCoreService('courses/lessons').Save(payload)
                 .then((res) => {
                     // const data = res?.data?.lessons
-                    // setCourse(data)
                     console.log(res?.data)
+                    setCourse(res?.data)
 
                 }).catch((err) => console.log(err)).finally(() => { })
         }
     }
+
+   
+
     useEffect(() => {
         getSingleRec(Number(searchParams?.get('q')))
     }, [])
 
 
     return (
-        <LessonDashboard data={course} />
+        <LessonDashboard data={course} getApi={getSingleRec}/>
 
 
     )

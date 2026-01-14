@@ -56,7 +56,7 @@ function page() {
         }
     ]
     const getSingleRec = (id: number) => {
-        GeneralCoreService('courses').GetAll(id)
+        GeneralCoreService('courses').GetAll(null,id)
             .then((res) => {
                 setRecord(res?.data);
 

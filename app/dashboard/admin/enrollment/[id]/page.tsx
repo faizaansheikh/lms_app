@@ -125,7 +125,7 @@ function EnrollmentForm() {
     }
     const getSingleRec = (id: number) => {
         setLoader(true)
-        GeneralCoreService(`users`).GetAll(id)
+        GeneralCoreService(`users`).GetAll(null,id)
             .then((res) => {
 
                 if (res?.status === 200) {

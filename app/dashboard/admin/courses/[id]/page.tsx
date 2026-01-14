@@ -213,7 +213,7 @@ function CoursesForm() {
 
     const getSingleRec = (id: number) => {
         setLoader(true)
-        GeneralCoreService(`courses`).GetAll(id)
+        GeneralCoreService(`courses`).GetAll(null,id)
             .then((res) => {
 
                 if (res?.status === 200) {

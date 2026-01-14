@@ -106,7 +106,7 @@ function LessonsForm() {
     }
     const getSingleRec = (id: number) => {
         setLoader(true)
-        GeneralCoreService(`lessons`).GetAll(id)
+        GeneralCoreService(`lessons`).GetAll(null,id)
             .then((res) => {
 
                 if (res?.status === 200) {
