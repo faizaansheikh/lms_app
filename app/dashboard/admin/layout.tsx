@@ -59,6 +59,10 @@ function page({
             icon: (s: number, c: string) => <FaUsers size={s} color={c} />
         },
         {
+            label: 'Questions',
+            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
+        },
+        {
             label: 'Certificate',
             icon: (s: number, c: string) => <FaUsers size={s} color={c} />
         }
@@ -92,6 +96,10 @@ function page({
             router.push('/dashboard/admin/enrollment')
         } else if (label === 'Progress') {
             router.push('/dashboard/admin/lesson_progress')
+        } else if (label === 'Quiz') {
+            router.push('/dashboard/admin/quiz')
+        } else if (label === 'Questions') {
+            router.push('/dashboard/admin/questions')
         }
         return
     }

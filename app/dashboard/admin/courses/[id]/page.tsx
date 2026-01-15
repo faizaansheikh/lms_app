@@ -241,18 +241,7 @@ function CoursesForm() {
     return (
         <div>
             <FormElement title="Course Form" save={params.id === 'new' ? handleSave : handleUpdate} setModel={setModel} model={model} elements={elems} loading={loader} />
-            {/* <GridTableForm
-                title="Lessons"
-                cols={[{ label: "Title", col: 10 }, { label: "Duration", col: 4 }, { label: "URL", col: 8 }]}
-                name="lessons"
-                defaultValues={{ lessons: lessons.length ? lessons : [{ title: "", duration: 0, url: "" }] }}
-                setData={(data: any) => setLessons(data)}
-                fieldsConfig={[
-                    { key: "title", placeholder: "Title", rules: { required: "Title required" }, col: 10 },
-                    { key: "duration", type: "number", placeholder: "Duration", rules: { required: "Duration required" }, col: 4 },
-                    { key: "url", placeholder: "URL", rules: { required: "URL required" }, col: 8 },
-                ]}
-            /> */}
+           
 
         </div>
     )

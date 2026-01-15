@@ -40,10 +40,13 @@ function Register(props: registerProps) {
 
     };
 
-    const handleUpdateRec = (x:any) => {
+    const handleUpdateRec = (x: any) => {
+        
         if (formName === 'course_lessons') {
             router.push(`${formName}/${x?.course_id}`)
-        } else {
+        } else if(formName === 'quiz_questions'){
+            router.push(`questions/${x?._id}`)
+        }else {
             router.push(`${formName}/${x?._id}`)
         }
 
@@ -54,10 +57,9 @@ function Register(props: registerProps) {
             .then((res: any) => {
 
                 if (res?.status === 200) {
-                    console.log('res', res.data);
-                    const cols = Object.keys(res?.data[0]) ?? []
-                    const [lessons, ...othersCols] = cols
-                    setColumn(cols)
+                    const cols: any = res.data[0]
+                    const { lessons, answers, ...othersCols } = cols
+                    setColumn(othersCols ? Object.keys(othersCols) : [])
                     setRowData([...res?.data])
                 }
 
@@ -87,9 +89,13 @@ function Register(props: registerProps) {
 
     }
     const updatedRows = (col: any, row: any) => {
+        console.log(row[col])
         if (col === 'thumbnail') {
             return row[col] ? <Image src={row[col]} alt="" width={45} height={45} className='w-[45] h-[45]' /> : ''
-        } else {
+        } else if (col === 'answers') {
+            return 'array'
+        }
+        else {
             return row[col]
         }
 

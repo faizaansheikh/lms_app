@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { Row, Col, Input, InputNumber, Button } from "antd";
+import { Row, Col, Input, InputNumber, Button, Select } from "antd";
 import { IoIosAddCircle } from "react-icons/io";
 import { CiCircleMinus } from "react-icons/ci";
 import XLookup from "./XLookup";
@@ -45,7 +45,7 @@ export default function GridTableForm({
 
                 {/* ROWS */}
                 {fields?.map((item: any, index) => (
-                    <Row gutter={16} key={item.id} className="mb-2 items-start">
+                    <Row gutter={16} key={item.id} className="mb-1 items-start">
                         {fieldsConfig.map((field: any) => (
                             <Col key={field.key} xs={24} sm={8} md={field.col}>
                                 <Controller
@@ -63,14 +63,12 @@ export default function GridTableForm({
                                                 onChange={(value) => controllerField.onChange(value ?? 0)}
                                                 style={{ width: '100%', padding: '7px', fontSize: '10px', background: '#F5F5F0' }}
                                             />
-                                        ) : field.type === 'lookup' ?
-                                            <CustomLookup
-                                                getData={(data: any) => {
-                                                   console.log(data)
-                                                }}
-                                                formName={'lessons'}
-                                                multiple={false}
-                                                vals={'lessons'}
+                                        ) : field.type === 'boolean' ?
+                                            <Select
+                                                {...controllerField}
+                                                style={{ width: '100%', padding: '8px', fontSize: '16px', background: '#F5F5F0' }}
+                                                // defaultValue={['Wrong']}
+                                                options={field.options}
                                             />
 
                                             : (
@@ -78,7 +76,7 @@ export default function GridTableForm({
                                                     {...controllerField}
                                                     type={field.type}
                                                     placeholder={field.placeholder}
-                                                    style={{ padding: '7px', fontSize: '14px', background: '#F5F5F0' }}
+                                                    style={{ padding: '7px', fontSize: '16px', background: '#F5F5F0' }}
                                                 />
                                             )
                                     }
@@ -91,7 +89,7 @@ export default function GridTableForm({
 
                         {/* ACTION */}
                         <Col xs={24} sm={24} md={2} className="flex gap-2 items-center mt-0">
-                            <div className="flex items-center">
+                            <div className="flex items-center gap-2">
                                 {fields.length > 1 && (
                                     <CiCircleMinus
                                         size={28}

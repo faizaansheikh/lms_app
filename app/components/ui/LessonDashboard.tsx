@@ -49,26 +49,22 @@ function LessonDashboard(props: ld) {
 
     const handleHome = () => router.push('/dashboard/client')
 
-    useEffect(() => {
-        if (complete) {
-            const user = getUser()
-            const payload = {
-                user_id: user?.id,
-                course_id: Number(searchParams?.get('q')),
-                lesson_id: video?.id
-            }
-            GeneralCoreService('lesson_progress').Save(payload)
-                .then((res) => {
-                    console.log(res)
-                    if (res?.status === 201) {
-                        getApi(Number(searchParams?.get('q')))
-                    }
-                }).catch((err) => console.log(err)).finally(() => { })
-            setComplete(false)
-            console.log(complete, video)
+    const updateLessonProgress = () => {
+        const user = getUser()
+        const payload = {
+            user_id: user?.id,
+            course_id: Number(searchParams?.get('q')),
+            lesson_id: video?.id
         }
-    }, [complete])
-
+        GeneralCoreService('lesson_progress').Save(payload)
+            .then((res) => {
+                console.log(res)
+                if (res?.status === 201) {
+                    getApi(Number(searchParams?.get('q')))
+                }
+            }).catch((err) => console.log(err)).finally(() => { })
+    }
+   
     useEffect(() => {
         if (data && data.length > 0) {
             setVideo({
@@ -122,6 +118,7 @@ function LessonDashboard(props: ld) {
                         vimeoId={video?.url}
                         setComplete={setComplete}
                         videoDetails={video}
+                        updateLessonProgress={updateLessonProgress}
                     />
                 </div>}
             </div>
