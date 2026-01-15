@@ -12,6 +12,7 @@ function QuizForm() {
     const params = useParams()
     const router = useRouter()
     const [loader, setLoader] = useState(false)
+    const [ques, setQues] = useState([])
     const [model, setModel] = useState<model>({
         name: '',
     })
@@ -23,7 +24,7 @@ function QuizForm() {
             title: '',
             fields: [
                 {
-                    col: 12,
+                    col: 24,
                     label: 'Name',
                     key: 'name',
                     placeholder: 'Enter Quiz Name',
@@ -36,13 +37,34 @@ function QuizForm() {
                     }
                 },
                 
+                {
+                    col: 24,
+                    label: 'Questions',
+                    key: 'questions',
+                    placeholder: 'Add Questions',
+                    type: 'lookup',
+                    multiple: true,
+                    formName: 'quiz_questions',
+                    required: true,
+
+                    vals: ques,
+                    getData: (data: any) => {
+                        console.log(data)
+                        setQues(data)
+                    },
+
+                },
             ]
         },
 
     ]
     const handleSave = (values: any) => {
+        const payload = {
+            ...values,
+            questions: ques
+        }
         setLoader(true)
-        GeneralCoreService('users/register').Save(values, params?.id === 'new' ? '' : params?.id)
+        GeneralCoreService('quiz').Save(payload, params?.id === 'new' ? '' : params?.id)
             .then((res) => {
 
                 if (res?.status === 201) {
@@ -58,11 +80,12 @@ function QuizForm() {
     }
     const getSingleRec = (id: number) => {
         setLoader(true)
-        GeneralCoreService(`users`).GetAll(null,id)
+        GeneralCoreService(`quiz`).GetAll(null, id)
             .then((res) => {
 
                 if (res?.status === 200) {
                     setModel(res?.data)
+                    setQues(res?.data?.questions)
                 } else {
                     message.error(res?.message)
                 }

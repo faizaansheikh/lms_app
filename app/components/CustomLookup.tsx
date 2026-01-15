@@ -27,13 +27,13 @@ const LookupInput: React.FC<LookupInputProps> = ({
     const [inputValue, setInputValue] = useState('');
     const [column, setColumn] = useState<string[]>([]);
     const [rowData, setRowData] = useState<any[]>([]);
-   
+
     useEffect(() => {
-          if (!value) return
+        if (!value) return
         let ids: number[] = [];
 
         if (typeof value === 'string') {
-            
+
             try {
                 ids = JSON.parse(value);
             } catch {
@@ -53,7 +53,9 @@ const LookupInput: React.FC<LookupInputProps> = ({
             const data = res?.data || [];
 
             setRowData(data);
-            setColumn(data.length > 0 ? Object.keys(data[0]) : []);
+            const cols = data[0] ?? {}
+            const { answers, ...otherCols } = cols
+            setColumn(Object.keys(otherCols) ?? []);
         } catch (err) {
             console.error(err);
         }
@@ -67,8 +69,8 @@ const LookupInput: React.FC<LookupInputProps> = ({
     /* -------- Select / Deselect -------- */
     const toggleSelect = (id: number) => {
         if (multiple) {
-            setSelectedIds((prev:any) =>
-                prev.includes(id) ? prev.filter((i:any) => i !== id) : [...prev, id]
+            setSelectedIds((prev: any) =>
+                prev.includes(id) ? prev.filter((i: any) => i !== id) : [...prev, id]
             );
         } else {
             setSelectedIds([id]);
@@ -87,7 +89,7 @@ const LookupInput: React.FC<LookupInputProps> = ({
 
         const titles = rowData
             .filter(item => selectedIds.includes(item._id))
-            .map(item => item.title)
+            .map(item => item.title || item.question)
             .join(',');
 
         setInputValue(prev => (prev !== titles ? titles : prev));
@@ -189,7 +191,7 @@ const CustomLookup = (props: any) => {
     const { getData, formName, multiple, vals } = props;
     const params = useParams()
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
-   
+
     return (
         <div className="p-0">
             <LookupInput

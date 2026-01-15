@@ -41,12 +41,12 @@ function Register(props: registerProps) {
     };
 
     const handleUpdateRec = (x: any) => {
-        
+
         if (formName === 'course_lessons') {
             router.push(`${formName}/${x?.course_id}`)
-        } else if(formName === 'quiz_questions'){
+        } else if (formName === 'quiz_questions') {
             router.push(`questions/${x?._id}`)
-        }else {
+        } else {
             router.push(`${formName}/${x?._id}`)
         }
 
@@ -58,7 +58,7 @@ function Register(props: registerProps) {
 
                 if (res?.status === 200) {
                     const cols: any = res.data[0]
-                    const { lessons, answers, ...othersCols } = cols
+                    const { lessons, answers, questions, ...othersCols } = cols
                     setColumn(othersCols ? Object.keys(othersCols) : [])
                     setRowData([...res?.data])
                 }

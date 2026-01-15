@@ -72,7 +72,6 @@ function Lesson_progressForm() {
             course_id: course.length ? course[0] : null,
             lesson_id: lessons
         }
-        console.log('vals',payload)
         setLoader(true)
         GeneralCoreService('course_lessons').Save(payload, params?.id === 'new' ? '' : course[0])
             .then((res) => {

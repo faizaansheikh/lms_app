@@ -13,7 +13,6 @@ interface model {
     author: string;
     price: string;
     thumbnail: string;
-    lessons: any;
 
 }
 function CoursesForm() {
@@ -27,8 +26,7 @@ function CoursesForm() {
         description: '',
         author: '',
         price: '',
-        thumbnail: '',
-        lessons: '',
+        thumbnail: ''
     })
     // console.log(model);
 
@@ -53,7 +51,7 @@ function CoursesForm() {
                 },
 
                 {
-                    col: 10,
+                    col: 14,
                     label: 'Author',
                     key: 'author',
                     placeholder: 'Course author',
@@ -64,7 +62,7 @@ function CoursesForm() {
                     validations: {}
                 },
                 {
-                    col: 6,
+                    col: 10,
                     label: 'Price',
                     key: 'price',
                     placeholder: 'Course Price',
@@ -77,23 +75,7 @@ function CoursesForm() {
                         // minLength: { value: 2, message: 'Min length at least 3' },
                     }
                 },
-                {
-                    col: 8,
-                    label: 'Lessons',
-                    key: 'lessons',
-                    placeholder: 'Add Lessons',
-                    type: 'lookup',
-                    multiple: true,
-                    formName: 'lessons',
-                    required: true,
-                
-                    vals: params?.id ? lessons : '',
-                        getData : (data: any) => {
-                            console.log(data)
-                            setLessons(data)
-                        },
-
-                },
+               
                 {
                     col: 24,
                     label: 'Description',
@@ -140,7 +122,6 @@ function CoursesForm() {
         formData.append("description", values.description);
         formData.append("author", values.author);
         formData.append("price", values.price);
-        formData.append("lessons", JSON.stringify(lessons));
 
         try {
             setLoader(true);
@@ -177,7 +158,6 @@ function CoursesForm() {
                 formData.append("description", values.description);
                 formData.append("author", values.author);
                 formData.append("price", values.price);
-                formData.append("lessons", JSON.stringify(lessons));
                 const res = await axiosInstance.put(`/courses/${params.id}`, formData,
                     {
                         headers: {
@@ -188,7 +168,7 @@ function CoursesForm() {
                 message.success(res?.data?.message);
                 router.back()
             } else {
-                GeneralCoreService('courses').Save({ ...values, lessons: JSON.stringify(lessons) }, params.id)
+                GeneralCoreService('courses').Save({ ...values }, params.id)
                     .then((res) => {
                         if (res?.status === 201) {
 
