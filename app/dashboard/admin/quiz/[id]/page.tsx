@@ -36,7 +36,7 @@ function QuizForm() {
                         minLength: { value: 3, message: 'Min length at least 3' },
                     }
                 },
-                
+
                 {
                     col: 24,
                     label: 'Questions',
@@ -46,14 +46,14 @@ function QuizForm() {
                     multiple: true,
                     formName: 'quiz_questions',
                     required: true,
-
-                    vals: ques,
+                    display: 'title',
+                    vals: params?.id !== 'new' ? ques : '',
                     getData: (data: any) => {
-                        console.log(data)
                         setQues(data)
                     },
 
                 },
+                
             ]
         },
 

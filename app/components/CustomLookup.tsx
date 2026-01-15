@@ -10,7 +10,8 @@ interface LookupInputProps {
     getData?: (ids: number[]) => void;
     multiple?: boolean;
     formName: string;
-    id: boolean
+    id: boolean,
+    display: string
 }
 
 /* ===================== LookupInput ===================== */
@@ -20,6 +21,7 @@ const LookupInput: React.FC<LookupInputProps> = ({
     getData,
     multiple = true,
     formName,
+    display,
     id
 }) => {
     const [modalOpen, setModalOpen] = useState(false);
@@ -89,12 +91,12 @@ const LookupInput: React.FC<LookupInputProps> = ({
 
         const titles = rowData
             .filter(item => selectedIds.includes(item._id))
-            .map(item => item.title || item.question)
+            .map(item => display ? item[display] : item.title || item.question)
             .join(',');
 
         setInputValue(prev => (prev !== titles ? titles : prev));
     }, [selectedIds, rowData]);
-
+    console.log(inputValue)
     return (
         <div className="relative w-full">
             {/* Input */}
@@ -148,6 +150,7 @@ const LookupInput: React.FC<LookupInputProps> = ({
                                                 <input
                                                     type="radio"
                                                     name="singleSelect"
+                                                    // value={true}s
                                                     checked={selectedIds.includes(item._id)}
                                                     readOnly
                                                 />
@@ -188,7 +191,7 @@ const LookupInput: React.FC<LookupInputProps> = ({
 
 /* ===================== CustomLookup Wrapper ===================== */
 const CustomLookup = (props: any) => {
-    const { getData, formName, multiple, vals } = props;
+    const { getData, formName, multiple, vals, display } = props;
     const params = useParams()
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
@@ -197,6 +200,7 @@ const CustomLookup = (props: any) => {
             <LookupInput
                 id={params.id !== 'new'}
                 value={vals}
+                display={display}
                 onChange={setSelectedIds}
                 getData={getData}
                 multiple={multiple}

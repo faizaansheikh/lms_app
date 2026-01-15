@@ -6,7 +6,8 @@ interface ModalProps {
     title: string
     content: React.ReactNode
     onOk?: () => void
-    okText?: string
+    okText?: string,
+    extraBtn?: React.ReactNode
 }
 
 const CustomModal: React.FC<ModalProps> = ({
@@ -15,6 +16,7 @@ const CustomModal: React.FC<ModalProps> = ({
     title,
     content,
     onOk,
+    extraBtn,
     okText = 'Ok'
 }) => {
 
@@ -41,8 +43,8 @@ const CustomModal: React.FC<ModalProps> = ({
             <div
                 className={`
           relative z-10
-          w-[95%] sm:w-[85%] md:w-[60%] lg:w-[45%] xl:w-[35%]
-          max-h-[90vh]
+          w-[100%] sm:w-[85%] md:w-[60%] lg:w-[45%] xl:w-[60%]
+          max-h-[100vh]
           bg-white rounded-xl shadow-xl
           flex flex-col
           transform transition-all duration-200
@@ -53,7 +55,7 @@ const CustomModal: React.FC<ModalProps> = ({
                 <div className="px-5 py-4 border-b flex justify-between items-center">
                     <h2 className="text-lg font-semibold">{title}</h2>
                     <button
-                     type="button"
+                        type="button"
                         onClick={() => setOpen(false)}
                         className="text-gray-400 hover:text-gray-600 text-xl cursor-pointer"
                     >
@@ -76,13 +78,14 @@ const CustomModal: React.FC<ModalProps> = ({
                         Cancel
                     </button>
 
-                    <button
+
+                    {extraBtn ? extraBtn : <button
                         onClick={handleOk}
                         type="button"
                         className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
                     >
                         {okText}
-                    </button>
+                    </button>}
                 </div>
             </div>
         </div>

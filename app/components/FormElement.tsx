@@ -10,6 +10,7 @@ import XSelect from './XSelect';
 import XUpload from './XUpload';
 import CustomLookup from './CustomLookup';
 import LookupInput from './CustomLookup';
+import Mylookup from './Mylookup';
 interface FormElems {
     elements: any,
     setModel: any,
@@ -58,11 +59,20 @@ function FormElement(props: FormElems) {
             case 'lookup':
                 return <>
                     {/* <LookupInput value={selectedIds} onChange={setSelectedIds} getData={x.getData} multiple={x.multiple} formName={x.formName} /> */}
-                    <CustomLookup
+                    {/* <CustomLookup
                         getData={x.getData}
                         formName={x.formName}
                         multiple={x?.multiple}
                         vals={x.vals}
+                        display={x?.display}
+                    /> */}
+                    <Mylookup
+                        vals={x.vals}
+                        formName={x.formName}
+                        placeholder={x.placeholder}
+                        display={x?.display}
+                        getData={x.getData}
+                        multiple={x?.multiple}
                     />
 
                 </>
