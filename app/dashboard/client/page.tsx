@@ -3,7 +3,8 @@ import Courses from "@/app/components/ui/Courses";
 import Xloader from "@/app/components/ui/Xloader";
 import { GeneralCoreService } from "@/app/config/GeneralCoreService";
 import { getUser, slugify } from "@/app/utility";
-import { Spin } from "antd";
+import { Col, Row, Spin } from "antd";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { MdOutlineGamepad } from "react-icons/md";
@@ -17,7 +18,7 @@ function page() {
         if (user) {
             setLoader(true)
             setUserInfo(user)
-            GeneralCoreService('enrollment/courses').GetAll(null,user?.id)
+            GeneralCoreService('enrollment/courses').GetAll(null, user?.id)
                 .then((res) => {
                     if (res?.data) {
                         setData(res?.data)
@@ -43,23 +44,35 @@ function page() {
 
                 <p className="text-center text-3xl font-bold">Welcome back {userInfo?.name}. Let's learn something today! </p>
                 <p className=" text-xl py-2 font-bold">My library</p>
-                <div className={`w-full ${data?.length ? "h-auto" : "h-[300px]"} p-6 bg-gray-200 flex ${data?.length ? "flex-row" : "flex-col"} gap-3 items-center justify-center`}>
+                <div className={`w-full ${data?.length ? "h-auto" : "h-[300px]"} p-6 bg-gray-200 flex ${data?.length ? "flex-row" : "flex-col justify-center"} gap-3 items-center `}>
                     {
                         loader ? <Spin size="large" />
 
                             : data?.length ?
                                 data?.map((x: any, i) => (
+                                    <Row key={i} justify="start">
+                                        <Col span={4}>
+                                            <div onClick={() => handleCourse(x)} className="w-[280px] h-[100px] flex bg-[whitesmoke] items-center border gap-4 rounded-2xl transition-all duration-300 cursor-pointer hover:scale-105">
+                                                <Image
+                                                    alt='img'
+                                                    src={x?.thumbnail ?? 'noimg.png'}
+                                                    width={100}
+                                                    height={100}
+                                                />
+                                                <p className="text-lg pr-3 font-semibold">{x?.title}</p>
+                                            </div>
+                                        </Col>
+                                    </Row>
 
-                                    <div key={i} onClick={() => handleCourse(x)} className="bg-[whitesmoke] w-full h-[200px] flex items-center justify-center cursor-pointer hover:shadow border hover:border-[red]  hover:bg-white rounded-lg">
 
-                                        <p className="text-xl">{x?.title}</p>
-                                    </div>
 
                                 ))
                                 : <>
                                     <span className="w-11 h-11 rounded-full bg-primary flex items-center justify-center"><MdOutlineGamepad color="white" size={22} /></span>
                                     <p className="text-xl">You're not enrolled in any course</p>
                                 </>}
+
+                    
                 </div>
 
 

@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 type Props = {
     quizName: string;
     onStart: () => void;
+    setShowQuiz:any
 };
 
-const StartQuizConfirmation: React.FC<Props> = ({ quizName, onStart }) => {
+const StartQuizConfirmation: React.FC<Props> = ({ quizName, onStart,setShowQuiz }) => {
     const [showModal, setShowModal] = useState(true);
 
     const handleStart = () => {
@@ -36,7 +37,10 @@ const StartQuizConfirmation: React.FC<Props> = ({ quizName, onStart }) => {
 
                         <div className="flex justify-between mt-2">
                             <button
-                                onClick={() => setShowModal(false)}
+                                onClick={() => {
+                                    setShowModal(false)
+                                    setShowQuiz(false)
+                                }}
                                 className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 cursor-pointer"
                             >
                                 Cancel

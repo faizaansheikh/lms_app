@@ -94,6 +94,13 @@ function Register(props: registerProps) {
             return row[col] ? <Image src={row[col]} alt="" width={45} height={45} className='w-[45] h-[45]' /> : ''
         } else if (col === 'answers') {
             return 'array'
+        } else if (col === 'is_completed') {
+            if (col) {
+                return 'Lesson completed'
+            }else{
+                return 'Lesson Pending'
+            }
+
         }
         else {
             return row[col]
@@ -126,10 +133,10 @@ function Register(props: registerProps) {
                         <thead className=''>
 
                             <tr className='bg-gray-300' >
-                                <td className='pr-4 pl-4 '><Checkbox onChange={onChangeAll}></Checkbox></td>
+                           
                                 {
                                     column?.map((x, i) => (
-                                        <td className='py-6 text-[] font-bold text-[14px]' key={i}>{x}</td>
+                                        <td className={`py-6 text-[] font-bold text-[14px] ${i === 0 ? 'pl-5':''}`} key={i}>{x}</td>
                                     ))
                                 }
                                 <td className='text-[] text-[14px] font-bold '>Actions</td>
@@ -141,10 +148,10 @@ function Register(props: registerProps) {
                             {
                                 rowData.map((x: any, i) => (
                                     <tr style={{ backgroundColor: selectedRow.includes(x) ? '#fbd06d' : '' }} className={`bg-secondary border-b-1 border-[lightgrey] `} key={i}>
-                                        <td className='pl-4'><Checkbox onChange={(e) => handleCheckbox(e, x, i)}></Checkbox></td>
+                                       
                                         {
                                             column.map((z, ind) => (
-                                                <td className='font-normal text-[13px] text-start py-2 ' key={ind}>{updatedRows(z, x)}</td>
+                                                <td className={`font-normal text-[13px] text-start py-2 ${ind === 0 ? 'pl-5':''}`} key={ind}>{updatedRows(z, x)}</td>
                                             ))
                                         }
 

@@ -87,9 +87,10 @@ function LessonDashboard(props: ld) {
 
     return (
 
-        showQuiz ? <Quiz data={quiz} /> :
+        showQuiz ? <Quiz data={quiz} setShowQuiz={setShowQuiz}/> :
 
             <div className='flex'>
+                
                 <div className='bg-rded-300 w-[25%] h-screen border-r border-gray-400'>
                     <div className='h-20 flex items-center pl-4 border-b border-gray-400 cursor-pointer' onClick={handleHome}><p><IoHome className="text-primary" size={20} /></p></div>
                     {

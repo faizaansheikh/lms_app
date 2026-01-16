@@ -8,8 +8,11 @@ import { TiTick } from "react-icons/ti";
 import { message } from 'antd';
 import CustomModal from '../CustomModal';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-const Quiz = ({ data }: any) => {
+import { useRouter, useSearchParams } from 'next/navigation';
+import { getUser } from '@/app/utility';
+import { GeneralCoreService } from '@/app/config/GeneralCoreService';
+const Quiz = ({ data,setShowQuiz }: any) => {
+    const searchParams = useSearchParams()
     const router = useRouter()
     const [active, setActive] = useState(null)
     const [disableSave, setDisableSave] = useState(true)
@@ -18,9 +21,33 @@ const Quiz = ({ data }: any) => {
     const [openModal, setOpenModal] = useState(false)
     const [answer, setAnswer] = useState<any>({})
     const [percentage, setPercentage] = useState<any>(null)
-
     const [result, setResult] = useState<any>([])
     const [index, setIndex] = useState(0)
+
+
+
+    const handleEnrollment = () => {
+        
+        const userInfo = getUser()
+        if (userInfo) {
+         
+            const coursId = Number(searchParams?.get('q')) || null
+            let payload = {
+                user_id: userInfo?.id,
+                course_id: coursId,
+                status:'Completed'
+            }
+            GeneralCoreService('enrollment/update').Save(payload)
+                .then((res) => {
+
+ 
+
+                }).catch((err) => console.log(err)).finally(() => {})
+        } else {
+            message.error('You need to sign in first to enroll in this course!')
+        }
+    }
+
 
     const handleOption = (x: any) => {
         setDisableSave(false)
@@ -46,6 +73,7 @@ const Quiz = ({ data }: any) => {
         const percentage = (correctCount / totalQuestions) * 100;
         setPercentage(percentage)
         setOpenModal(true)
+        
     }
 
     const handleSave = () => {
@@ -65,6 +93,7 @@ const Quiz = ({ data }: any) => {
     const handleModalSave = () => {
         setOpenModal(false)
         message.success('Certificate sent to you email address!')
+        handleEnrollment()
         router.back()
     }
     console.log(result)
@@ -120,7 +149,7 @@ const Quiz = ({ data }: any) => {
                 } />
 
 
-            <StartQuizConfirmation quizName={data?.name} onStart={() => { }} />
+            <StartQuizConfirmation quizName={data?.name} onStart={() => { }} setShowQuiz={setShowQuiz}/>
             <div className='w-full h-[100vh] bg-[#FAF3F0] px-8 md:px-32 flex flex-col '>
                 <h1 className="text-xl md:text-3xl font-bold mb-1 text-center pt-8">Final Exam</h1>
                 <div>
