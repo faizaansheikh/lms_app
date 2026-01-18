@@ -10,15 +10,7 @@ import { SiGamedeveloper } from "react-icons/si";
 import Image from "next/image";
 function Footer() {
   const [data, setData] = useState([])
-  const menu = [
-    { title: 'Home', link: '#home' },
-    { title: 'About Us', link: '#about' },
-    { title: 'Partners', link: '#partner' },
-    { title: 'Products', link: '#products' },
-    { title: 'Services', link: '#services' },
-    { title: 'Careers', link: '/careers' },
-
-  ];
+ 
   const getRec = () => {
 
     GeneralCoreService('courses').GetAll()
