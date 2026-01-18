@@ -40,18 +40,18 @@ function page() {
     }, [])
     return (
         <>
-            <div className="mt-12 px-42">
+            <div className="mt-12 px-14 md:px-42">
 
-                <p className="text-center text-3xl font-bold">Welcome back {userInfo?.name}. Let's learn something today! </p>
-                <p className=" text-xl py-2 font-bold">My library</p>
-                <div className={`w-full ${data?.length ? "h-auto" : "h-[300px]"} p-6 bg-gray-200 flex ${data?.length ? "flex-row" : "flex-col justify-center"} gap-3 items-center `}>
+                <p className="text-center text-2xl md:text-3xl font-bold">Welcome back {userInfo?.name}. Let's learn something today! </p>
+                <p className=" text-xl py-2 mt-4 font-bold">My library</p>
+                <div className={`w-full ${data?.length ? "h-auto" : "h-[300px]"} p-6 bg-gray-200 flex flex-wrap ${data?.length ? "flex-row" : "flex-col justify-center"} gap-3 items-center `}>
                     {
                         loader ? <Spin size="large" />
 
                             : data?.length ?
                                 data?.map((x: any, i) => (
                                     <Row key={i} justify="start">
-                                        <Col span={4}>
+                                        <Col xs={24} lg={24}>
                                             <div onClick={() => handleCourse(x)} className="w-[280px] h-[100px] flex bg-[whitesmoke] items-center border gap-4 rounded-2xl transition-all duration-300 cursor-pointer hover:scale-105">
                                                 <Image
                                                     alt='img'

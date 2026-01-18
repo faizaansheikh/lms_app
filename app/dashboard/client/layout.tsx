@@ -2,7 +2,8 @@
 // import '@ant-design/v5-patch-for-react-19';
 
 import Footer from '@/app/components/ui/Footer';
-import Navbar from '@/app/components/ui/Navbar';
+import Nav from '@/app/components/ui/Nav';
+
 import React from 'react'
 function layout({
     children,
@@ -15,11 +16,11 @@ function layout({
         <div className="flex flex-col min-h-screen">
            
             <header className="sticky top-0 z-50">
-                <Navbar dashboard={true}/>
+                <Nav />
             </header>
 
          
-            <main className="flex-1">
+            <main className="flex-1 mt-22">
                 {children}
             </main>
 
