@@ -1,42 +1,82 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import XButton from './XButton'
 import { MdOutlineFileDownload } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { FaFilter } from "react-icons/fa";
-import { Checkbox, CheckboxProps, Input, Popover } from 'antd';
+import { Checkbox, CheckboxProps, Input, message, Popover, Select } from 'antd';
 import { usePathname, useRouter } from 'next/navigation';
 import { CiSearch } from "react-icons/ci";
 import { CiCircleList } from "react-icons/ci";
 import ThemeToggle from './ThemeToggle';
+import { CiCircleRemove } from "react-icons/ci";
+import axiosInstance from '../config/axiosInstance';
 interface headerProps {
     title: string
     selectedRows: any,
     rowData: any,
     setColumns: any,
-    column: any
+    column: any,
+    setLoader: any
+    setRowData: any
+    rowsPerPage: any
+    page: any
+    getAllRec: any
 }
 function XHeader(props: headerProps) {
     const router = useRouter()
     const path = usePathname()
-    const { title, selectedRows, rowData, setColumns, column } = props
-    // const [check,setCheck] = useState<boolean>(true)
-    const onChangeAll = (e: any, label: string) => {
+    const { title, selectedRows, rowData, setColumns, column, setLoader, setRowData,rowsPerPage,page,getAllRec } = props
+    const [opt, setOpt] = useState([])
+    const [rowVal, setRowVal] = useState('')
+    const [colVal, setColVal] = useState('')
 
-        const val = e.target.checked
-        if (val) {
 
-            setColumns((prev: any) => prev.filter((x: any) => x !== label))
-        } else {
-            setColumns([
-                label,
-                ...column,
-            ])
-        }
-    };
-    const handleAddNew = () => {    
+
+    const handleAddNew = () => {
         router.push(`${path}/new`)
     }
 
+
+    const getAll = async () => {
+
+        setLoader(true)
+        try {
+            const response = await axiosInstance.post(`/${title}/search?col=${colVal}&row=${rowVal}`)
+            const res = { data: response?.data, status: response.status }
+            setRowData(res?.data)
+
+        } catch (err: any) {
+            message.error('Error searching column!')
+            console.log(err)
+        } finally {
+            setLoader(false)
+        }
+
+
+    }
+    const handleSearch = () => {
+        if (colVal && rowVal) {
+            getAll()
+        } else {
+            message.error('Please select both fields')
+        }
+
+    }
+    const handleRemove = () => {
+        setRowVal('')
+        setColVal('')
+        getAllRec(page, rowsPerPage)
+    }
+
+    useEffect(() => {
+        const arr = column?.map((x: any) => (
+            {
+                label: x,
+                value: x,
+            }
+        ))
+        setOpt(arr)
+    }, [column])
 
     return (
 
@@ -47,40 +87,40 @@ function XHeader(props: headerProps) {
                 <span className='text-2xl '>{title}</span>
             </div>
             <div className='flex items-center gap-0'>
-              
-                <span> <Input style={{ width: '300px', padding: '7px 7px' }} placeholder="Search" prefix={<CiSearch className='mx-1' size={20} />} /></span>
-                <span className='px-3'><XButton label='Add New'   Click={() => handleAddNew()} /></span>
-
-                <Popover trigger='click' className=' cursor-pointer  px-0 py-2 flex items-center gap-2 rounded-lg' placement="bottom" title={"Columns"} content={
-                    <div className='flex flex-col gap-2'>
-                        {column?.map((x:string, i:number) => (
-                            <span key={i}>
-                                <span className='pr-3'><Checkbox onChange={(e) => onChangeAll(e, x)}></Checkbox></span>
-                                <span>{x}</span>
-                            </span>
-                        ))}
-
-
-                    </div>
-                }>
-
-                    <span className='px-0 text-[#a9a5a5] hover:text-[grey]'><FaFilter  size={18} /></span>
-
-                </Popover>
 
 
 
 
-                <span className='px-2 cursor-pointer text-[#a9a5a5] hover:text-[grey]'><MdOutlineFileDownload  size={30} /></span>
-                <span className='pr-1 cursor-pointer text-[#a9a5a5] hover:text-[grey]'><CiCircleList size={30} /></span>
-                {selectedRows.length > 0 && <span className='ml-2 bg-[] border-1 border-[red] rounded-lg cursor-pointer hover:shadow '>
-                    <MdDelete className='p-2 text-[red] ' size={37} />
+                <Select
+                    style={{ width: '180px', padding: '7px 7px', margin: '0 12px' }}
 
-                </span>}
-                {/* <span className='bg-[#fbd06d] rounded-lg cursor-pointer hover:shadow flex items-center gap-2'>
+                    placeholder={'Select Column'}
+                    // defaultValue={['happy']}
+                    onChange={(value) => {
+                        console.log(value)
+                        setColVal(value);
+                    }}
+                    options={[...opt]}
 
-                    <MdOutlineFileDownload className='p-2 text-primary ' size={37} />
-                </span> */}
+                />
+                <span>
+                    <Input
+                        style={{ width: '250px', padding: '7px 7px', margin: '0px 5px' }}
+                        placeholder="Search Row"
+                        prefix={<CiSearch className='mx-1' size={20} />}
+                        value={rowVal}
+                        onChange={(e: any) => setRowVal(e.target.value)}
+
+                    />
+                </span>
+                {rowVal && <span onClick={handleRemove}><CiCircleRemove size={30} className='cursor-pointer'/></span>}
+                <span className='px-1'><XButton label='Search' Click={() => handleSearch()} /></span>
+
+                <span className='px-2'><XButton label='Add New' Click={() => handleAddNew()} /></span>
+
+
+
+
 
             </div>
 

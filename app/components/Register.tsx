@@ -1,7 +1,7 @@
 'use client'
 // import '@ant-design/v5-patch-for-react-19';
 import { useEffect, useState } from 'react'
-import { Checkbox, message } from 'antd';
+import { Checkbox, message, Spin } from 'antd';
 import type { CheckboxProps } from 'antd';
 import { CiEdit } from "react-icons/ci";
 import XHeader from './XHeader';
@@ -12,6 +12,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import XModal from './XModal';
 import Image from 'next/image';
 import CustomModal from './CustomModal';
+import Xloader from './ui/Xloader';
 interface registerProps {
     formName: string
 }
@@ -23,22 +24,11 @@ function Register(props: registerProps) {
     const [openModal, setOpenModal] = useState<boolean>(false)
     const [delId, setDelId] = useState<any>(null)
     const [selectedRow, setSelectedRow] = useState<string[]>([])
-    const onChangeAll: CheckboxProps['onChange'] = (e) => {
-        console.log(`checked = ${e.target.checked}`);
-    };
-    const handleCheckbox = (e: any, row: any, i: number) => {
+    const [totalCount, setTotalCount] = useState<any>(null)
+    const [page, setPage] = useState<any>(1)
+    const [rowsPerPage, setRowsPerPage] = useState<any>(10)
+    const [loader, setLoader] = useState<any>(false)
 
-
-        if (e.target.checked) {
-
-            setSelectedRow((prev) => [...prev, row])
-        } else {
-            setSelectedRow((prev) => prev.filter((z: any) => z.id !== row.id));
-
-        }
-
-
-    };
 
     const handleUpdateRec = (x: any) => {
 
@@ -51,20 +41,22 @@ function Register(props: registerProps) {
         }
 
     }
-    const getAllRec = () => {
+    const getAllRec = (page: any, size: any) => {
 
-        GeneralCoreService(formName).GetAll()
+        setLoader(true)
+        GeneralCoreService(formName).GetAll(null, '', page, size)
             .then((res: any) => {
 
                 if (res?.status === 200) {
-                    const cols: any = res.data[0]
-                    const { lessons, answers, questions, ...othersCols } = cols
+                    const cols: any = res?.data?.data[0]
+                    const { lessons, answers, questions, password, ...othersCols } = cols
                     setColumn(othersCols ? Object.keys(othersCols) : [])
-                    setRowData([...res?.data])
+                    setRowData([...res?.data?.data])
+                    setTotalCount(Number(res?.data?.totalRecords))
                 }
 
 
-            }).catch((err: any) => console.log('error', err))
+            }).catch((err: any) => console.log('error', err)).finally(() => setLoader(false))
 
     }
     const handleDeleteRec = (id: number) => {
@@ -78,7 +70,7 @@ function Register(props: registerProps) {
             .then((res: any) => {
                 if (res?.status === 200) {
                     message.success(res?.message)
-                    getAllRec()
+                    getAllRec(page, rowsPerPage)
                 } else {
                     message.error(res?.message)
                 }
@@ -89,7 +81,6 @@ function Register(props: registerProps) {
 
     }
     const updatedRows = (col: any, row: any) => {
-        console.log(row[col])
         if (col === 'thumbnail') {
             return row[col] ? <Image src={row[col]} alt="" width={45} height={45} className='w-[45] h-[45]' /> : ''
         } else if (col === 'answers') {
@@ -97,7 +88,7 @@ function Register(props: registerProps) {
         } else if (col === 'is_completed') {
             if (col) {
                 return 'Lesson completed'
-            }else{
+            } else {
                 return 'Lesson Pending'
             }
 
@@ -109,9 +100,9 @@ function Register(props: registerProps) {
 
     }
     useEffect(() => {
-        getAllRec()
+        getAllRec(page, rowsPerPage)
 
-    }, [])
+    }, [page, rowsPerPage])
     return (
         <>
 
@@ -126,51 +117,68 @@ function Register(props: registerProps) {
 
 
                 <div className='w-full h-[70px] bg-gray-200 sticky top-0 z-20' >
-                    <XHeader title={formName || ''} selectedRows={selectedRow} rowData={rowData} setColumns={setColumn} column={column} />
+                    <XHeader 
+                    title={formName || ''} 
+                    setLoader={setLoader}
+                    selectedRows={selectedRow} 
+                    rowData={rowData} setRowData={setRowData} 
+                    setColumns={setColumn} 
+                    column={column} 
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    getAllRec={getAllRec}
+                    />
                 </div>
                 <div className='w-full '>
-                    <table className='w-full'>
-                        <thead className=''>
+                    {
+                        !loader ? <table className='w-full'>
+                            <thead className=''>
 
-                            <tr className='bg-gray-300' >
-                           
+                                <tr className='bg-gray-300' >
+
+                                    {
+                                        column?.map((x, i) => (
+                                            <td className={`py-6 text-[] font-bold text-[14px] ${i === 0 ? 'pl-5' : ''}`} key={i}>{x}</td>
+                                        ))
+                                    }
+                                    <td className='text-[] text-[14px] font-bold '>Actions</td>
+
+                                </tr>
+
+                            </thead>
+                            <tbody>
                                 {
-                                    column?.map((x, i) => (
-                                        <td className={`py-6 text-[] font-bold text-[14px] ${i === 0 ? 'pl-5':''}`} key={i}>{x}</td>
+                                    rowData.map((x: any, i) => (
+                                        <tr style={{ backgroundColor: selectedRow.includes(x) ? '#fbd06d' : '' }} className={`bg-secondary border-b-1 border-[lightgrey] `} key={i}>
+
+                                            {
+                                                column.map((z, ind) => (
+                                                    <td className={`font-normal text-[13px] text-start py-2 ${ind === 0 ? 'pl-5' : ''}`} key={ind}>{updatedRows(z, x)}</td>
+                                                ))
+                                            }
+
+                                            <td className='text-[14px] text-start py-3'>
+                                                <span className='flex gap-2 items-center r'>
+                                                    <CiEdit onClick={() => handleUpdateRec(x)} size={20} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />
+                                                    <MdDeleteOutline onClick={() => handleDeleteRec(x?._id)} size={18} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />
+
+
+                                                </span>
+                                            </td>
+                                        </tr>
                                     ))
                                 }
-                                <td className='text-[] text-[14px] font-bold '>Actions</td>
+                            </tbody>
+                        </table> :
+                            <div className="h-[400px] z-10 flex items-center justify-center bg-black/0 rounded-xl" >
+                                <Spin size="large" />
+                            </div >
+                    }
 
-                            </tr>
-
-                        </thead>
-                        <tbody>
-                            {
-                                rowData.map((x: any, i) => (
-                                    <tr style={{ backgroundColor: selectedRow.includes(x) ? '#fbd06d' : '' }} className={`bg-secondary border-b-1 border-[lightgrey] `} key={i}>
-                                       
-                                        {
-                                            column.map((z, ind) => (
-                                                <td className={`font-normal text-[13px] text-start py-2 ${ind === 0 ? 'pl-5':''}`} key={ind}>{updatedRows(z, x)}</td>
-                                            ))
-                                        }
-
-                                        <td className='text-[14px] text-start py-3'>
-                                            <span className='flex gap-2 items-center r'>
-                                                <CiEdit onClick={() => handleUpdateRec(x)} size={20} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />
-                                                <MdDeleteOutline onClick={() => handleDeleteRec(x?._id)} size={18} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />
-
-
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))
-                            }
-                        </tbody>
-                    </table>
                 </div>
-                <div className='w-full bg-gray-300 flex justify-end items-center h-[auto] py-0  sticky bottom-0 z-20' >
-                    <XPagination />
+                <div className='w-full bg-gray-300 flex justify-between items-center h-[auto] py-4 px-4  sticky bottom-0 z-20' >
+                    Total Records: {totalCount}
+                    <XPagination totalCount={totalCount} page={page} setPage={setPage} setRowsPerPage={setRowsPerPage} getAll={getAllRec} />
                 </div>
 
             </div>

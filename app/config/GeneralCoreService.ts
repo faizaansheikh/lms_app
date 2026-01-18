@@ -4,10 +4,10 @@ import axiosInstance from "./axiosInstance";
 export const GeneralCoreService = (formName?: string) => {
 
     return {
-        GetAll: async (payload?: any,id?: number) => {
+        GetAll: async (payload?: any, id?: any, page?: any, size?: any) => {
 
             try {
-                const response = await axiosInstance.get(`/${formName}/${id ? id : ''}`, { ...payload });
+                const response = await axiosInstance.get(`/${formName}${id ? `/${id}` : ''}?page=${page}&size=${size}`, { ...payload });
                 return { data: response?.data, status: response.status }
 
             } catch (err: any) {
