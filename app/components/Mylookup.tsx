@@ -6,6 +6,7 @@ import XModal from './XModal';
 import { GeneralCoreService } from '../config/GeneralCoreService';
 import CustomModal from './CustomModal';
 import { useParams } from 'next/navigation';
+import XPagination from './XPagination';
 
 interface lookup {
     display: any
@@ -22,18 +23,25 @@ function Mylookup(props: lookup) {
     const [openModal, setOpenModal] = useState(false)
     const [inputVal, setInputVal] = useState('')
     const [column, setColumn] = useState<string[]>([])
-    const [rowData, setRowData] = useState([])
+    const [rowData, setRowData] = useState<any>([])
     const [selectedRows, setSelectedRows] = useState<any>([]);
-    const getAllRec = () => {
-        GeneralCoreService(formName).GetAll()
+
+    const [selectedRow, setSelectedRow] = useState<string[]>([])
+    const [totalCount, setTotalCount] = useState<any>(null)
+    const [page, setPage] = useState<any>(1)
+    const [rowsPerPage, setRowsPerPage] = useState<any>(10)
+
+    const getAllRec = (page: any, size: any) => {
+        GeneralCoreService(formName).GetAll(null, '', page, size)
             .then((res) => {
-                const resData = res?.data
+                if (res?.status === 200) {
+                    const cols: any = res?.data?.data[0]
+                    const { lessons, answers, questions, password, ...othersCols } = cols
+                    setColumn(othersCols ? Object.keys(othersCols) : [])
+                    setRowData([...res?.data?.data])
+                    setTotalCount(Number(res?.data?.totalRecords))
+                }
 
-                const cols = resData[0] ?? {}
-                const { answers, ...otherCols } = cols
-
-                setColumn(Object.keys(otherCols) ?? []);
-                setRowData(resData)
 
             }).catch((err) => console.log(err))
             .finally(() => { })
@@ -41,7 +49,7 @@ function Mylookup(props: lookup) {
 
     const handleLookup = () => {
         setOpenModal(true)
-        getAllRec()
+        getAllRec(page, rowsPerPage)
     }
 
     const handleRowClick = (x: any) => {
@@ -86,7 +94,14 @@ function Mylookup(props: lookup) {
         }
     }, [vals])
 
-    console.log(selectedRows)
+
+    useEffect(() => {
+        if (totalCount) {
+            getAllRec(page, rowsPerPage)
+        }
+
+
+    }, [page, rowsPerPage])
     return (
         <>
 
@@ -144,7 +159,7 @@ function Mylookup(props: lookup) {
                                 </thead>
                                 <tbody>
                                     {
-                                        rowData.map((x: any, i) => (
+                                        rowData.map((x: any, i: number) => (
 
 
                                             <tr onClick={() => multiple ? {} : handleRowClick(x)} className={`
@@ -176,6 +191,11 @@ function Mylookup(props: lookup) {
                                     }
                                 </tbody>
                             </table>
+                        </div>
+
+                        <div className='w-full bg-gray-300 flex justify-between items-center h-[auto] py-4 px-4  sticky bottom-0 z-20' >
+                            Total Records: {totalCount}
+                            <XPagination totalCount={totalCount} page={page} setPage={setPage} setRowsPerPage={setRowsPerPage} getAll={getAllRec} />
                         </div>
                     </>
                 } />

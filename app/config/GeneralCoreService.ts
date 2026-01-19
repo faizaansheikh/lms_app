@@ -7,8 +7,14 @@ export const GeneralCoreService = (formName?: string) => {
         GetAll: async (payload?: any, id?: any, page?: any, size?: any) => {
 
             try {
-                const response = await axiosInstance.get(`/${formName}${id ? `/${id}` : ''}?page=${page}&size=${size}`, { ...payload });
-                return { data: response?.data, status: response.status }
+                if (page && size) {
+                    const response = await axiosInstance.get(`/${formName}${id ? `/${id}` : ''}?page=${page}&size=${size}`, { ...payload });
+                    return { data: response?.data, status: response.status }
+                } else {
+                    const response = await axiosInstance.get(`/${formName}${id ? `/${id}` : ''}`, { ...payload });
+                    return { data: response?.data, status: response.status }
+                }
+
 
             } catch (err: any) {
                 return {

@@ -1,5 +1,6 @@
 // lib/axiosInstance.ts
 import axios from 'axios';
+import { getAuthToken } from '../components/authToken';
 // import { getCookie } from '../libs';
 
 const axiosInstance = axios.create({
@@ -9,14 +10,13 @@ const axiosInstance = axios.create({
 
 // 🔐 Request Interceptor
 axiosInstance.interceptors.request.use(
-  (config) => {
+  async (config) => {
     // debugger
-    // const token =  getCookie() ??  null;
+    const token = await getAuthToken()
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
 
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
-    
     return config;
   },
   (error) => {

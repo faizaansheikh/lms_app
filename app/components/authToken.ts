@@ -9,9 +9,9 @@ export async function setAuthToken(token: string) {
     httpOnly: true,
     secure: true,
     // maxAge: 60 * 5
-     maxAge: 60 * 60 * 5
+    maxAge: 60 * 60 * 5
   });
-  
+
 
 }
 export async function removeAuthToken() {
@@ -22,4 +22,10 @@ export async function removeAuthToken() {
     secure: true,
     maxAge: 0
   });
+}
+
+export async function getAuthToken() {
+  const cookieStore = await cookies(); // old versions
+  return cookieStore.get("token")?.value ?? null;
+
 }

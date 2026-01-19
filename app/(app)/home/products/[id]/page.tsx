@@ -64,21 +64,23 @@ function page() {
     }
 
     const handleEnrollment = () => {
+        
         const userInfo = localStorage.getItem('userInfo')
         if (userInfo) {
-            setLoading(true)
-            const coursId = Number(searchParams?.get('q')) || null
-            const user = JSON.parse(userInfo);
-            let payload = {
-                user_id: user?.id,
-                course_id: coursId,
-            }
-            GeneralCoreService('enrollment').Save(payload)
-                .then((res) => {
+            router.push(`/checkout/${Number(searchParams?.get('q'))}`)
+            // setLoading(true)
+            // const coursId = Number(searchParams?.get('q')) || null
+            // const user = JSON.parse(userInfo);
+            // let payload = {
+            //     user_id: user?.id,
+            //     course_id: coursId,
+            // }
+            // GeneralCoreService('enrollment').Save(payload)
+            //     .then((res) => {
 
-                    console.log(res?.data);
-                    router.back()
-                }).catch((err) => console.log(err)).finally(() => setLoading(false))
+            //         console.log(res?.data);
+            //         router.back()
+            //     }).catch((err) => console.log(err)).finally(() => setLoading(false))
         } else {
             message.error('You need to sign in first to enroll in this course!')
         }
@@ -98,7 +100,7 @@ function page() {
         record?._id === 15 ? <CustomProd /> :
             <>
                 <section
-                    className="relative h-125 w-full bg-cover bg-center"
+                    className="relative h-150 w-full bg-cover bg-center"
                     style={{ backgroundImage: "url('/product.jpg')" }}
                 >
                     {/* Dark overlay */}
@@ -153,7 +155,7 @@ function page() {
                     {/* curriculam */}
                     <div className='flex w-full h-full mt-14 md:mt-22'>
                         <div className='bg-grdeen-300 w-full h-full'>
-                            <p className='text-3xl py-3' onClick={() => handleVideoClick()}> Course Curriculum</p>
+                            {/* <p className='text-3xl py-3' onClick={() => handleVideoClick()}> Course Curriculum</p> */}
 
 
                             {

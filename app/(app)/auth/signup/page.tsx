@@ -6,6 +6,9 @@ import { Input, message, Spin } from 'antd';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { MdHomeWork } from "react-icons/md";
+import { FaPhone } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
 import { Controller, useForm } from 'react-hook-form';
 function page() {
   const [loader, setLoader] = useState(false)
@@ -119,7 +122,7 @@ function page() {
                   className='my-2'
                   size="large"
                   placeholder="Email"
-                  suffix={<UserOutlined />}
+                  suffix={<MdEmail />}
 
                   aria-invalid={errors['email'] ? true : false}
                 />
@@ -133,6 +136,59 @@ function page() {
             }
 
             <Controller
+              name={'phone'}
+              control={control}
+              rules={{
+                required: "Phone number is required",
+                maxLength: {
+                  value: 15,
+                  message: "Number cannot exceed from 15 characters",
+                },
+              }}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  className='my-2'
+                  size="large"
+                  placeholder="Phone number"
+                  suffix={<FaPhone />}
+
+                  aria-invalid={errors['phone'] ? true : false}
+                />
+
+
+              )}
+            />
+
+            {
+              errors['phone'] && <p className='text-red-600 text-sm px-1' role='alert'>{errors['phone']?.message as string}</p>
+            }
+
+            <Controller
+              name={'address'}
+              control={control}
+              rules={{
+                required: "Address is required",
+              }}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  className='my-2'
+                  size="large"
+                  placeholder="Enter your address"
+                  suffix={<MdHomeWork />}
+
+                  aria-invalid={errors['address'] ? true : false}
+                />
+
+
+              )}
+            />
+
+            {
+              errors['address'] && <p className='text-red-600 text-sm px-1' role='alert'>{errors['address']?.message as string}</p>
+            }
+            <Controller
               name={'password'}
               control={control}
               rules={{
@@ -141,7 +197,7 @@ function page() {
                   value: 8,
                   message: "Password must have at least 8 characters"
                 },
-                
+
               }}
               render={({ field }) => (
                 <Input.Password

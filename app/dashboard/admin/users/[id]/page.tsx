@@ -10,6 +10,8 @@ interface model {
     email: string;
     password: string;
     role: string;
+    phone: string,
+    address: string,
 
 }
 function UsersForm() {
@@ -21,6 +23,8 @@ function UsersForm() {
         name: '',
         email: '',
         password: '',
+        phone: '',
+        address: '',
         role: '',
     })
 
@@ -60,6 +64,38 @@ function UsersForm() {
                         maxLength: {
                             value: 50,
                             message: "Email cannot exceed 50 characters",
+                        },
+                    }
+                },
+                {
+                    col: 12,
+                    label: 'Phone number',
+                    key: 'phone',
+                    placeholder: 'Enter User Phone',
+                    ChangeEv: () => { },
+                    type: 'input',
+                    required: true,
+                    validations: {
+                        required: "Phone is required",
+                        maxLength: {
+                            value: 20,
+                            message: "Number cannot exceed 20 characters",
+                        },
+                    }
+                },
+                {
+                    col: 12,
+                    label: 'Address',
+                    key: 'address',
+                    placeholder: 'Enter Your Address',
+                    ChangeEv: () => { },
+                    type: 'input',
+                    required: true,
+                    validations: {
+                        required: "Address is required",
+                        maxLength: {
+                            value: 50,
+                            message: "Address cannot exceed 50 characters",
                         },
                     }
                 },
@@ -125,7 +161,7 @@ function UsersForm() {
     }
     const getSingleRec = (id: number) => {
         setLoader(true)
-        GeneralCoreService(`users`).GetAll(null,id)
+        GeneralCoreService(`users`).GetAll(null, id)
             .then((res) => {
 
                 if (res?.status === 200) {

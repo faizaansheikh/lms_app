@@ -25,7 +25,7 @@ interface headerProps {
 function XHeader(props: headerProps) {
     const router = useRouter()
     const path = usePathname()
-    const { title, selectedRows, rowData, setColumns, column, setLoader, setRowData,rowsPerPage,page,getAllRec } = props
+    const { title, selectedRows, rowData, setColumns, column, setLoader, setRowData, rowsPerPage, page, getAllRec } = props
     const [opt, setOpt] = useState([])
     const [rowVal, setRowVal] = useState('')
     const [colVal, setColVal] = useState('')
@@ -64,7 +64,7 @@ function XHeader(props: headerProps) {
     }
     const handleRemove = () => {
         setRowVal('')
-        setColVal('')
+        // setColVal('')
         getAllRec(page, rowsPerPage)
     }
 
@@ -113,10 +113,18 @@ function XHeader(props: headerProps) {
 
                     />
                 </span>
-                {rowVal && <span onClick={handleRemove}><CiCircleRemove size={30} className='cursor-pointer'/></span>}
+                {rowVal && <span onClick={handleRemove}><CiCircleRemove size={30} className='cursor-pointer' /></span>}
                 <span className='px-1'><XButton label='Search' Click={() => handleSearch()} /></span>
 
-                <span className='px-2'><XButton label='Add New' Click={() => handleAddNew()} /></span>
+                {
+                    title !== 'enrollment' &&
+                    title !== 'lesson_progress' && (
+                        <span className="px-2">
+                            <XButton label="Add New" Click={handleAddNew} />
+                        </span>
+                    )
+                }
+
 
 
 
