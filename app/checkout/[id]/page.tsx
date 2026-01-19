@@ -2,6 +2,7 @@
 import Payment from "@/app/components/Payment";
 import { GeneralCoreService } from "@/app/config/GeneralCoreService";
 import { getUser } from "@/app/utility";
+import { Select } from "antd";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FaLock, FaCcVisa, FaCcMastercard, FaCcAmex, FaCcDiscover } from "react-icons/fa";
@@ -12,15 +13,18 @@ export default function Checkout() {
     const searchParams = useSearchParams()
     const [record, setRecord] = useState<any>({})
     const [userDetails, setUserDetails] = useState<any>({})
+    const [installment, setInstallment] = useState<any>(null)
     const handleHome = () => router.push('/home')
 
-   
+
     const getSingleRec = (id: any) => {
         GeneralCoreService('courses').GetAll(null, id)
             .then((res) => {
                 const data = res?.data
+                setRecord({ ...data, price: Number(data?.price) || null })
 
-                setRecord({ ...data, price: Number(data?.price) || null });
+
+
 
             }).catch((err) => console.log(err)).finally(() => { })
     }
@@ -30,9 +34,14 @@ export default function Checkout() {
             setUserDetails(user)
             getSingleRec(params?.id)
         }
-
-
     }, [])
+
+    useEffect(() => {
+        if (installment) {
+            const insPrice = installment === 2 ? record.price / 2 : record.price / 4
+            setRecord({ ...record, price: insPrice || null });
+        }
+    }, [installment])
     return (
         <div className="min-h-screen bg-gray-50 flex justify-center p-6">
             <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -68,8 +77,23 @@ export default function Checkout() {
                             <FaLock /> Secure, fast checkout with Link
                         </p>
 
-                        <Payment amount={record?.price} />
 
+                        {record?.title === 'Sterile Processing / Central Service Comprehensive Training' && <Select
+                            style={{ width: '100%', padding: '7px 7px', margin: '7px 0px' }}
+
+                            placeholder={'Installment Plan'}
+                            // defaultValue={['happy']}
+                            onChange={(value) => {
+                                setInstallment(value)
+                                // setColVal(value);
+                            }}
+                            options={[
+                                { label: '2 Installments', value: 2 },
+                                { label: '4 Installments', value: 4 },
+                            ]}
+
+                        />}
+                        <Payment amount={record?.price} />
                     </div>
 
 

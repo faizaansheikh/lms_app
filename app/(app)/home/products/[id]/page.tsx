@@ -68,19 +68,7 @@ function page() {
         const userInfo = localStorage.getItem('userInfo')
         if (userInfo) {
             router.push(`/checkout/${Number(searchParams?.get('q'))}`)
-            // setLoading(true)
-            // const coursId = Number(searchParams?.get('q')) || null
-            // const user = JSON.parse(userInfo);
-            // let payload = {
-            //     user_id: user?.id,
-            //     course_id: coursId,
-            // }
-            // GeneralCoreService('enrollment').Save(payload)
-            //     .then((res) => {
 
-            //         console.log(res?.data);
-            //         router.back()
-            //     }).catch((err) => console.log(err)).finally(() => setLoading(false))
         } else {
             message.error('You need to sign in first to enroll in this course!')
         }

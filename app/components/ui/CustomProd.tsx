@@ -1,23 +1,37 @@
+import { message } from 'antd';
 import Image from 'next/image'
+import { useRouter, useSearchParams } from 'next/navigation';
 import { FaFacebookF } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { FaTiktok } from "react-icons/fa6";
-function Btn({ title }: any) {
-    return <button className='bg-primary px-9 py-3 text-white cursor-pointer '>
+function Btn({ title,click }: any) {
+    return <button className='bg-primary px-9 py-3 text-white cursor-pointer ' onClick={click}>
         {title}
     </button>
 }
 function CustomProd() {
+    const searchParams = useSearchParams()
+    const router = useRouter()
+    const handleEnrollment = () => {
+
+        const userInfo = localStorage.getItem('userInfo')
+        if (userInfo) {
+            router.push(`/checkout/${Number(searchParams?.get('q'))}`)
+
+        } else {
+            message.error('You need to sign in first to enroll in this course!')
+        }
+    }
     return (
-        <div className='bg-gray-100 w-full h-auto px-12 lg:px-62 '>
+        <div className='bg-gray-100 w-full h-auto px-12 lg:px-62 mt-12'>
             {/* start */}
             <div className=' flex flex-col md:items-center justify-center lg:px-18 pt-20'>
                 <p className='text-4xl lg:text-6xl py-4 md:text-center leading-snug'>Sterile Processing / Central <br /> Service Comprehensive Training Course</p>
                 <p className='py-3'>Sat, Feb 07  |  Secaucus</p>
                 <p className='text-sm font-lighter py-4 mb-2'>Sterile Processing Technician Certification Course <br />
                     Launch Your Healthcare Career in Just 8 Weeks</p>
-                <Btn title='RSVP' />
+                <Btn title='RSVP' click={handleEnrollment}/>
                 {/* end */}
 
                 {/* start */}
@@ -146,7 +160,7 @@ function CustomProd() {
                     <br />
                     <br />
 
-                    <Btn title='RSVP' />
+                    <Btn title='RSVP' click={handleEnrollment}/>
                     <br />
                     <br />
                     <br />
@@ -163,7 +177,7 @@ function CustomProd() {
 
                         Indiana, USA<br />
 
-                       Italien Techsol LLC <br />
+                        Italien Techsol LLC <br />
                     </p>
 
 
