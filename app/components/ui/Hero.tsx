@@ -41,7 +41,7 @@ const Hero = () => {
               />
 
               {/* Optional overlay for darkening the image */}
-              <div className="absolute top-0 left-0 w-full h-full bg-black/40 z-10"></div>
+              <div className="absolute top-0 left-0 w-full h-[330px] md:h-full bg-black/40 z-10"></div>
 
               {/* Content over the image */}
               <div className="absolute top-0 left-0  w-full h-full flex flex-col justify-center items-center text-white px-4 z-20" data-aos='fade-right'>

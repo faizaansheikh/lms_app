@@ -62,13 +62,13 @@ function page() {
 
 
       </div>
-      <div className='bg-[] w-full h-screen flex flex-col justify-center items-center '>
+      <div className='bg-[] w-full my-2 flex flex-col justify-center items-center '>
 
-        <div className='w-[500px] p-6 rounded-[16px] bg-white/10 backdrop-blur-md border-2 border-black/30 shadow-2xl'>
-          <h2 className='text-start text-4xl mb-6 mt-4'>
-            Welcome to XYZ <br /> Academy
+        <div className='mx-4 md:w-[500px] p-6 rounded-[16px] bg-white/10 backdrop-blur-md border-2 border-black/30 shadow-2xl'>
+          <h2 className='text-start text-4xl mb-4 mt-4'>
+            Welcome to Chrissy Medical Academy
           </h2>
-          <p className='mb-4 '>
+          <p className='mb-2 '>
             Create your account
           </p>
           {/* <h2 className='text-white my-2 text-2xl'>Login</h2> */}
