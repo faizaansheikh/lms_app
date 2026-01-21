@@ -46,7 +46,7 @@ function page() {
     router.push('/auth/login')
   }
   return (
-    <div className='bg-[] w-full h-screen flex justify-center items-center' style={{ backgroundColor: '#F8F8F8' }}>
+    <div className='bg-[] w-full my-5 md:mt-0 flex justify-center items-center' style={{ backgroundColor: '#F8F8F8' }}>
 
       <div className='hidden md:flex relative w-full h-screen '>
         {/* Image */}
