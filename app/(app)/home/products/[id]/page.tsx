@@ -104,7 +104,7 @@ function page() {
                             </h1>
                             <p className="text-xl md:text-3xl mt-2 wrap-break-word"> {record?.description}</p>
                             <div className="mt-4 flex justify-center">
-                                <XButton Click={handleEnrollment} icon={<IoIosCart />} label={`Enroll in course for ${record?.price}`} />
+                                <XButton Click={handleEnrollment} icon={<IoIosCart />} label={`Enroll in course for ${record?.price}$`} />
                             </div>
                         </div>
                     </div>

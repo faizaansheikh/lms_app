@@ -41,7 +41,7 @@ function ProductCard(props: any) {
                         {product?.author}
                     </span>
                     <span className="text-primary font-bold text-lg">
-                        {product?.price}
+                        {product?.price}$
                     </span>
                 </div>
             </div>
