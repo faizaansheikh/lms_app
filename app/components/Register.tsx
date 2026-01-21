@@ -49,7 +49,7 @@ function Register(props: registerProps) {
 
                 if (res?.status === 200) {
                     const cols: any = res?.data?.data[0]
-                    const { lessons, answers, questions, password, ...othersCols } = cols
+                    const { lessons, answers, questions, password, description, ...othersCols } = cols
                     setColumn(othersCols ? Object.keys(othersCols) : [])
                     setRowData([...res?.data?.data])
                     setTotalCount(Number(res?.data?.totalRecords))
@@ -117,16 +117,16 @@ function Register(props: registerProps) {
 
 
                 <div className='w-full h-[70px] bg-gray-200 sticky top-0 z-20' >
-                    <XHeader 
-                    title={formName || ''} 
-                    setLoader={setLoader}
-                    selectedRows={selectedRow} 
-                    rowData={rowData} setRowData={setRowData} 
-                    setColumns={setColumn} 
-                    column={column} 
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    getAllRec={getAllRec}
+                    <XHeader
+                        title={formName || ''}
+                        setLoader={setLoader}
+                        selectedRows={selectedRow}
+                        rowData={rowData} setRowData={setRowData}
+                        setColumns={setColumn}
+                        column={column}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        getAllRec={getAllRec}
                     />
                 </div>
                 <div className='w-full '>

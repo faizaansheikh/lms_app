@@ -80,7 +80,7 @@ function Mylookup(props: lookup) {
     }
 
     useEffect(() => {
-        if (selectedRows.length > 0) {
+        if (selectedRows?.length > 0) {
             const arr = selectedRows.map((x: any) => x._id)
             setInputVal(arr?.join(', '))
         }
@@ -89,7 +89,7 @@ function Mylookup(props: lookup) {
     useEffect(() => {
         // debugger
         if (params.id !== 'new') {
-            const result = vals.map((id: any) => ({ _id: id }));
+            const result = vals?.map((id: any) => ({ _id: id }));
             setSelectedRows(result)
         }
     }, [vals])

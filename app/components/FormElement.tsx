@@ -11,6 +11,7 @@ import XUpload from './XUpload';
 import CustomLookup from './CustomLookup';
 import LookupInput from './CustomLookup';
 import Mylookup from './Mylookup';
+import XTextarea from './XTextarea';
 interface FormElems {
     elements: any,
     setModel: any,
@@ -47,6 +48,18 @@ function FormElement(props: FormElems) {
             case 'input':
                 return <>
                     <XInput
+                        value={x.key}
+                        control={control}
+                        validations={x.validations}
+                        placeholder={x.placeholder}
+                        errors={errors}
+                        disable={x.disable}
+                    />
+
+                </>
+            case 'textarea':
+                return <>
+                    <XTextarea
                         value={x.key}
                         control={control}
                         validations={x.validations}
