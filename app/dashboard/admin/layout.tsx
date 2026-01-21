@@ -1,7 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { RxDashboard } from "react-icons/rx";
-import { FaUsers } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
 import { MdOutlineLightMode } from "react-icons/md";
 import { IoMoon } from "react-icons/io5";
@@ -11,6 +10,15 @@ import { Popover } from 'antd';
 import { useTheme } from 'next-themes';
 import { GrBladesVertical } from "react-icons/gr";
 import { removeAuthToken } from '@/app/components/authToken';
+import { CiViewTable } from "react-icons/ci";
+import { FaUsers } from "react-icons/fa";
+import { MdOutlinePlayLesson } from "react-icons/md";
+import { GiProgression } from "react-icons/gi";
+import { RiAccountBox2Fill } from "react-icons/ri";
+import { SiQuizlet } from "react-icons/si";
+import { MdReviews } from "react-icons/md";
+import { GrCertificate } from "react-icons/gr";
+import { IoIosArrowRoundForward } from "react-icons/io";
 function page({
     children,
 }: Readonly<{
@@ -36,47 +44,47 @@ function page({
         },
         {
             label: 'Courses',
-            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
+            icon: (s: number, c: string) => <MdOutlinePlayLesson size={s} color={c} />
         },
         {
             label: 'Course Details',
-            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
+            icon: (s: number, c: string) => <IoIosArrowRoundForward size={s} color={c} />
         },
-        
+
         {
             label: 'Lessons',
-            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
+            icon: (s: number, c: string) => <IoIosArrowRoundForward size={s} color={c} />
         },
         {
             label: 'Add lessons in courses',
-            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
+            icon: (s: number, c: string) => <IoIosArrowRoundForward size={s} color={c} />
         },
         {
             label: 'Progress',
-            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
+            icon: (s: number, c: string) => <GiProgression size={s} color={c} />
         },
         {
             label: 'Enrollment',
-            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
+            icon: (s: number, c: string) => <RiAccountBox2Fill size={s} color={c} />
         },
         {
             label: 'Quiz',
-            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
+            icon: (s: number, c: string) => <SiQuizlet size={s} color={c} />
         },
         {
             label: 'Questions',
-            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
+            icon: (s: number, c: string) => <SiQuizlet size={s} color={c} />
         },
         {
             label: 'Reviews',
-            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
+            icon: (s: number, c: string) => <MdReviews size={s} color={c} />
         },
         {
             label: 'Certificate',
-            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
+            icon: (s: number, c: string) => <GrCertificate size={s} color={c} />
         }
 
-        
+
     ]
     const handleTheme = (theme: string) => {
         setTheme(theme)
@@ -113,16 +121,21 @@ function page({
             router.push('/dashboard/admin/questions')
         } else if (label === 'Course Details') {
             router.push('/dashboard/admin/events')
-        }else if (label === 'Reviews') {
+        } else if (label === 'Reviews') {
             router.push('/dashboard/admin/reviews')
         }
         return
     }
     const handleLogout = () => {
-        localStorage.removeItem('userInfo')
-        removeAuthToken()
-        router.push('/home')
+        const isBrowser = typeof window !== "undefined";
+        if (isBrowser) {
+            localStorage.removeItem('userInfo')
+            removeAuthToken()
+            router.push('/home')
+        }
+
     }
+
     return (
 
         <div className="flex h-screen overflow-hidden">

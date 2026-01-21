@@ -41,15 +41,8 @@ const Nav = () => {
     const showDrawer = () => setOpen(true);
     const onClose = () => setOpen(false);
 
-    // Scroll logic
-    useEffect(() => {
-        const handleScroll = () => {
-            // setIsScrolled(window.scrollY > 10);
-        };
-
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+ 
+    
 
     const menu = [
         { title: 'Home', link: '#home' },

@@ -123,7 +123,7 @@ export default function ReviewSection({ data, courseId, getApi }: any) {
                         data?.map((review: any, index: any) => (
                             <div
                                 key={index}
-                                className="bg-white rounded-2xl shadow p-5 space-y-2"
+                                className="bg-white rounded-2xl shadow-lg p-5 space-y-2 border border-gray-400"
                             >
                                 <div className="flex justify-between items-center">
                                     <h3 className="font-semibold">{review.name}</h3>
