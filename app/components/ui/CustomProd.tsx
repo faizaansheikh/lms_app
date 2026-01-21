@@ -1,3 +1,4 @@
+import { addLineBreaks } from '@/app/utility';
 import { message } from 'antd';
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -5,12 +6,14 @@ import { FaFacebookF } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { FaTiktok } from "react-icons/fa6";
-function Btn({ title,click }: any) {
+import ReviewSection from '../ReviewSection';
+function Btn({ title, click }: any) {
     return <button className='bg-primary px-9 py-3 text-white cursor-pointer ' onClick={click}>
         {title}
     </button>
 }
-function CustomProd() {
+function CustomProd({ desc, review, getApi }: any) {
+
     const searchParams = useSearchParams()
     const router = useRouter()
     const handleEnrollment = () => {
@@ -31,7 +34,7 @@ function CustomProd() {
                 <p className='py-3'>Sat, Feb 07  |  Secaucus</p>
                 <p className='text-sm font-lighter py-4 mb-2'>Sterile Processing Technician Certification Course <br />
                     Launch Your Healthcare Career in Just 8 Weeks</p>
-                <Btn title='RSVP' click={handleEnrollment}/>
+                <Btn title='RSVP' click={handleEnrollment} />
                 {/* end */}
 
                 {/* start */}
@@ -44,10 +47,11 @@ function CustomProd() {
                     />
                 </div>
                 <div className='md:mt-14 '>
+                    <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: addLineBreaks(desc) }} />
 
 
 
-                    <h4 className='text-2xl pt-12 pb-3'>Time & Location</h4>
+                    {/* <h4 className='text-2xl pt-12 pb-3'>Time & Location</h4>
                     <span className='text-[#605e5e]'>
                         <p>Feb 07, 2026, 8:00 AM – Mar 28, 2026, 2:30 PM <br /> Secaucus, 55 Meadowlands Pkwy, Secaucus, NJ 07094, USA</p>
                     </span>
@@ -131,9 +135,9 @@ function CustomProd() {
                         Hybrid Format: Choose in-person or online learning <br />
                         Affordable: Competitive pricing with payment plan options <br />
                         Job-Ready: Immediate eligibility for certification exam upon completion
-                    </span>
+                    </span> */}
 
-                    <br />
+                    {/* <br />
                     <br />
 
                     <span className=' text-[15px]'>
@@ -143,7 +147,7 @@ function CustomProd() {
                         Contact Information
                     </span>
                     <br />
-                    <br />
+                    <br /> */}
                     <span className='text-[15px]'>
                         Ernest Kruah, CEO <br />
                         Kruah Consultants LLC <br />
@@ -158,9 +162,12 @@ function CustomProd() {
                     <br />
                     <br />
                     <br />
-                    <br />
-
-                    <Btn title='RSVP' click={handleEnrollment}/>
+                   
+                    <Btn title='RSVP' click={handleEnrollment} />
+                      <br />
+                      <br />
+                      <br />
+                    <ReviewSection data={review} courseId={Number(searchParams?.get('q'))} getApi={getApi} />
                     <br />
                     <br />
                     <br />

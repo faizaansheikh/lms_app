@@ -13,17 +13,15 @@ function layout({
 
     return (
         <div className="flex flex-col min-h-screen">
-           
+
             <header className="sticky top-0 z-50">
                 <Nav />
             </header>
 
-         
+
             <main className="flex-1">
                 {children}
-            </main>
-
-           
+            </main>        
             <footer>
                 <Footer />
             </footer>

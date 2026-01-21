@@ -1,10 +1,11 @@
 'use client'
+import ReviewSection from '@/app/components/ReviewSection';
 import CustomProd from '@/app/components/ui/CustomProd';
 import Xloader from '@/app/components/ui/Xloader';
 import XButton from '@/app/components/XButton'
 import { GeneralCoreService } from '@/app/config/GeneralCoreService';
 import { useLessonContext } from '@/app/context/LessonContext';
-import { slugify } from '@/app/utility';
+import { addLineBreaks, slugify } from '@/app/utility';
 import { message, Spin } from 'antd';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
@@ -19,52 +20,25 @@ function page() {
     const searchParams = useSearchParams()
     const [record, setRecord] = useState<any>({})
     const [loading, setLoading] = useState<any>(false)
+    const [desc, setDesc] = useState<any>('')
+    const [review, setReview] = useState<any>([])
     const router = useRouter()
-    const handleVideoClick = () => {
-        const coursId = Number(searchParams?.get('q')) || null
-        // const slug = slugify(title) || ''
-        router.push(`/course/lectures?q=${coursId}`)
-    }
-    const arr = [
-        {
-            head: 'Introduction',
-            videos: [
-                {
-                    title: 'Welcome'
-                }
-            ]
-        },
-        {
-            head: 'First Aide Video',
-            videos: [
-                {
-                    title: 'First Aide Video #1 (56:37)',
-                },
-                {
-                    title: 'First Aide Video #2 (64:15)',
-                }
-            ]
-        },
-        {
-            head: 'Final Exam',
-            videos: [
-                {
-                    title: 'Final Exam',
-                },
 
-            ]
-        }
-    ]
     const getSingleRec = (id: number) => {
-        GeneralCoreService('courses').GetAll(null,id)
+        GeneralCoreService('courses/details').GetAll(null, id)
             .then((res) => {
-                setRecord(res?.data);
+                if (res) {
+                    const data = res?.data?.data
+                    setRecord(data);
+                    setReview(data?.reviews)
+                    setDesc(data?.events[0]?.description);
+                }
 
             }).catch((err) => console.log(err)).finally(() => { })
     }
 
-    const handleEnrollment = () => {
-        
+    const handleCheckOut = () => {
+
         const userInfo = localStorage.getItem('userInfo')
         if (userInfo) {
             router.push(`/checkout/${Number(searchParams?.get('q'))}`)
@@ -85,7 +59,7 @@ function page() {
 
     return (
 
-        record?._id === 15 ? <CustomProd /> :
+        record?._id === 15 ? <CustomProd desc={desc} review={review} getApi={getSingleRec}/> :
             <>
                 <section
                     className="relative h-150 w-full bg-cover bg-center"
@@ -104,15 +78,15 @@ function page() {
                             </h1>
                             <p className="text-xl md:text-3xl mt-2 wrap-break-word"> {record?.description}</p>
                             <div className="mt-4 flex justify-center">
-                                <XButton Click={handleEnrollment} icon={<IoIosCart />} label={`Enroll in course for ${record?.price}$`} />
+                                <XButton Click={handleCheckOut} icon={<IoIosCart />} label={`Enroll in course for ${record?.price}$`} />
                             </div>
                         </div>
                     </div>
                 </section>
 
-
+                {/* 
                 <div className='bg-prdimary w-full h-full mt-18  px-12 lg:px-52 '>
-                    {/* instructor */}
+                  
                     <p className='text-3xl'>Your Course Instructor</p>
                     <div className='flex gap-6 md:gap-12 w-full h-full mt-6 mb-6 flex-wrap md:flex-nowrap'>
 
@@ -140,10 +114,10 @@ function page() {
                         </div>
                     </div>
 
-                    {/* curriculam */}
+                   
                     <div className='flex w-full h-full mt-14 md:mt-22'>
                         <div className='bg-grdeen-300 w-full h-full'>
-                            {/* <p className='text-3xl py-3' onClick={() => handleVideoClick()}> Course Curriculum</p> */}
+                         
 
 
                             {
@@ -151,7 +125,7 @@ function page() {
                                     <div key={i} className='flex justify-between items-center rounded-lg p-2 bg-gray-200 my-2' >
 
                                         <p className='flex items-center gap-2 justify-center pl-1'><span><FaFileAlt /></span>{x?.title}</p>
-                                        {/* <button className='bg-red-400 px-4 py-1 text-white rounded-lg cursor-pointer'>Start</button> */}
+                                        
                                     </div>
                                 ))
                             }
@@ -160,22 +134,18 @@ function page() {
 
 
 
-                            {/* {arr.map((x, i) => (
-                                <div className=' w-full h-full my-4 text-sm md:text-[16px]' key={i}>
-                                    <div className='bg-gray-300 w-full p-4 font-bold rounded-t-lg'>{x.head}</div>
-                                    {x?.videos?.map((v, ind) => (
-                                        <div onClick={() => handleVideoClick(v?.title)} className='flex justify-between items-center rounded-b-lg p-2 bg-gray-200 cursor-pointer hover:bg-red-200' key={ind}>
-
-                                            <p className='flex items-center gap-2 justify-center pl-1'><span><FaFileAlt /></span>{v.title}</p>
-                                            <button className='bg-red-400 px-4 py-1 text-white rounded-lg cursor-pointer'>Start</button>
-                                        </div>
-                                    ))}
-                                </div>
-                            ))} */}
+                           
                         </div>
-                        {/* <div className='bg-green-600 w-full h-full'></div> */}
+                       
                     </div>
+                </div> */}
+
+
+                <div className='md:mt-14 bg-prdimary w-full h-full mt-0  px-12 lg:px-52'>
+                    <div className="prose max-w-none mb-2 md:mb-4" dangerouslySetInnerHTML={{ __html: addLineBreaks(desc) }} />
                 </div>
+
+                <ReviewSection data={review} courseId={Number(searchParams?.get('q'))} getApi={getSingleRec}/>
             </>
 
 

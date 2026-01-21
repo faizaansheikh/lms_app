@@ -4,12 +4,21 @@ import React, { useEffect, useRef } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { FiBold, FiItalic, FiList } from "react-icons/fi";
-
+import BulletList from '@tiptap/extension-bullet-list';
+import OrderedList from '@tiptap/extension-ordered-list';
+import ListItem from '@tiptap/extension-list-item';
+import Paragraph from '@tiptap/extension-paragraph';
 const TiptapEditor = ({ value, onChange }: any) => {
     const isContentLoaded = useRef(false); // 👈 IMPORTANT
 
     const editor = useEditor({
-        extensions: [StarterKit],
+        extensions: [
+            StarterKit,
+            BulletList,
+            OrderedList,
+            ListItem,
+            Paragraph,
+        ],
         immediatelyRender: false,
         onUpdate({ editor }) {
             onChange(editor.getHTML());
@@ -18,7 +27,7 @@ const TiptapEditor = ({ value, onChange }: any) => {
 
     // ✅ SET CONTENT ONLY ONCE
     useEffect(() => {
-       
+
         if (editor && value && !isContentLoaded.current) {
             editor.commands.setContent(value);
             isContentLoaded.current = true;

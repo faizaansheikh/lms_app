@@ -9,6 +9,7 @@ import Image from "next/image";
 import { UserOutlined } from '@ant-design/icons';
 import { removeAuthToken } from "../authToken";
 import XButton from "../XButton";
+import Link from "next/link";
 const Nav = () => {
     const router = useRouter()
     const [open, setOpen] = useState(false);
@@ -51,28 +52,13 @@ const Nav = () => {
     }, []);
 
     const menu = [
-        { title: 'About Us', link: '#about' },
+        { title: 'Home', link: '#home' },
         { title: 'Programs', link: '#programs' },
         { title: 'Blogs', link: '#blogs' },
         { title: 'Contact Us', link: '#contact' }
     ];
 
-    const handleLinks = (x: any) => {
-        if (x.title === 'Careers') {
-            router.push('/careers')
-        } else if (x.title === 'Home') {
-            router.replace('/#home')
-        } else if (x.title === 'About Us') {
-            router.replace('/#about')
-        } else if (x.title === 'Partners') {
-            router.replace('/#partner')
-        } else if (x.title === 'Products') {
-            router.replace('/#products')
-        } else if (x.title === 'Contact Us') {
-            router.replace('/#contact')
-        }
-
-    }
+   
     return (
         <>
             <div
@@ -92,15 +78,15 @@ const Nav = () => {
 
                 <ul className="hidden md:flex items-center justify-center" >
                     {menu.map((x, i) => (
-                        <a href={x.link} key={i}>
+                        <Link href={x.link} key={i}>
                             <li
                                 className={`list-none px-4 text-[17px] relative nav-list cursor-pointer text-grey text-gray-800 cursor-pointer transition-all duration-400 hover:text-primary
                                 }`}
-                                onClick={() => handleLinks(x)}
+                            // onClick={() => handleLinks(x)}
                             >
                                 {x.title}
                             </li>
-                        </a>
+                        </Link >
 
                     ))}
                     {userrole === 'student' ?
@@ -161,15 +147,15 @@ const Nav = () => {
             >
                 <ul className="flex flex-col">
                     {menu.map((x, i) => (
-                        <a href={x.link} key={i}>
+                        <Link href={x.link} key={i}>
                             <li
-
+                                onClick={onClose}
                                 className="list-none px-4 py-[6px] my-2 text-black text-[17px] cursor-pointer"
                             >
                                 {x.title}
                                 <hr />
                             </li>
-                        </a>
+                        </Link>
                     ))}
                 </ul>
             </Drawer>

@@ -68,9 +68,15 @@ function page({
             icon: (s: number, c: string) => <FaUsers size={s} color={c} />
         },
         {
+            label: 'Reviews',
+            icon: (s: number, c: string) => <FaUsers size={s} color={c} />
+        },
+        {
             label: 'Certificate',
             icon: (s: number, c: string) => <FaUsers size={s} color={c} />
         }
+
+        
     ]
     const handleTheme = (theme: string) => {
         setTheme(theme)
@@ -107,6 +113,8 @@ function page({
             router.push('/dashboard/admin/questions')
         } else if (label === 'Course Details') {
             router.push('/dashboard/admin/events')
+        }else if (label === 'Reviews') {
+            router.push('/dashboard/admin/reviews')
         }
         return
     }

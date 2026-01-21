@@ -23,19 +23,9 @@ function Courses({ allProd }: any) {
     useEffect(() => {
         getCourses()
     }, [])
-    const arr = [
-
-        {
-            img: '/noimg.png',
-            title: 'Sterile Processing / Central Service Comprehensive Training',
-            desc: 'Sterile Processing Technician Certification Course Launch Your Healthcare Career in Just 8 Weeks',
-            author: 'Brandum Marcom',
-            price: '$500',
-        },
-       
-    ]
+   
     return (
-        <div className='mt-12'>
+        <div className='mt-12 scroll-mt-24' id='programs'>
             {!allProd && <p className='text-2xl md:text-3xl text-center'>{course?.length ? "Featured Courses" :'No courses available right now'}</p>}
             <div className='my-8 mx-8 md:mx-12 lg:mx-38'>
                 <Row justify="center" gutter="2rem">

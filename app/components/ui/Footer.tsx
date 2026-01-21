@@ -26,7 +26,7 @@ function Footer() {
 
   }, [])
   return (
-    <div>
+    <div id="contact">
       <div
         style={{ backgroundColor: '#122f60' }}
         className="w-full h-auto text-white py-12   flex flex-col md:flex-row flex-wrap justify-around items-start pl-12 md:pl-0"

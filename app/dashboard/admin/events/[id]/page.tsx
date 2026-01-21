@@ -17,12 +17,12 @@ function Course_Desc_Form() {
     const params = useParams()
     const router = useRouter()
     const [loader, setLoader] = useState(false)
-    const [course, setCourse] = useState<any>(null)
+    const [course, setCourse] = useState<any>([])
     const [description, setDescription] = useState("");
     const [model, setModel] = useState<model>({
         test: ''
     })
-    console.log(course);
+
 
     const elems = [
         {
@@ -111,6 +111,7 @@ function Course_Desc_Form() {
             <TiptapEditor
                 value={description}
                 onChange={setDescription}
+                 className="min-h-[250px] p-4 prose prose-sm max-w-none"
             />
 
         </div>

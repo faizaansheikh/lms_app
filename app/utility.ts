@@ -32,3 +32,14 @@ export const getUser = () => {
     }
     return null
 }
+export function addLineBreaks(html: any) {
+    if (!html) return "";
+
+    // H2 se pehle <br>
+    let updated = html.replace(/(<strong>)/gi, "<br/>$1");
+
+    // H3 se pehle <br>
+    updated = updated.replace(/(<strong>)/gi, "<br/>$1");
+
+    return updated;
+}

@@ -1,6 +1,7 @@
 'use client'
 
 import { getAuthToken } from "@/app/components/authToken";
+import BlogSection from "@/app/components/ui/BlogSection";
 import Courses from "@/app/components/ui/Courses";
 import Hero from "@/app/components/ui/Hero";
 import { useEffect } from "react";
@@ -20,6 +21,7 @@ export default function Page() {
 
       <Hero />
       <Courses />
+      <BlogSection/>
 
     </div>
   );
