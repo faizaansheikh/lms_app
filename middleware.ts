@@ -6,8 +6,8 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
 
   const decoded = token ? (jwt.decode(token) as any) : null;
-  if(pathname === '/'){
-      return NextResponse.redirect(new URL("/home", request.url));
+  if (pathname === '/') {
+    return NextResponse.redirect(new URL("/home", request.url));
   }
   if (token && (pathname === "/" || pathname === "/home" || pathname === "/login")) {
     // Redirect based on role
@@ -17,7 +17,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard/client", request.url));
   }
 
- 
+  if (!token && pathname.startsWith("/checkout")) {
+    return NextResponse.redirect(new URL("/home", request.url));
+  }
+
   if (!token && pathname.startsWith("/dashboard")) {
     return NextResponse.redirect(new URL("/home", request.url));
   }
@@ -30,7 +33,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard/admin", request.url));
   }
 
-  
+
   if (decoded?.exp && decoded.exp * 1000 < Date.now()) {
     return NextResponse.redirect(new URL("/home", request.url));
   }

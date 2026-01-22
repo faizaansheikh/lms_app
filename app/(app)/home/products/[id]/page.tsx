@@ -56,14 +56,16 @@ function page() {
     if (loading) {
         return <Xloader />
     }
-
+    console.log(record.thumbnail)
     return (
 
-        record?._id === 15 ? <CustomProd desc={desc} review={review} getApi={getSingleRec}/> :
+        record?._id === 15 ? <CustomProd desc={desc} review={review} getApi={getSingleRec} /> :
             <>
                 <section
                     className="relative h-150 w-full bg-cover bg-center"
-                    style={{ backgroundImage: "url('/product.jpg')" }}
+                    style={{
+                        backgroundImage: `url(${record?.thumbnail || "/product.jpg"})`
+                    }}
                 >
                     {/* Dark overlay */}
                     <div className="absolute inset-0 bg-black/60" />
@@ -145,7 +147,7 @@ function page() {
                     <div className="prose max-w-none mb-2 md:mb-4" dangerouslySetInnerHTML={{ __html: addLineBreaks(desc) }} />
                 </div>
 
-                <ReviewSection data={review} courseId={Number(searchParams?.get('q'))} getApi={getSingleRec}/>
+                <ReviewSection data={review} courseId={Number(searchParams?.get('q'))} getApi={getSingleRec} />
             </>
 
 

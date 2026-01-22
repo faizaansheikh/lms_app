@@ -59,9 +59,9 @@ function Register(props: registerProps) {
             }).catch((err: any) => console.log('error', err)).finally(() => setLoader(false))
 
     }
-    const handleDeleteRec = (id: number) => {
+    const handleDeleteRec = (x: any) => {
         setOpenModal(true)
-        setDelId(id)
+        setDelId(x?._id)
 
     }
     const deleteRec = () => {
@@ -130,25 +130,29 @@ function Register(props: registerProps) {
                     />
                 </div>
                 <div className='w-full '>
-                    {
-                        !loader ? <table className='w-full'>
-                            <thead className=''>
+                    {rowData.length ?
+                        loader ?
+                            <div className="h-[400px] z-10 flex items-center justify-center bg-black/0 rounded-xl" >
+                                <Spin size="large" />
+                            </div >
+                            : <table className='w-full'>
+                                <thead className=''>
 
-                                <tr className='bg-gray-300' >
+                                    <tr className='bg-gray-300' >
 
-                                    {
-                                        column?.map((x, i) => (
-                                            <td className={`py-6 text-[] font-bold text-[14px] ${i === 0 ? 'pl-5' : ''}`} key={i}>{x}</td>
-                                        ))
-                                    }
-                                    <td className='text-[] text-[14px] font-bold '>Actions</td>
+                                        {
+                                            column?.map((x, i) => (
+                                                <td className={`py-6 text-[] font-bold text-[14px] ${i === 0 ? 'pl-5' : ''}`} key={i}>{x}</td>
+                                            ))
+                                        }
+                                        <td className='text-[] text-[14px] font-bold '>Actions</td>
 
-                                </tr>
+                                    </tr>
 
-                            </thead>
-                            <tbody>
-                                {
-                                    rowData.map((x: any, i) => (
+                                </thead>
+                                <tbody>
+
+                                    {rowData.map((x: any, i) => (
                                         <tr style={{ backgroundColor: selectedRow.includes(x) ? '#fbd06d' : '' }} className={`bg-secondary border-b-1 border-[lightgrey] `} key={i}>
 
                                             {
@@ -158,21 +162,31 @@ function Register(props: registerProps) {
                                             }
 
                                             <td className='text-[14px] text-start py-3'>
-                                                <span className='flex gap-2 items-center r'>
-                                                    <CiEdit onClick={() => handleUpdateRec(x)} size={20} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />
-                                                    <MdDeleteOutline onClick={() => handleDeleteRec(x?._id)} size={18} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />
+                                                <span className='flex gap-2 items-center '>
+                                                    {formName !== 'enrollment' && <CiEdit onClick={() => handleUpdateRec(x)} size={20} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />}
+                                                    <MdDeleteOutline onClick={() => handleDeleteRec(x)} size={18} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />
 
 
                                                 </span>
                                             </td>
                                         </tr>
-                                    ))
-                                }
-                            </tbody>
-                        </table> :
-                            <div className="h-[400px] z-10 flex items-center justify-center bg-black/0 rounded-xl" >
-                                <Spin size="large" />
-                            </div >
+                                    ))}
+
+
+
+
+                                </tbody>
+                            </table>
+                        :
+                        <div className='flex items-center justify-center m-12'>
+
+                            <Image
+                                src='/noitems.jpg'
+                                alt='no items'
+                                width={500}
+                                height={500}
+                            />
+                        </div>
                     }
 
                 </div>

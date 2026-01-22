@@ -30,7 +30,7 @@ function CheckoutForm({ amount }: any) {
       }
       GeneralCoreService('enrollment').Save(payload)
         .then((res) => {
-          router.back()
+          router.push('/dashboard/client')
         }).catch((err) => console.log(err)).finally(() => setLoading(false))
     } else {
       message.error('You need to sign in first to enroll in this course!')
