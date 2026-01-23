@@ -130,12 +130,11 @@ function Register(props: registerProps) {
                     />
                 </div>
                 <div className='w-full '>
-                    {rowData.length ?
-                        loader ?
+                    {loader  ?                      
                             <div className="h-[400px] z-10 flex items-center justify-center bg-black/0 rounded-xl" >
                                 <Spin size="large" />
                             </div >
-                            : <table className='w-full'>
+                            :  rowData?.length > 0  ? <table className='w-full'>
                                 <thead className=''>
 
                                     <tr className='bg-gray-300' >

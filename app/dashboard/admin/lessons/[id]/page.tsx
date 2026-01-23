@@ -123,13 +123,14 @@ function LessonsForm() {
 
     useEffect(() => {
         if (params.id !== 'new') {
-            console.log('id ');
+          
 
             getSingleRec(Number(params.id))
         }
     }, [])
     return (
         <div>
+    
             <FormElement title="Lessons Form" save={handleSave} setModel={setModel} model={model} elements={elems} loading={loader} />
         </div>
     )

@@ -144,7 +144,7 @@ function CoursesForm() {
     }
 
     const handleUpdate = async (values: any) => {
-        console.log(lessons)
+       
 
         try {
             setLoader(true);

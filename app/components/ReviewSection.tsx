@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import Xloader from "./ui/Xloader";
 import { getUser } from "../utility";
 
-export default function ReviewSection({ data, courseId, getApi }: any) {
+export default function ReviewSection({ data, courseId, getApi, ui }: any) {
     const [loader, setLoader] = useState(false)
     const [reviews, setReviews] = useState([
         {
@@ -59,9 +59,9 @@ export default function ReviewSection({ data, courseId, getApi }: any) {
     };
 
     return (
-        <div className="md:max-w-3xl mx-auto p-6 space-y-8">
+        <div className={`w-full  ${ui ? "" : "md:px-62 p-6"} mx-auto  space-y-8`}>
             {/* Review Form */}
-            <div className="bg-white rounded-2xl shadow p-6">
+            <div className="bg-white rounded-2xl shadow border border-gray-300 p-6">
                 <h2 className="text-xl font-semibold mb-4">Leave a Review</h2>
 
                 <form onSubmit={handleSubmit} className="space-y-4">

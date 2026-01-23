@@ -93,7 +93,7 @@ function ReviewsForm() {
                 ...values,
                 course_id: course[0]
             }
-            console.log(payload)
+         
             setLoader(true)
             GeneralCoreService('reviews').Save(payload, params?.id === 'new' ? '' : params?.id)
                 .then((res) => {
@@ -133,7 +133,7 @@ function ReviewsForm() {
 
     useEffect(() => {
         if (params.id !== 'new') {
-            console.log('id ');
+         
 
             getSingleRec(Number(params.id))
         }

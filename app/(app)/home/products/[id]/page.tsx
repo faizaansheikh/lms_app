@@ -56,7 +56,7 @@ function page() {
     if (loading) {
         return <Xloader />
     }
-    console.log(record.thumbnail)
+   
     return (
 
         record?._id === 15 ? <CustomProd desc={desc} review={review} getApi={getSingleRec} /> :
@@ -143,8 +143,8 @@ function page() {
                 </div> */}
 
 
-                <div className='md:mt-14 bg-prdimary w-full h-full mt-0  px-12 lg:px-52'>
-                    <div className="prose max-w-none mb-2 md:mb-4" dangerouslySetInnerHTML={{ __html: addLineBreaks(desc) }} />
+                <div className='md:my-6 bg-prdimary w-full h-full mt-0  px-12 md:px-52'>
+                    <div className="prose max-w-none mb-2 px-0 md:px-16 md:mb-4  md:text-xl" dangerouslySetInnerHTML={{ __html: addLineBreaks(desc) }} />
                 </div>
 
                 <ReviewSection data={review} courseId={Number(searchParams?.get('q'))} getApi={getSingleRec} />

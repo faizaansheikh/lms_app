@@ -44,7 +44,7 @@ export default function VideoPlayer({ vimeoId, setComplete, videoDetails, update
         // playing={true}  
         //   playing
           controls
-          onRateChange={(rate) => console.log("Rate:", rate)}
+          // onRateChange={(rate) => console.log("Rate:", rate)}
           onEnded={handleEnded}
           onSeeking={handleSeek}
 

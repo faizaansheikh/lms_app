@@ -178,7 +178,7 @@ function UsersForm() {
 
     useEffect(() => {
         if (params.id !== 'new') {
-            console.log('id ');
+          
 
             getSingleRec(Number(params.id))
         }

@@ -96,7 +96,7 @@ const LookupInput: React.FC<LookupInputProps> = ({
 
         setInputValue(prev => (prev !== titles ? titles : prev));
     }, [selectedIds, rowData]);
-    console.log(inputValue)
+   
     return (
         <div className="relative w-full">
             {/* Input */}

@@ -37,7 +37,9 @@ function ProductCard(props: any) {
                 <div className="mt-8 flex items-center justify-between">
 
                     <span className="  px-0 rounded-lg text-lg hover:opacity-90 transition">
-                        <span className='bg-[#b9b6b6] border border-green-60 w-full h-full px-3 py-2 rounded-[100%] mr-2'>B</span>
+                        <span className='bg-[#b9b6b6] border border-green-60 w-full h-full px-3 py-2 rounded-[100%] mr-2'>
+                            {product?.author ? product?.author?.split('')[0]?.toUpperCase() : 'A'}
+                        </span>
                         {product?.author}
                     </span>
                     <span className="text-primary font-bold text-lg">

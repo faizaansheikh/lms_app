@@ -1,9 +1,6 @@
 
 'use client'
-import { FaRegCircle } from "react-icons/fa";
-import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { FaFileAlt } from "react-icons/fa";
-import { PiVideoBold } from "react-icons/pi";
+import  { useEffect,  useState } from 'react'
 import { IoHome } from "react-icons/io5";
 import { useRouter, useSearchParams } from "next/navigation";
 import { GoRepoLocked } from "react-icons/go";
@@ -66,7 +63,6 @@ function LessonDashboard(props: ld) {
         }
         GeneralCoreService('lesson_progress').Save(payload)
             .then((res) => {
-                console.log(res)
                 if (res?.status === 201) {
                     getApi(Number(searchParams?.get('q')))
                 }
@@ -116,10 +112,10 @@ function LessonDashboard(props: ld) {
                             {v.title}
                         </li>
                     ))}
-                    <li onClick={quiz?.locked ? () => { } : () => handleQuiz()} className={`list-none p-4 border-t border-b border-gray-400 flex items-center gap-3 text-sm ${quiz?.locked ? 'cursor-not-allowed bg-gray-300' : 'cursor-pointer hover:bg-red-300'} `}>
+                   {quiz && <li onClick={quiz?.locked ? () => { } : () => handleQuiz()} className={`list-none p-4 border-t border-b border-gray-400 flex items-center gap-3 text-sm ${quiz?.locked ? 'cursor-not-allowed bg-gray-300' : 'cursor-pointer hover:bg-red-300'} `}>
                         <span className=''>{quiz?.locked ? <GoRepoLocked size={20} className="text-primary mr-2" /> : <ImUnlocked size={20} className="text-primary mr-2" />}</span>
                         Final Exam
-                    </li>
+                    </li>}
                 </div>
 
                 <div className='w-full h-screen'>

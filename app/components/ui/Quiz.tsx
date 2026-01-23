@@ -96,7 +96,7 @@ const Quiz = ({ data,setShowQuiz }: any) => {
         handleEnrollment()
         router.back()
     }
-    console.log(result)
+   
 
     return (
         <>

@@ -47,7 +47,7 @@ function XHeader(props: headerProps) {
 
         } catch (err: any) {
             message.error('Error searching column!')
-            console.log(err)
+
         } finally {
             setLoader(false)
         }
@@ -97,7 +97,7 @@ function XHeader(props: headerProps) {
                     placeholder={'Select Column'}
                     // defaultValue={['happy']}
                     onChange={(value) => {
-                        console.log(value)
+                     
                         setColVal(value);
                     }}
                     options={[...opt]}

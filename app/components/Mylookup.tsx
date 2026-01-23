@@ -1,4 +1,4 @@
-import { Input } from 'antd'
+import { Input, Spin } from 'antd'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { CiViewTable } from "react-icons/ci";
@@ -7,6 +7,7 @@ import { GeneralCoreService } from '../config/GeneralCoreService';
 import CustomModal from './CustomModal';
 import { useParams } from 'next/navigation';
 import XPagination from './XPagination';
+import Image from 'next/image';
 
 interface lookup {
     display: any
@@ -25,6 +26,7 @@ function Mylookup(props: lookup) {
     const [column, setColumn] = useState<string[]>([])
     const [rowData, setRowData] = useState<any>([])
     const [selectedRows, setSelectedRows] = useState<any>([]);
+    const [loader, seLoader] = useState<any>(false);
 
     const [selectedRow, setSelectedRow] = useState<string[]>([])
     const [totalCount, setTotalCount] = useState<any>(null)
@@ -32,11 +34,12 @@ function Mylookup(props: lookup) {
     const [rowsPerPage, setRowsPerPage] = useState<any>(10)
 
     const getAllRec = (page: any, size: any) => {
+        seLoader(true)
         GeneralCoreService(formName).GetAll(null, '', page, size)
             .then((res) => {
                 if (res?.status === 200) {
                     const cols: any = res?.data?.data[0]
-                    const { lessons, answers, questions, password, ...othersCols } = cols
+                    const { lessons, answers, description, thumbnail, questions, password, ...othersCols } = cols
                     setColumn(othersCols ? Object.keys(othersCols) : [])
                     setRowData([...res?.data?.data])
                     setTotalCount(Number(res?.data?.totalRecords))
@@ -44,7 +47,7 @@ function Mylookup(props: lookup) {
 
 
             }).catch((err) => console.log(err))
-            .finally(() => { })
+            .finally(() => seLoader(false))
     }
 
     const handleLookup = () => {
@@ -157,12 +160,25 @@ function Mylookup(props: lookup) {
                                     </tr>
 
                                 </thead>
-                                <tbody>
-                                    {
-                                        rowData.map((x: any, i: number) => (
+                                {loader ? (
+                                    <tbody>
+                                        <tr>
+                                            <td colSpan={column.length + (multiple ? 1 : 0)}>
+                                                <div className="flex items-center justify-center m-12">
+                                                    {/* Loader */}
+                                                    <Spin />
+                                                    {/* <span className="animate-spin h-8 w-8 rounded-full border-4 border-gray-300 border-t-transparent" /> */}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                )
+                                    : rowData?.length > 0 ? <tbody>
+                                        {
+                                            rowData.map((x: any, i: number) => (
 
 
-                                            <tr onClick={() => multiple ? {} : handleRowClick(x)} className={`
+                                                <tr onClick={() => multiple ? {} : handleRowClick(x)} className={`
                                                     border-b border-[lightgrey]
                                                     cursor-pointer transition-colors
                                              bg-secondary hover:bg-red-200
@@ -170,26 +186,43 @@ function Mylookup(props: lookup) {
                                                 // : 'bg-secondary hover:bg-secondary/80'
                                             }
                                                 `} key={i}>
-                                                {multiple && <td className=' text-[14px] py-2 px-3'>
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={selectedRows.some((item: any) => item._id === x._id)}
-                                                        onChange={(e) =>
-                                                            handleCheckboxChange(x, e.target.checked)
-                                                        }
-                                                    />
-                                                </td>}
-                                                {
-                                                    column.map((z, ind) => (
-                                                        <td className=' text-[14px] py-2 px-3 cursor-pointer ' key={ind}>{x[z]}</td>
-                                                    ))
-                                                }
+                                                    {multiple && <td className=' text-[14px] py-2 px-3'>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedRows.some((item: any) => item._id === x._id)}
+                                                            onChange={(e) =>
+                                                                handleCheckboxChange(x, e.target.checked)
+                                                            }
+                                                        />
+                                                    </td>}
+                                                    {
+                                                        column.map((z, ind) => (
+                                                            <td className=' text-[14px] py-2 px-3 cursor-pointer ' key={ind}>{x[z]}</td>
+                                                        ))
+                                                    }
 
+                                                </tr>
+
+                                            ))
+                                        }
+                                    </tbody> :
+                                        <tbody>
+                                            <tr>
+                                                <td colSpan={column.length + (multiple ? 1 : 0)}>
+                                                    <div className="flex items-center justify-center ">
+                                                        <Image
+                                                            src="/noitems.jpg"
+                                                            alt="no items"
+                                                            width={500}
+                                                            height={400}
+                                                        />
+                                                    </div>
+                                                </td>
                                             </tr>
+                                        </tbody>
 
-                                        ))
-                                    }
-                                </tbody>
+                                }
+
                             </table>
                         </div>
 

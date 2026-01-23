@@ -39,7 +39,7 @@ function Lesson_progressForm() {
 
                     vals: params?.id !== 'new' ? params?.id : '',
                     getData: (data: any) => {
-                        console.log(data)
+                      
                         setCourse(data)
                     },
 
@@ -56,7 +56,7 @@ function Lesson_progressForm() {
 
                     vals: params?.id ? lessons : '',
                     getData: (data: any) => {
-                        console.log(data)
+                     
                         setLessons(data)
                     },
 
@@ -110,7 +110,7 @@ function Lesson_progressForm() {
             getSingleRec(Number(params.id))
         }
     }, [])
-    console.log(course,lessons);
+   
     
     return (
         <div>

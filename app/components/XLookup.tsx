@@ -75,7 +75,7 @@ function XLookup(props: lookup) {
     //     }
     // }, [params.id,valueField])
 
-    console.log('test...');
+   
 
     return (
         <>
