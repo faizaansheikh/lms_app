@@ -56,20 +56,20 @@ function LessonsForm() {
                         minLength: { value: 3, message: 'Min length at least 3' },
                     }
                 },
-                {
-                    col: 12,
-                    label: 'Quiz',
-                    key: 'quizId',
-                    placeholder: 'Select Quiz',
-                    type: 'lookup',
-                    multiple: false,
-                    formName: 'quiz',
-                    required: true,
-                    vals: '',
-                    getData: (data: any) => {
-                        console.log(data)
-                    },
-                },
+                // {
+                //     col: 12,
+                //     label: 'Quiz',
+                //     key: 'quizId',
+                //     placeholder: 'Select Quiz',
+                //     type: 'lookup',
+                //     multiple: false,
+                //     formName: 'quiz',
+                //     required: true,
+                //     vals: '',
+                //     getData: (data: any) => {
+                //         console.log(data)
+                //     },
+                // },
                 {
                     col: 12,
                     label: 'Lesson Type',
@@ -79,7 +79,7 @@ function LessonsForm() {
                     required: true,
                     options: [
                         {label:'Video',value:'video'},
-                        {label:'Exam',value:'exam'},
+                        // {label:'Exam',value:'exam'},
                     ]
                 },
                
