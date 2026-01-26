@@ -21,7 +21,7 @@ export default function Page() {
 
       <Hero />
       <Courses />
-      <BlogSection/>
+      {/* <BlogSection/> */}
 
     </div>
   );

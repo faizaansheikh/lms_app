@@ -47,7 +47,7 @@ const Nav = () => {
     const menu = [
         { title: 'Home', link: '#home' },
         { title: 'Programs', link: '#programs' },
-        { title: 'Blogs', link: '#blogs' },
+        // { title: 'Blogs', link: '#blogs' },
         { title: 'Contact Us', link: '#contact' }
     ];
 
