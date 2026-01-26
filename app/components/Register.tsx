@@ -51,7 +51,7 @@ function Register(props: registerProps) {
                     const cols: any = res?.data?.data[0]
                     const { lessons, answers, questions, password, description, outline, ...othersCols } = cols
                     setColumn(othersCols ? Object.keys(othersCols) : [])
-                    setRowData([...res?.data?.data])
+                    setRowData(res?.data ? [...res?.data?.data] : [])
                     setTotalCount(Number(res?.data?.totalRecords))
                 }
 

@@ -37,7 +37,7 @@ export default function Checkout() {
     }, [])
 
     useEffect(() => {
-        if (installment) {
+        if (Number(searchParams?.get('ins'))) {
             const insPrice = installment === 2 ? record.price / 2 : record.price / 4
             setRecord({ ...record, price: insPrice || null });
         }

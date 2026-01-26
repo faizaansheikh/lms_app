@@ -22,6 +22,7 @@ function page() {
     const [loading, setLoading] = useState<any>(false)
     const [desc, setDesc] = useState<any>('')
     const [review, setReview] = useState<any>([])
+    const [show, setShow] = useState<any>(false)
     const router = useRouter()
 
     const getSingleRec = (id: number) => {
@@ -29,6 +30,11 @@ function page() {
             .then((res) => {
                 if (res) {
                     const data = res?.data?.data
+                    // record?.title === 'Sterile Processing / Central Service Comprehensive Training'
+                    if(data?.title?.split(' ')?.includes('Sterile')){
+                        setShow(true)
+                    }
+                 
                     setRecord(data);
                     setReview(data?.reviews)
                     setDesc(data?.events[0]?.description);
@@ -59,7 +65,7 @@ function page() {
    
     return (
 
-        record?.title === 'Sterile Processing / Central Service Comprehensive Training' ? <CustomProd desc={desc} review={review} getApi={getSingleRec} /> :
+         show ? <CustomProd desc={desc} review={review} getApi={getSingleRec} /> :
             <>
                 <section
                     className="relative h-150 w-full bg-cover bg-center"

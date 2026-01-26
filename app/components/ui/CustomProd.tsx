@@ -20,7 +20,7 @@ function CustomProd({ desc, review, getApi }: any) {
 
         const userInfo = localStorage.getItem('userInfo')
         if (userInfo) {
-            router.push(`/checkout/${Number(searchParams?.get('q'))}`)
+            router.push(`/checkout/${Number(searchParams?.get('q'))}?ins=true`)
 
         } else {
             message.error('You need to sign in first to enroll in this course!')
