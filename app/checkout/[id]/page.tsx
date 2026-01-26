@@ -14,6 +14,8 @@ export default function Checkout() {
     const [record, setRecord] = useState<any>({})
     const [userDetails, setUserDetails] = useState<any>({})
     const [installment, setInstallment] = useState<any>(null)
+    const [price, setPrice] = useState<any>(null)
+    const [show, setShow] = useState<any>(false)
     const handleHome = () => router.push('/home')
 
 
@@ -22,8 +24,10 @@ export default function Checkout() {
             .then((res) => {
                 const data = res?.data
                 setRecord({ ...data, price: Number(data?.price) || null })
-
-
+                setPrice(Number(data?.price))
+                if (data?.title?.split(' ')?.includes('Sterile')) {
+                    setShow(true)
+                }
 
 
             }).catch((err) => console.log(err)).finally(() => { })
@@ -37,11 +41,14 @@ export default function Checkout() {
     }, [])
 
     useEffect(() => {
-        if (Number(searchParams?.get('ins'))) {
-            const insPrice = installment === 2 ? record.price / 2 : record.price / 4
+
+        if (show) {
+            console.log("price, record?.price")
+            const insPrice = installment === 2 ? price / 2 : installment === 4 ? price / 4 : price
             setRecord({ ...record, price: insPrice || null });
         }
     }, [installment])
+
     return (
         <div className="min-h-screen bg-gray-50 flex justify-center p-6">
             <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -78,7 +85,7 @@ export default function Checkout() {
                         </p>
 
 
-                        {record?.title === 'Sterile Processing / Central Service Comprehensive Training' && <Select
+                        {show && <Select
                             style={{ width: '100%', padding: '7px 7px', margin: '7px 0px' }}
 
                             placeholder={'Installment Plan'}
@@ -88,6 +95,7 @@ export default function Checkout() {
                                 // setColVal(value);
                             }}
                             options={[
+                                { label: 'Full', value: 'full' },
                                 { label: '2 Installments', value: 2 },
                                 { label: '4 Installments', value: 4 },
                             ]}
