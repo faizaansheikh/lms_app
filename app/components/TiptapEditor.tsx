@@ -13,7 +13,9 @@ const TiptapEditor = ({ value, onChange }: any) => {
 
     const editor = useEditor({
         extensions: [
-            StarterKit,
+            StarterKit.configure({
+                codeBlock: false, // 🚫 disable code blocks
+            }),
             BulletList,
             OrderedList,
             ListItem,

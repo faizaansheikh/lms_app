@@ -31,10 +31,10 @@ function page() {
                 if (res) {
                     const data = res?.data?.data
                     // record?.title === 'Sterile Processing / Central Service Comprehensive Training'
-                    if(data?.title?.split(' ')?.includes('Sterile')){
+                    if (data?.title?.split(' ')?.includes('Sterile')) {
                         setShow(true)
                     }
-                 
+
                     setRecord(data);
                     setReview(data?.reviews)
                     setDesc(data?.events[0]?.description);
@@ -62,10 +62,10 @@ function page() {
     if (loading) {
         return <Xloader />
     }
-   
+
     return (
 
-         show ? <CustomProd desc={desc} review={review} getApi={getSingleRec} /> :
+        show ? <CustomProd desc={desc} review={review} getApi={getSingleRec} /> :
             <>
                 <section
                     className="relative h-150 w-full bg-cover bg-center"
@@ -149,9 +149,27 @@ function page() {
                 </div> */}
 
 
-                <div className='md:my-6 bg-prdimary w-full h-full mt-0  px-12 md:px-52'>
-                    <div className="prose max-w-none mb-2 px-0 md:px-16 md:mb-4  md:text-xl" dangerouslySetInnerHTML={{ __html: addLineBreaks(desc) }} />
+                <div className="bg-primdary w-full my-12 md:my-0 md:mt-26 md:mb-12 px-6  sm:px-6 md:px-10 lg:px-32 text-lg">
+                    <div
+                        className="
+      prose max-w-full
+      whitespace-normal
+      break-words
+      font-sans
+
+      prose-p:font-sans
+      prose-li:font-sans
+      prose-strong:font-sans
+      prose-em:font-sans
+      prose-pre:font-sans
+      prose-code:font-sans
+    "
+                        dangerouslySetInnerHTML={{ __html: desc }}
+                    />
                 </div>
+
+
+
 
                 <ReviewSection data={review} courseId={Number(searchParams?.get('q'))} getApi={getSingleRec} />
             </>

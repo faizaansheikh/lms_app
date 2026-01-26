@@ -30,7 +30,7 @@ function Course_Desc_Form() {
             type: 'fieldset',
             title: '',
             fields: [
-               
+
                 {
                     col: 8,
                     label: 'Course',
@@ -82,7 +82,7 @@ function Course_Desc_Form() {
         GeneralCoreService(`events`).GetAll(null, id)
             .then((res) => {
                 if (res?.status === 200) {
-                    
+
                     setCourse(res?.data?.course_id ? [Number(res?.data?.course_id)] : [])
                     setDescription(res?.data?.description)
                 } else {
@@ -111,7 +111,21 @@ function Course_Desc_Form() {
             <TiptapEditor
                 value={description}
                 onChange={setDescription}
-                 className="min-h-[250px] p-4 prose prose-sm max-w-none"
+                className="
+    min-h-[250px]
+    p-4
+    prose max-w-full
+    whitespace-normal
+    break-words
+    font-sans
+
+    prose-p:font-sans
+    prose-li:font-sans
+    prose-strong:font-sans
+    prose-em:font-sans
+    prose-pre:font-sans
+    prose-code:font-sans
+  "
             />
 
         </div>
