@@ -5,12 +5,12 @@ import Player from '@vimeo/player'
 import { message, Spin } from 'antd'
 import ReactPlayer from 'react-player'
 import { ReactPlayerProps } from 'react-player/types'
-export default function VideoPlayer({ vimeoId, setComplete, videoDetails, updateLessonProgress }: { vimeoId: string, setComplete: any, videoDetails: any, updateLessonProgress: any }) {
+export default function VideoPlayer({ vimeoId, setComplete, videoDetails }: { vimeoId: string, setComplete: any, videoDetails: any }) {
   const [state, setState] = useState(false)
   const handleEnded = (e: any) => {
     if (!videoDetails.is_completed) {
       message.success('Video completed successfully!....')
-      updateLessonProgress()
+      setComplete(true)
     }
 
   }
@@ -40,9 +40,9 @@ export default function VideoPlayer({ vimeoId, setComplete, videoDetails, update
     >
       {
         !state && <ReactPlayer
-        src={`https://player.vimeo.com/video/${vimeoId}` || ''}
-        // playing={true}  
-        //   playing
+          src={`https://player.vimeo.com/video/${vimeoId}` || ''}
+          // playing={true}  
+          //   playing
           controls
           // onRateChange={(rate) => console.log("Rate:", rate)}
           onEnded={handleEnded}

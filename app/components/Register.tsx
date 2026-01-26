@@ -49,7 +49,7 @@ function Register(props: registerProps) {
 
                 if (res?.status === 200) {
                     const cols: any = res?.data?.data[0]
-                    const { lessons, answers, questions, password, description, ...othersCols } = cols
+                    const { lessons, answers, questions, password, description, outline, ...othersCols } = cols
                     setColumn(othersCols ? Object.keys(othersCols) : [])
                     setRowData([...res?.data?.data])
                     setTotalCount(Number(res?.data?.totalRecords))
@@ -130,62 +130,62 @@ function Register(props: registerProps) {
                     />
                 </div>
                 <div className='w-full '>
-                    {loader  ?                      
-                            <div className="h-[400px] z-10 flex items-center justify-center bg-black/0 rounded-xl" >
-                                <Spin size="large" />
-                            </div >
-                            :  rowData?.length > 0  ? <table className='w-full'>
-                                <thead className=''>
+                    {loader ?
+                        <div className="h-[400px] z-10 flex items-center justify-center bg-black/0 rounded-xl" >
+                            <Spin size="large" />
+                        </div >
+                        : rowData?.length > 0 ? <table className='w-full'>
+                            <thead className=''>
 
-                                    <tr className='bg-gray-300' >
+                                <tr className='bg-gray-300' >
+
+                                    {
+                                        column?.map((x, i) => (
+                                            <td className={`py-6 text-[] font-bold text-[14px] ${i === 0 ? 'pl-5' : ''}`} key={i}>{x}</td>
+                                        ))
+                                    }
+                                    <td className='text-[] text-[14px] font-bold '>Actions</td>
+
+                                </tr>
+
+                            </thead>
+                            <tbody>
+
+                                {rowData.map((x: any, i) => (
+                                    <tr style={{ backgroundColor: selectedRow.includes(x) ? '#fbd06d' : '' }} className={`bg-secondary border-b-1 border-[lightgrey] `} key={i}>
 
                                         {
-                                            column?.map((x, i) => (
-                                                <td className={`py-6 text-[] font-bold text-[14px] ${i === 0 ? 'pl-5' : ''}`} key={i}>{x}</td>
+                                            column.map((z, ind) => (
+                                                <td className={`font-normal text-[13px] text-start py-2 ${ind === 0 ? 'pl-5' : ''}`} key={ind}>{updatedRows(z, x)}</td>
                                             ))
                                         }
-                                        <td className='text-[] text-[14px] font-bold '>Actions</td>
 
+                                        <td className='text-[14px] text-start py-3'>
+                                            <span className='flex gap-2 items-center '>
+                                                {formName !== 'enrollment' && <CiEdit onClick={() => handleUpdateRec(x)} size={20} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />}
+                                                <MdDeleteOutline onClick={() => handleDeleteRec(x)} size={18} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />
+
+
+                                            </span>
+                                        </td>
                                     </tr>
-
-                                </thead>
-                                <tbody>
-
-                                    {rowData.map((x: any, i) => (
-                                        <tr style={{ backgroundColor: selectedRow.includes(x) ? '#fbd06d' : '' }} className={`bg-secondary border-b-1 border-[lightgrey] `} key={i}>
-
-                                            {
-                                                column.map((z, ind) => (
-                                                    <td className={`font-normal text-[13px] text-start py-2 ${ind === 0 ? 'pl-5' : ''}`} key={ind}>{updatedRows(z, x)}</td>
-                                                ))
-                                            }
-
-                                            <td className='text-[14px] text-start py-3'>
-                                                <span className='flex gap-2 items-center '>
-                                                    {formName !== 'enrollment' && <CiEdit onClick={() => handleUpdateRec(x)} size={20} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />}
-                                                    <MdDeleteOutline onClick={() => handleDeleteRec(x)} size={18} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />
-
-
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    ))}
+                                ))}
 
 
 
 
-                                </tbody>
-                            </table>
-                        :
-                        <div className='flex items-center justify-center m-12'>
+                            </tbody>
+                        </table>
+                            :
+                            <div className='flex items-center justify-center m-12'>
 
-                            <Image
-                                src='/noitems.jpg'
-                                alt='no items'
-                                width={500}
-                                height={500}
-                            />
-                        </div>
+                                <Image
+                                    src='/noitems.jpg'
+                                    alt='no items'
+                                    width={500}
+                                    height={500}
+                                />
+                            </div>
                     }
 
                 </div>

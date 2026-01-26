@@ -14,6 +14,7 @@ function page() {
 
     const searchParams = useSearchParams()
     const [course, setCourse] = useState<any>([])
+    const [tabs, setTabs] = useState<any>([])
 
 
     const getSingleRec = (id: number) => {
@@ -25,6 +26,9 @@ function page() {
             }
             GeneralCoreService('courses/lessons').Save(payload)
                 .then((res) => {
+                    // console.log(res?.data)
+                    const lessons = res?.data?.lessons
+                    
                     setCourse(res?.data)
 
                 }).catch((err) => console.log(err)).finally(() => { })
@@ -32,17 +36,22 @@ function page() {
     }
 
 
-useEffect(() => {
-    getSingleRec(Number(searchParams?.get('q')))
+    useEffect(() => {
+        getSingleRec(Number(searchParams?.get('q')))
 
-}, [])
-
-
-return (
-    <LessonDashboard data={course?.data} quiz={course?.quiz} getApi={getSingleRec} />
+    }, [])
 
 
-)
+    return (
+        <LessonDashboard
+            data={course?.lessons}
+            quiz={course?.finalQuiz}
+            getApi={getSingleRec}
+           
+        />
+
+
+    )
 }
 
 export default page

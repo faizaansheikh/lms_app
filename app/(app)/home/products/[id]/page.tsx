@@ -59,7 +59,7 @@ function page() {
    
     return (
 
-        record?._id === 15 ? <CustomProd desc={desc} review={review} getApi={getSingleRec} /> :
+        record?.title === 'Sterile Processing / Central Service Comprehensive Training' ? <CustomProd desc={desc} review={review} getApi={getSingleRec} /> :
             <>
                 <section
                     className="relative h-150 w-full bg-cover bg-center"

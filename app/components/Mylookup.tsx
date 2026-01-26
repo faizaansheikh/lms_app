@@ -39,7 +39,7 @@ function Mylookup(props: lookup) {
             .then((res) => {
                 if (res?.status === 200) {
                     const cols: any = res?.data?.data[0]
-                    const { lessons, answers, description, thumbnail, questions, password, ...othersCols } = cols
+                    const { lessons, answers, description, thumbnail, questions, password,outline, ...othersCols } = cols
                     setColumn(othersCols ? Object.keys(othersCols) : [])
                     setRowData([...res?.data?.data])
                     setTotalCount(Number(res?.data?.totalRecords))

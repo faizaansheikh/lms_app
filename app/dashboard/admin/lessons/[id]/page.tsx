@@ -8,8 +8,7 @@ import { useEffect, useState } from 'react'
 interface model {
     title: string;
     url: string;
-    quizId: string;
-    type:string
+    type: string
 
 }
 function LessonsForm() {
@@ -17,11 +16,12 @@ function LessonsForm() {
     const router = useRouter()
     const [loader, setLoader] = useState(false)
     const [userData, setUserData] = useState(null);
+    const [quiz, setQuiz] = useState<any>([]);
+
     const [model, setModel] = useState<model>({
         title: '',
         url: '',
-        quizId: '',
-        type:''
+        type: ''
     })
 
     const elems = [
@@ -31,7 +31,7 @@ function LessonsForm() {
             title: '',
             fields: [
                 {
-                    col: 12,
+                    col: 24,
                     label: 'Title',
                     key: 'title',
                     placeholder: 'Enter Lesson Title',
@@ -56,41 +56,43 @@ function LessonsForm() {
                         minLength: { value: 3, message: 'Min length at least 3' },
                     }
                 },
-                // {
-                //     col: 12,
-                //     label: 'Quiz',
-                //     key: 'quizId',
-                //     placeholder: 'Select Quiz',
-                //     type: 'lookup',
-                //     multiple: false,
-                //     formName: 'quiz',
-                //     required: true,
-                //     vals: '',
-                //     getData: (data: any) => {
-                //         console.log(data)
-                //     },
-                // },
                 {
                     col: 12,
-                    label: 'Lesson Type',
-                    key: 'type',
-                    placeholder: 'Select Lesson Type',
-                    type: 'dropdown',
+                    label: 'Lesson Quiz',
+                    key: 'quiz',
+                    placeholder: 'Select Quiz',
+                    type: 'lookup',
+                    multiple: false,
+                    formName: 'quiz',
                     required: true,
-                    options: [
-                        {label:'Video',value:'video'},
-                        // {label:'Exam',value:'exam'},
-                    ]
+                    display: 'name',
+                    vals: params?.id !== 'new' ? quiz : '',
+                    getData: (data: any) => {
+                        setQuiz(data)
+                    },
+
                 },
-               
+                {
+                    col: 24,
+                    label: 'Description',
+                    key: 'outline',
+                    placeholder: 'Write Lesson Overview',
+                    type: 'textarea',
+                },
+
 
             ]
         },
 
     ]
     const handleSave = (values: any) => {
+        const payload = {
+            ...values,
+            quizid: quiz?.length > 0 ? quiz[0] : null
+        }
+        // console.log(payload)
         setLoader(true)
-        GeneralCoreService('lessons').Save(values, params?.id === 'new' ? '' : params?.id)
+        GeneralCoreService('lessons').Save(payload, params?.id === 'new' ? '' : params?.id)
             .then((res) => {
 
                 if (res?.status === 201) {
@@ -106,11 +108,12 @@ function LessonsForm() {
     }
     const getSingleRec = (id: number) => {
         setLoader(true)
-        GeneralCoreService(`lessons`).GetAll(null,id)
+        GeneralCoreService(`lessons`).GetAll(null, id)
             .then((res) => {
 
                 if (res?.status === 200) {
                     setModel(res?.data)
+                    setQuiz(res?.data?.quizid ? [Number(res?.data?.quizid)] : [])
                 } else {
                     message.error(res?.message)
                 }
@@ -123,14 +126,14 @@ function LessonsForm() {
 
     useEffect(() => {
         if (params.id !== 'new') {
-          
+
 
             getSingleRec(Number(params.id))
         }
     }, [])
     return (
         <div>
-    
+
             <FormElement title="Lessons Form" save={handleSave} setModel={setModel} model={model} elements={elems} loading={loader} />
         </div>
     )
