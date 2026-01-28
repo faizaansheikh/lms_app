@@ -182,7 +182,7 @@ function CertificateForm() {
 
     return (
         <div>
-            <FormElement title="Course Form" save={params.id === 'new' ? handleSave : handleUpdate} setModel={setModel} model={model} elements={elems} loading={loader} />
+            <FormElement title="Certificate Form" save={params.id === 'new' ? handleSave : handleUpdate} setModel={setModel} model={model} elements={elems} loading={loader} />
 
 
         </div>

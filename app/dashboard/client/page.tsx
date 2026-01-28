@@ -3,11 +3,13 @@ import Courses from "@/app/components/ui/Courses";
 import Xloader from "@/app/components/ui/Xloader";
 import { GeneralCoreService } from "@/app/config/GeneralCoreService";
 import { getUser, slugify } from "@/app/utility";
-import { Col, Row, Spin } from "antd";
+import { Col, ConfigProvider, message, Row, Spin, Tooltip } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { MdOutlineGamepad } from "react-icons/md";
+import { FaBookOpen } from "react-icons/fa";
+import { FaCertificate } from "react-icons/fa6";
 function page() {
     const router = useRouter()
     const [loader, setLoader] = useState(false)
@@ -31,6 +33,34 @@ function page() {
 
     }
 
+    const handleCertificate = (x: any) => {
+        
+        const userInfo = getUser()
+        if (userInfo) {
+
+          
+            let payload = {
+                user_id: userInfo?.id,
+                course_id: x?._id,
+            }
+            GeneralCoreService('certificate/confirm').Save(payload)
+                .then((res) => {
+                    if (res.status === 200) {
+                        message.success('Certificate sent to you email address!')
+                    } else {
+                        message.error(res?.message || "Error sending certificate!")
+                    }
+
+
+                }).catch((err) => console.log(err)).finally(() => { })
+        } else {
+            message.error('You need to sign in first to enroll in this course!')
+        }
+
+    }
+
+
+
     const handleCourse = (product: any) => {
         router.push(`/course/lectures?q=${product._id}`)
     }
@@ -39,6 +69,7 @@ function page() {
             ? parseInt(product?.payment.split("%")[0]) : 0
         router.push(`/checkout/${product._id}?p=${paidPercent}`)
     }
+
     useEffect(() => {
         getUserCourses()
     }, [])
@@ -48,73 +79,94 @@ function page() {
 
                 <p className="text-center text-2xl md:text-3xl font-bold">Welcome back {userInfo?.name}. Let's learn something today! </p>
                 <p className=" text-xl py-2 mt-4 font-bold">My library</p>
-                <div className={`w-full ${data?.length ? "h-auto" : "h-[300px]"} p-6 bg-gray-200 flex flex-wrap ${data?.length ? "flex-row" : "flex-col justify-center"} gap-3 items-center `}>
-                    {
-                        loader ? <Spin size="large" />
+                <div
+                    className={`w-full p-6 bg-gray-200 ${data?.length ? "h-auto" : "h-[300px] flex flex-col justify-center items-center"
+                        }`}
+                >
+                    {loader ? (
+                        <Spin size="large" />
+                    ) : data?.length ? (
+                        <Row gutter={[16, 16]}>
+                            {data.map((x: any, i) => (
+                                <Col key={i} xs={24} sm={24} md={12} lg={12}>
+                                    <div className="flex flex-col sm:flex-row w-full min-h-[140px] bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
 
-                            : data?.length ?
-                                data?.map((x: any, i) => (
+                                        {/* Image */}
+                                        <div className="w-full sm:w-[120px] h-[160px] sm:h-auto overflow-hidden">
+                                            <Image
+                                                src={x?.thumbnail ?? "/noimg.png"}
+                                                alt=""
+                                                width={300}
+                                                height={300}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
 
-                                    <Row key={i} justify="start" className="mb-4">
-                                        <Col xs={24} lg={24}>
-                                            <div
-                                                className="flex flex-col sm:flex-row w-full max-w-[400px] h-auto sm:h-[120px] bg-white shadow-md border border-gray-200 rounded-2xl overflow-hidden "
+                                        {/* Content */}
+                                        <div className="flex flex-col justify-between p-4 flex-1">
+                                            <p className="text-base font-semibold text-gray-800 line-clamp-2">
+                                                {x?.title}
+                                            </p>
 
-                                            >
-                                                {/* Course Thumbnail */}
-                                                <div className="flex-shrink-0 w-full sm:w-[120px] h-[120px] sm:h-full overflow-hidden rounded-t-2xl sm:rounded-l-2xl sm:rounded-tr-none">
-                                                    <Image
-                                                        alt={`Course thumbnail ${i}`}
-                                                        src={x?.thumbnail ?? "/noimg.png"}
-                                                        width={120}
-                                                        height={120}
-                                                        className="object-cover w-full h-full"
-                                                    />
+                                            <div className="flex justify-between items-center gap-2 mt-3">
+                                                <div
+                                                    onClick={
+                                                        x?.payment !== "100% Complete"
+                                                            ? () => handleRemainingPayment(x)
+                                                            : undefined
+                                                    }
+                                                    className={`px-4 py-2 text-xs rounded-full font-medium ${x?.payment === "100% Complete"
+                                                        ? "bg-green-100 text-green-700"
+                                                        : "bg-yellow-100 text-yellow-700 hover:bg-yellow-200 cursor-pointer"
+                                                        }`}
+                                                >
+                                                    Payment {x?.payment ?? "Pending"}
                                                 </div>
 
-                                                {/* Course Info */}
-                                                <div className="flex flex-col justify-between p-4 flex-1 gap-2">
-                                                    {/* Course Title */}
-                                                    <p className="text-md font-semibold text-gray-800 ">{x?.title}</p>
-
-                                                    <div className="flex flex-wrap gap-2 mt-2">
-                                                        {/* Payment Status */}
-                                                        <span
-                                                            onClick={x?.payment !== "100% Complete" ? () => handleRemainingPayment(x) : undefined}
-                                                            className={`
-                inline-block px-3 py-1 text-sm text-center rounded-full font-medium
-                ${x?.payment === "100% Complete" ? "bg-green-100 text-green-800" : ""}
-                ${x?.payment?.includes("%") && x?.payment !== "100% Complete" ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-200 cursor-pointer" : ""}
-              `}
+                                                <div className="flex items-center gap-2">
+                                                    {x.status === 'Completed' &&
+                                                        <ConfigProvider
+                                                            tooltip={{
+                                                                unique: true,
+                                                            }}
                                                         >
-                                                            {x?.payment ?? "Pending"}
-                                                        </span>
+                                                            <Tooltip title="Request for certificate!" placement={'bottom'}>
+                                                                <span
+                                                                    onClick={() => handleCertificate(x)}
+                                                                    className="w-10 h-10 flex  items-center justify-center rounded-full bg-red-500 hover:bg-red-600 text-white cursor-pointer transition-transform hover:scale-105"
+                                                                >
+                                                                    <FaCertificate size={16} />
+                                                                </span>
+                                                            </Tooltip>
 
-                                                        {/* Open Lectures Button */}
-                                                        <span
-                                                            onClick={() => handleCourse(x)}
+                                                        </ConfigProvider>
+                                                    }
+                                                    <div
+                                                        onClick={() => handleCourse(x)}
+                                                        className="w-10 h-10 flex  items-center justify-center rounded-full bg-red-500 hover:bg-red-600 text-white cursor-pointer transition-transform hover:scale-105"
+                                                    >
+                                                        <FaBookOpen size={16} />
 
-                                                            className="
-                bg-red-500 hover:bg-red-600 text-white px-3 py-1 text-sm font-medium rounded-full cursor-pointer transition-transform duration-300 hover:scale-105
-              "
-                                                        >
-                                                            Open Lectures
-                                                        </span>
                                                     </div>
+
+
                                                 </div>
                                             </div>
-                                        </Col>
-                                    </Row>
-
-
-                                ))
-                                : <>
-                                    <span className="w-11 h-11 rounded-full bg-primary flex items-center justify-center"><MdOutlineGamepad color="white" size={22} /></span>
-                                    <p className="text-xl">You're not enrolled in any course</p>
-                                </>}
-
-
+                                        </div>
+                                    </div>
+                                </Col>
+                            ))}
+                        </Row>
+                    ) : (
+                        <>
+                            <span className="w-11 h-11 rounded-full bg-primary flex items-center justify-center">
+                                <MdOutlineGamepad color="white" size={22} />
+                            </span>
+                            <p className="text-xl mt-2">You're not enrolled in any course</p>
+                        </>
+                    )}
                 </div>
+
 
 
             </div>

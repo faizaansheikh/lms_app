@@ -11,7 +11,7 @@ import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getUser } from '@/app/utility';
 import { GeneralCoreService } from '@/app/config/GeneralCoreService';
-const Quiz = ({ data,setShowQuiz }: any) => {
+const Quiz = ({ data, setShowQuiz }: any) => {
     const searchParams = useSearchParams()
     const router = useRouter()
     const [active, setActive] = useState(null)
@@ -27,27 +27,50 @@ const Quiz = ({ data,setShowQuiz }: any) => {
 
 
     const handleEnrollment = () => {
-        
+
         const userInfo = getUser()
         if (userInfo) {
-         
+
             const coursId = Number(searchParams?.get('q')) || null
             let payload = {
                 user_id: userInfo?.id,
                 course_id: coursId,
-                status:'Completed'
+                status: 'Completed'
             }
             GeneralCoreService('enrollment/update').Save(payload)
                 .then((res) => {
 
- 
 
-                }).catch((err) => console.log(err)).finally(() => {})
+
+                }).catch((err) => console.log(err)).finally(() => { })
         } else {
             message.error('You need to sign in first to enroll in this course!')
         }
     }
+    const handleCertificate = () => {
 
+        const userInfo = getUser()
+        if (userInfo) {
+
+            const coursId = Number(searchParams?.get('q')) || null
+            let payload = {
+                user_id: userInfo?.id,
+                course_id: coursId,
+            }
+            GeneralCoreService('certificate/confirm').Save(payload)
+                .then((res) => {
+                    if (res.status === 200) {
+                        message.success('Certificate sent to you email address!')
+                    }else{
+                        message.error(res?.message || "Error sending certificate!")
+                    }
+
+
+                }).catch((err) => console.log(err)).finally(() => { })
+        } else {
+            message.error('You need to sign in first to enroll in this course!')
+        }
+    }
 
     const handleOption = (x: any) => {
         setDisableSave(false)
@@ -73,7 +96,7 @@ const Quiz = ({ data,setShowQuiz }: any) => {
         const percentage = (correctCount / totalQuestions) * 100;
         setPercentage(percentage)
         setOpenModal(true)
-        
+
     }
 
     const handleSave = () => {
@@ -92,11 +115,11 @@ const Quiz = ({ data,setShowQuiz }: any) => {
 
     const handleModalSave = () => {
         setOpenModal(false)
-        message.success('Certificate sent to you email address!')
+        handleCertificate()
         handleEnrollment()
         router.back()
     }
-   
+
 
     return (
         <>
@@ -149,7 +172,7 @@ const Quiz = ({ data,setShowQuiz }: any) => {
                 } />
 
 
-            <StartQuizConfirmation quizName={data?.name} onStart={() => { }} setShowQuiz={setShowQuiz}/>
+            <StartQuizConfirmation quizName={data?.name} onStart={() => { }} setShowQuiz={setShowQuiz} />
             <div className='w-full h-[100vh] bg-[#FAF3F0] px-8 md:px-32 flex flex-col '>
                 <h1 className="text-xl md:text-3xl font-bold mb-1 text-center pt-8">Final Exam</h1>
                 <div>

@@ -113,7 +113,7 @@ export default function Checkout() {
                             options={[
                                 { label: 'Full', value: 'Full' },
                                 { label: '2 Installments', value: 2 },
-                                { label: '4 Installments', value: 4 },
+                                // { label: '4 Installments', value: 4 },
                             ]}
 
                         />}

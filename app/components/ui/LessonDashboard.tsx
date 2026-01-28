@@ -66,10 +66,10 @@ function LessonDashboard(props: ld) {
         }
 
 
-        if (!quiz?.locked) {
-            message.warning('You have already attempted this quiz')
-            setShowQuiz(false)
-        }
+        // if (!quiz?.locked) {
+        //     message.warning('You have already attempted this quiz')
+        //     setShowQuiz(false)
+        // }
     }
 
 
