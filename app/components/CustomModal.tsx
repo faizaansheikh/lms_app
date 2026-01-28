@@ -1,3 +1,4 @@
+import { Spin } from 'antd'
 import React from 'react'
 
 interface ModalProps {
@@ -8,6 +9,7 @@ interface ModalProps {
     onOk?: () => void
     okText?: string,
     extraBtn?: React.ReactNode
+    loader?: any
 }
 
 const CustomModal: React.FC<ModalProps> = ({
@@ -17,7 +19,8 @@ const CustomModal: React.FC<ModalProps> = ({
     content,
     onOk,
     extraBtn,
-    okText = 'Ok'
+    okText = 'Ok',
+    loader
 }) => {
 
     const handleOk = () => {
@@ -82,9 +85,9 @@ const CustomModal: React.FC<ModalProps> = ({
                     {extraBtn ? extraBtn : <button
                         onClick={handleOk}
                         type="button"
-                        className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+                        className={`px-4 py-2 rounded-lg ${loader ? "bg-blue-100" : "bg-blue-600"} text-white hover:bg-blue-700 cursor-pointer`}
                     >
-                        {okText}
+                        {loader ? <Spin /> : okText}
                     </button>}
                 </div>
             </div>

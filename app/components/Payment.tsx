@@ -10,7 +10,8 @@ const stripePromise: any = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
 
-function CheckoutForm({ amount }: any) {
+function CheckoutForm({ amount, installment, query }: any) {
+
   const stripe: any = useStripe();
   const elements: any = useElements();
   const router = useRouter()
@@ -26,12 +27,26 @@ function CheckoutForm({ amount }: any) {
       let payload = {
         user_id: userInfo?.id,
         course_id: coursId,
-        status:'Pending'
+        status: 'Pending',
+        payment:
+          installment === 'Full' || installment == null
+            ? '100% Complete'
+            : `${100 / installment}% Complete`
+
       }
-      GeneralCoreService('enrollment').Save(payload)
-        .then((res) => {
-          router.push('/dashboard/client')
-        }).catch((err) => console.log(err)).finally(() => setLoading(false))
+      if (query) {
+        GeneralCoreService('enrollment/update').Save(payload)
+          .then((res) => {
+            router.push('/dashboard/client')
+          }).catch((err) => console.log(err)).finally(() => setLoading(false))
+      } else {
+        GeneralCoreService('enrollment').Save(payload)
+          .then((res) => {
+            router.push('/dashboard/client')
+          }).catch((err) => console.log(err)).finally(() => setLoading(false))
+      }
+     
+
     } else {
       message.error('You need to sign in first to enroll in this course!')
     }
@@ -49,7 +64,7 @@ function CheckoutForm({ amount }: any) {
 
     const { clientSecret } = await res.json();
 
-   
+
     const result = await stripe.confirmCardPayment(clientSecret, {
       payment_method: {
         card: elements.getElement(CardElement),
@@ -82,10 +97,10 @@ function CheckoutForm({ amount }: any) {
   );
 }
 
-export default function Payment({ amount }: any) {
+export default function Payment({ amount, installment, query }: any) {
   return (
     <Elements stripe={stripePromise}>
-      <CheckoutForm amount={amount} />
+      <CheckoutForm amount={amount} installment={installment} query={query} />
     </Elements>
   );
 }

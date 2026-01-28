@@ -12,7 +12,8 @@ import { MdDeleteOutline } from "react-icons/md";
 import XModal from './XModal';
 import Image from 'next/image';
 import CustomModal from './CustomModal';
-import Xloader from './ui/Xloader';
+import { SiMinutemailer } from "react-icons/si";
+import { getUser } from '../utility';
 interface registerProps {
     formName: string
 }
@@ -22,13 +23,21 @@ function Register(props: registerProps) {
     const [column, setColumn] = useState<string[]>([])
     const [rowData, setRowData] = useState<string[]>([])
     const [openModal, setOpenModal] = useState<boolean>(false)
+    const [openRem, setOpenRem] = useState<boolean>(false)
     const [delId, setDelId] = useState<any>(null)
     const [selectedRow, setSelectedRow] = useState<string[]>([])
     const [totalCount, setTotalCount] = useState<any>(null)
     const [page, setPage] = useState<any>(1)
     const [rowsPerPage, setRowsPerPage] = useState<any>(10)
     const [loader, setLoader] = useState<any>(false)
+    const [mounted, setMounted] = useState(false);
+    const [remData, setRemData] = useState<any>({});
+    const [btnLoad, setBtnLoad] = useState(false);
 
+    const handleEmail = (x: any) => {
+        setOpenRem(true)
+        setRemData(x)
+    }
 
     const handleUpdateRec = (x: any) => {
 
@@ -62,6 +71,30 @@ function Register(props: registerProps) {
     const handleDeleteRec = (x: any) => {
         setOpenModal(true)
         setDelId(x?._id)
+
+    }
+    const reminderUser = () => {
+        setBtnLoad(true)
+       
+        const payload = {
+            userId:remData?.user_id,
+            amount:remData?.payment
+        }
+        GeneralCoreService('users/email').Save(payload)
+            .then((res: any) => {
+                if (res?.status === 200) {
+                    message.success(res?.message)
+
+                } else {
+                    message.error(res?.message)
+                }
+
+
+            }).catch((err: any) => console.log('error', err))
+            .finally(() => {
+                setOpenRem(false)
+                setBtnLoad(false)
+            })
 
     }
     const deleteRec = () => {
@@ -99,16 +132,26 @@ function Register(props: registerProps) {
 
 
     }
+
     useEffect(() => {
         getAllRec(page, rowsPerPage)
 
     }, [page, rowsPerPage])
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+    if (!mounted) return
     return (
         <>
 
             <CustomModal okText='Delete' open={openModal} setOpen={setOpenModal} title='Confirmation' content={<>
                 <p>Are you sure you want to delete this record from table?</p>
             </>} onOk={deleteRec} />
+
+            <CustomModal okText='Send Reminder' open={openRem} setOpen={setOpenRem} title='Reminder' content={<>
+                <p>Are you sure you want to send a reminder email to this user?</p>
+            </>} onOk={reminderUser} loader={btnLoad} />
 
 
             {/* ====================================table==================================== */}
@@ -162,7 +205,7 @@ function Register(props: registerProps) {
 
                                         <td className='text-[14px] text-start py-3'>
                                             <span className='flex gap-2 items-center '>
-                                                {formName !== 'enrollment' && <CiEdit onClick={() => handleUpdateRec(x)} size={20} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />}
+                                                {formName === 'enrollment' ? <SiMinutemailer onClick={() => handleEmail(x)} size={20} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' /> : <CiEdit onClick={() => handleUpdateRec(x)} size={20} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />}
                                                 <MdDeleteOutline onClick={() => handleDeleteRec(x)} size={18} className=' transition-all duration-400 hover:border-primary hover:text-primary cursor-pointer' />
 
 

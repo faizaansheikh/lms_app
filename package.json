@@ -11,6 +11,7 @@
   "dependencies": {
     "@stripe/react-stripe-js": "^5.4.1",
     "@stripe/stripe-js": "^8.6.1",
+    "@tiptap/extension-hard-break": "^3.17.1",
     "@tiptap/react": "^3.16.0",
     "@tiptap/starter-kit": "^3.16.0",
     "@vimeo/player": "^2.30.1",

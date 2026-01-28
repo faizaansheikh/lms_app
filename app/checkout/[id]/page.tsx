@@ -23,8 +23,22 @@ export default function Checkout() {
         GeneralCoreService('courses').GetAll(null, id)
             .then((res) => {
                 const data = res?.data
-                setRecord({ ...data, price: Number(data?.price) || null })
-                setPrice(Number(data?.price))
+                const price = Number(data?.price)
+
+                if (searchParams.get('p')) {
+                    const paidPercent = searchParams.get('p')
+
+                    const paidAmount = (price * Number(paidPercent)) / 100;
+
+                    const remainingAmount = price - paidAmount;
+                    setRecord({ ...data, price: remainingAmount || null })
+                    setPrice(remainingAmount)
+                } else {
+                    setRecord({ ...data, price: Number(data?.price) || null })
+                    setPrice(Number(data?.price))
+                }
+
+
                 if (data?.title?.split(' ')?.includes('Sterile')) {
                     setShow(true)
                 }
@@ -35,6 +49,8 @@ export default function Checkout() {
     useEffect(() => {
         const user = getUser()
         if (params?.id) {
+
+
             setUserDetails(user)
             getSingleRec(params?.id)
         }
@@ -43,12 +59,12 @@ export default function Checkout() {
     useEffect(() => {
 
         if (show) {
-            console.log("price, record?.price")
+
             const insPrice = installment === 2 ? price / 2 : installment === 4 ? price / 4 : price
             setRecord({ ...record, price: insPrice || null });
         }
     }, [installment])
-
+    console.log(record?.price)
     return (
         <div className="min-h-screen bg-gray-50 flex justify-center p-6">
             <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -95,13 +111,13 @@ export default function Checkout() {
                                 // setColVal(value);
                             }}
                             options={[
-                                { label: 'Full', value: 'full' },
+                                { label: 'Full', value: 'Full' },
                                 { label: '2 Installments', value: 2 },
                                 { label: '4 Installments', value: 4 },
                             ]}
 
                         />}
-                        <Payment amount={record?.price} />
+                        <Payment amount={record?.price} installment={installment} query={searchParams.get('p')}/>
                     </div>
 
 

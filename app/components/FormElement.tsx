@@ -105,7 +105,7 @@ function FormElement(props: FormElems) {
                     <XUpload
                         onChange={x.ChangeEv}
                         file={x.file}
-                        previewUrl={model?.thumbnail}
+                        previewUrl={model[x.key]}
                     />
                 </>
 

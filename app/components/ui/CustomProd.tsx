@@ -46,8 +46,25 @@ function CustomProd({ desc, review, getApi }: any) {
                         height={200}
                     />
                 </div>
-                <div className='md:mt-14 '>
-                    <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: addLineBreaks(desc) }} />
+                <div className=' '>
+                    <div className="bg-primdary w-full mt-12  md:mt-22 mb-12  text-md">
+                        <div
+                            className="
+      prose max-w-full
+    whitespace-pre-line break-words
+      font-sans
+
+      prose-p:font-sans
+      prose-li:font-sans
+       prose-li:my-2  
+      prose-strong:font-sans
+      prose-em:font-sans
+      prose-pre:font-sans
+      prose-code:font-sans
+    "
+                            dangerouslySetInnerHTML={{ __html: desc }}
+                        />
+                    </div>
 
                     <span className='text-[15px]'>
                         Ernest Kruah, CEO <br />
@@ -63,17 +80,17 @@ function CustomProd({ desc, review, getApi }: any) {
                     <br />
                     <br />
                     <br />
-                   
+
                     <Btn title='RSVP' click={handleEnrollment} />
-                      <br />
-                      <br />
-                      <br />
-                 
                     <br />
-                   
+                    <br />
+                    <br />
+
+                    <br />
+
 
                 </div>
-               <ReviewSection data={review} courseId={Number(searchParams?.get('q'))} getApi={getApi} ui={true}/>
+                <ReviewSection data={review} courseId={Number(searchParams?.get('q'))} getApi={getApi} ui={true} />
 
                 <div className='text-center mt-22'>
                     <p className='text-2xl '>Italien Techsol LLC</p>

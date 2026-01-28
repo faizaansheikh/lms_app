@@ -8,24 +8,32 @@ import BulletList from '@tiptap/extension-bullet-list';
 import OrderedList from '@tiptap/extension-ordered-list';
 import ListItem from '@tiptap/extension-list-item';
 import Paragraph from '@tiptap/extension-paragraph';
+import HardBreak from "@tiptap/extension-hard-break";
 const TiptapEditor = ({ value, onChange }: any) => {
     const isContentLoaded = useRef(false); // 👈 IMPORTANT
 
     const editor = useEditor({
         extensions: [
             StarterKit.configure({
-                codeBlock: false, // 🚫 disable code blocks
+                codeBlock: false,
+                hardBreak: false, // disable default
+            }),
+            HardBreak.configure({
+                HTMLAttributes: {
+                    class: "line-break",
+                },
             }),
             BulletList,
             OrderedList,
             ListItem,
             Paragraph,
         ],
-        immediatelyRender: false,
         onUpdate({ editor }) {
             onChange(editor.getHTML());
         },
+         immediatelyRender: false,
     });
+
 
     // ✅ SET CONTENT ONLY ONCE
     useEffect(() => {

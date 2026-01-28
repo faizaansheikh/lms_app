@@ -123,6 +123,8 @@ function page({
             router.push('/dashboard/admin/events')
         } else if (label === 'Reviews') {
             router.push('/dashboard/admin/reviews')
+        }else if (label === 'Certificate') {
+            router.push('/dashboard/admin/certificate')
         }
         return
     }
