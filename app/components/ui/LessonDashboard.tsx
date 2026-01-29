@@ -10,7 +10,7 @@ const VideoPlayer = dynamic(() => import('./VideoPlayer'), {
     loading: () => <p>Loading video...</p>
 })
 import { ImUnlocked } from "react-icons/im";
-import { getUser } from "@/app/utility";
+import { getUser, turnDown } from "@/app/utility";
 import { GeneralCoreService } from "@/app/config/GeneralCoreService";
 import dynamic from "next/dynamic";
 import Quiz from "./Quiz";
@@ -41,7 +41,8 @@ function LessonDashboard(props: ld) {
         quiz: {},
         is_completed: false
     })
-    const handleLinks = (x: any) => {
+    const handleLinks = async (x: any) => {
+
         setTabs('1')
         setActive(x?.lesson_id)
         setVideo({
@@ -158,10 +159,18 @@ function LessonDashboard(props: ld) {
                                     key: '1',
                                     label: 'Outline',
                                     children: (
-                                        <h2 className="text-lg">
-                                            {video?.outline ? video?.outline : 'No outline for this lesson!'}
+                                        <div
+                                            className="mdr-preview"
+                                            dangerouslySetInnerHTML={{ __html: video?.outline }}
+                                        />
 
-                                        </h2>
+
+
+
+                                        // <h2 className="text-lg">
+                                        //     {video?.outline ? video?.outline : 'No outline for this lesson!'}
+
+                                        // </h2>
                                     ),
                                 },
                                 {
@@ -194,6 +203,21 @@ function LessonDashboard(props: ld) {
                     </div>
 
                 </div>
+                <style jsx>{`
+       
+.mdr-preview {
+  width: 100%;
+  min-width: 300px;
+  padding: 12px;
+  background: #fafafa;
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+       
+      `}</style>
             </div >
 
     )

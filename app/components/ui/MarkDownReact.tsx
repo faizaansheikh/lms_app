@@ -1,251 +1,243 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
-import { unified } from "unified";
-import remarkParse from "remark-parse";
-import remarkGfm from "remark-gfm";
-import remarkRehype from "remark-rehype";
-import rehypeStringify from "rehype-stringify";
+import { getHtml } from "@/app/utility";
+import { useState, useEffect, useRef } from "react";
+
+let DOMPurify: any;
+if (typeof window !== "undefined") {
+  // Only import in browser
+  DOMPurify = require("dompurify")(window);
+}
 import { useParams } from "next/navigation";
 
-export default function MarkDownReact({ setData, data, edit }: any) {
-  const params = useParams()
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const [markdown, setMarkdown] = useState("");
-  const [html, setHtml] = useState("");
-  const [selection, setSelection] = useState({ start: 0, end: 0 });
+type Props = {
+  onChangeHtml?: (html: string) => void;
+  edit?: string;
+};
 
-  // Undo/Redo stack
-  const [history, setHistory] = useState<string[]>([]);
-  const [historyIndex, setHistoryIndex] = useState(-1);
+const MarkDownReact = ({ onChangeHtml, edit }: Props) => {
+  const params = useParams();
+  const [markdown, setMarkdown] = useState<string>(edit || "");
+  const [history, setHistory] = useState<string[]>([edit || ""]);
+  const [historyIndex, setHistoryIndex] = useState(0);
 
-  // Track textarea selection
-  const updateSelection = () => {
-    const ta = textareaRef.current;
-    if (!ta) return;
-    setSelection({ start: ta.selectionStart, end: ta.selectionEnd });
-  };
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  useEffect(() => {
-    const ta = textareaRef.current;
-    if (!ta) return;
-
-    ta.addEventListener("select", updateSelection);
-    ta.addEventListener("keyup", updateSelection);
-    ta.addEventListener("click", updateSelection);
-
-    // Undo / Redo keyboard support
-    const keyHandler = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.key === "z") {
-        e.preventDefault();
-        undo();
-      } else if (e.ctrlKey && e.key === "y") {
-        e.preventDefault();
-        redo();
-      }
-    };
-    window.addEventListener("keydown", keyHandler);
-
-    return () => {
-      ta.removeEventListener("select", updateSelection);
-      ta.removeEventListener("keyup", updateSelection);
-      ta.removeEventListener("click", updateSelection);
-      window.removeEventListener("keydown", keyHandler);
-    };
-  }, [historyIndex, history]);
-
-  // Push to history
+  // Colors for toolbar
+  const colors = ["#f87171", "#34d399", "#60a5fa", "#facc15", "#a78bfa"];
+  const fontSizes = ["12px", "14px", "16px", "18px", "20px", "24px"];
+  // Push current state to history
   const pushHistory = (newMarkdown: string) => {
-    const newHistory = history.slice(0, historyIndex + 1);
-    newHistory.push(newMarkdown);
-    setHistory(newHistory);
-    setHistoryIndex(newHistory.length - 1);
+    const updatedHistory = history.slice(0, historyIndex + 1);
+    updatedHistory.push(newMarkdown);
+    setHistory(updatedHistory);
+    setHistoryIndex(updatedHistory.length - 1);
   };
 
-  const undo = () => {
-    if (historyIndex <= 0) return;
-    setHistoryIndex(historyIndex - 1);
-    setMarkdown(history[historyIndex - 1]);
-  };
-
-  const redo = () => {
-    if (historyIndex >= history.length - 1) return;
-    setHistoryIndex(historyIndex + 1);
-    setMarkdown(history[historyIndex + 1]);
-  };
-
-  // Convert Markdown to HTML
-  const convertToHtml = async () => {
-    const file = await unified()
-      .use(remarkParse)
-      .use(remarkGfm)
-      .use(remarkRehype, { allowDangerousHtml: true })
-      .use(rehypeStringify, { allowDangerousHtml: true })
-      .process(markdown);
-
-    setHtml(String(file));
-    setData(String(file))
-  };
-
-  // Toggle formatting (Bold, Italic, Headings, Color)
-  const toggleFormat = (before: string, after = "") => {
-    const ta = textareaRef.current;
-    if (!ta) return;
-
-    const { start, end } = selection;
-    const selectedText = markdown.slice(start, end) || "text";
-
-    const alreadyWrapped =
-      markdown.slice(start - before.length, end + after.length) ===
-      before + selectedText + after;
-
-    const newText = alreadyWrapped
-      ? markdown.slice(0, start - before.length) +
-      selectedText +
-      markdown.slice(end + after.length)
-      : markdown.slice(0, start) +
+  // Wrap selected text utility
+  const wrapSelection = (before: string, after: string = "") => {
+    if (!textareaRef.current) return;
+    const textarea = textareaRef.current;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.substring(start, end) || "text";
+    const newValue =
+      textarea.value.substring(0, start) +
       before +
       selectedText +
       after +
-      markdown.slice(end);
+      textarea.value.substring(end);
+    setMarkdown(newValue);
+    pushHistory(newValue);
 
-    setMarkdown(newText);
-    pushHistory(newText);
-
-    setTimeout(() => {
-      ta.focus();
-      ta.selectionStart = start;
-      ta.selectionEnd = start + selectedText.length;
-    }, 0);
+    textarea.selectionStart = start + before.length;
+    textarea.selectionEnd = start + before.length + selectedText.length;
+    textarea.focus();
   };
 
-  // Apply list formatting (Bulleted / Numbered)
-  const applyList = (type: "ul" | "ol") => {
-    const ta = textareaRef.current;
-    if (!ta) return;
-    const { start, end } = selection;
-
-    const selectedText = markdown.slice(start, end) || "List item";
-    const lines = selectedText.split("\n");
-
-    const formatted = lines
-      .map((line, idx) =>
-        type === "ul" ? `- ${line}` : `${idx + 1}. ${line}`
-      )
-      .join("\n");
-
-    const newText =
-      markdown.slice(0, start) + formatted + markdown.slice(end);
-
-    setMarkdown(newText);
-    pushHistory(newText);
-
-    setTimeout(() => {
-      ta.focus();
-      ta.selectionStart = start;
-      ta.selectionEnd = start + formatted.length;
-    }, 0);
+  // Apply color to selection
+  const applyColor = (color: string) => {
+    wrapSelection(`<span style="color:${color}">`, "</span>");
   };
 
+  //Apply font size
+  const applyFontSize = (size: string) => {
+    wrapSelection(`<span style="font-size:${size};">`, "</span>");
+  };
+
+  // Toolbar actions
+  const toolbarActions = {
+    bold: () => wrapSelection("**", "**"),
+    italic: () => wrapSelection("_", "_"),
+    h1: () => wrapSelection("# ", ""),
+    h2: () => wrapSelection("## ", ""),
+    ul: () => wrapSelection("- ", ""),
+    ol: () => wrapSelection("1. ", ""),
+    image: () => wrapSelection("![Alt text](image-url)", ""),
+    code: () => wrapSelection("```js\n", "\n```"),
+    link: () => wrapSelection("[", "](https://)"),
+  };
+
+  // Update parent with sanitized HTML
   useEffect(() => {
-    if (params?.id !== 'new') {
-      setMarkdown(edit)
+    const html = getHtml(markdown);
+    const sanitized = DOMPurify.sanitize(html, {
+      ALLOWED_TAGS: [
+        "b", "i", "strong", "em", "p", "h1", "h2", "h3", "ul", "ol", "li", "span", "img", "pre", "code", "a"
+      ],
+      ALLOWED_ATTR: ["style", "href", "src"]
+    });
+    onChangeHtml?.(sanitized);
+  }, [markdown, onChangeHtml]);
+
+  // Load existing edit content
+  useEffect(() => {
+    if (params?.id !== "new" && edit) {
+      setMarkdown(edit);
+      setHistory([edit]);
+      setHistoryIndex(0);
     }
-  }, [edit])
+  }, [edit, params?.id]);
+
+  // Undo / Redo with keyboard
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.ctrlKey && e.key === "z" && !e.shiftKey) {
+      // Ctrl+Z => undo
+      e.preventDefault();
+      if (historyIndex > 0) {
+        setHistoryIndex(historyIndex - 1);
+        setMarkdown(history[historyIndex - 1]);
+      }
+    } else if ((e.ctrlKey && e.key === "y") || (e.ctrlKey && e.shiftKey && e.key === "Z")) {
+      // Ctrl+Y or Ctrl+Shift+Z => redo
+      e.preventDefault();
+      if (historyIndex < history.length - 1) {
+        setHistoryIndex(historyIndex + 1);
+        setMarkdown(history[historyIndex + 1]);
+      }
+    }
+  };
 
   return (
-    <div className="p-4 space-y-4 max-w-full">
+    <div className="mdr-wrapper">
       {/* Toolbar */}
-      <div className="flex flex-wrap gap-2 border rounded-md p-2 bg-gray-50">
-        <button
-          className="px-2 py-1 bg-blue-500 text-white rounded cursor-pointer"
-          onClick={() => toggleFormat("# ")}
+      <div className="mdr-toolbar">
+
+        <button onClick={toolbarActions.h1}>Heading</button>
+        <button onClick={toolbarActions.h2}>Sub Heading</button>
+        <button onClick={toolbarActions.bold}>B</button>
+        <button onClick={toolbarActions.italic}>I</button>
+        <button onClick={toolbarActions.ul}>Bullets</button>
+        <button onClick={toolbarActions.ol}>Numbers</button>
+        <select
+          onChange={(e) => applyFontSize(e.target.value)}
+          defaultValue=""
+          style={{ padding: "3px 4px", borderRadius: "4px", border: "1px solid #d1d5db" }}
         >
-          H1
-        </button>
-        <button
-          className="px-2 py-1 bg-blue-500 text-white rounded cursor-pointer"
-          onClick={() => toggleFormat("## ")}
-        >
-          H2
-        </button>
-        <button
-          className="px-2 py-1 bg-gray-200 rounded cursor-pointer"
-          onClick={() => toggleFormat("**", "**")}
-        >
-          Bold
-        </button>
-        <button
-          className="px-2 py-1 bg-gray-200 rounded cursor-pointer"
-          onClick={() => toggleFormat("*", "*")}
-        >
-          Italic
-        </button>
-        <button
-          className="px-2 py-1 bg-gray-200 rounded cursor-pointer"
-          onClick={() =>
-            toggleFormat('<span style="color:red;">', "</span>")
-          }
-        >
-          Color
-        </button>
-        <button
-          className="px-2 py-1 bg-gray-200 rounded cursor-pointer"
-          onClick={() =>
-            toggleFormat('<span style="font-size:24px;">', "</span>")
-          }
-        >
-          Font Size
-        </button>
-        <button
-          className="px-2 py-1 bg-gray-200 rounded cursor-pointer"
-          onClick={() => toggleFormat("![image](https://picsum.photos/300)")}
-        >
-          Image
-        </button>
-        <button
-          className="px-2 py-1 bg-gray-200 rounded cursor-pointer"
-          onClick={() => applyList("ul")}
-        >
-          • Bulleted List
-        </button>
-        <button
-          className="px-2 py-1 bg-gray-200 rounded cursor-pointer"
-          onClick={() => applyList("ol")}
-        >
-          1. Numbered List
-        </button>
-        <button
-          className="px-2 py-1 bg-green-500 text-white rounded cursor-pointer"
-          onClick={convertToHtml}
-        >
-          Convert to HTML
-        </button>
+          <option value="" disabled>
+            Font Size
+          </option>
+          {fontSizes.map((size) => (
+            <option key={size} value={size}>
+              {size}
+            </option>
+          ))}
+        </select>
+
+        <button onClick={toolbarActions.image}>🖼 Image</button>
+
+        {/* Color picker */}
+        {colors.map((color) => (
+          <button
+            key={color}
+            style={{ backgroundColor: color, width: 24, height: 24, padding: 0 }}
+            onClick={() => applyColor(color)}
+          />
+        ))}
       </div>
 
       {/* Editor + Preview */}
-      <div className="flex flex-col lg:flex-row gap-4">
-        {/* Editor */}
+      <div className="mdr-body">
         <textarea
           ref={textareaRef}
-          className="flex-1 border rounded-md p-3 w-full min-h-[300px] resize-y"
+          placeholder="Write markdown..."
           value={markdown}
           onChange={(e) => {
             setMarkdown(e.target.value);
             pushHistory(e.target.value);
           }}
-          placeholder="Select text and click toolbar..."
+          onKeyDown={handleKeyDown}
         />
-
-        {/* Rendered Output */}
-        <div className="flex-1 flex flex-col border rounded-md p-3 overflow-auto max-h-[80vh] bg-white">
-          <h3 className="mb-2 font-semibold text-lg">Rendered Output</h3>
-          <div
-            className="prose max-w-full break-words"
-            dangerouslySetInnerHTML={{ __html: html || data }}
-          />
-        </div>
+        <div
+          className="mdr-preview"
+          dangerouslySetInnerHTML={{ __html: getHtml(markdown) }}
+        />
       </div>
+
+      {/* Scoped Styles */}
+      <style jsx>{`
+        .mdr-wrapper {
+          border: 1px solid #e5e7eb;
+          border-radius: 8px;
+          background: #fff;
+        }
+
+        .mdr-toolbar {
+          display: flex;
+          gap: 8px;
+          padding: 8px;
+          border-bottom: 1px solid #e5e7eb;
+          background: #f9fafb;
+          flex-wrap: wrap;
+        }
+
+        .mdr-toolbar button {
+          padding: 4px 8px;
+          font-size: 13px;
+          border: 1px solid #d1d5db;
+          background: white;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: 0.2s;
+        }
+
+        .mdr-toolbar button:hover {
+          background: #f3f4f6;
+        }
+
+        .mdr-body {
+          display: flex;
+          flex-direction:row;
+          min-height: 350px;
+          gap: 8px;
+          // flex-wrap: wrap;
+        }
+
+        textarea {
+          width: 50%;
+          min-width: 300px;
+          padding: 12px;
+          border: none;
+          outline: none;
+          resize: none;
+          font-family: monospace;
+          font-size: 14px;
+        }
+.mdr-preview {
+  width: 50%;
+  min-width: 300px;
+  padding: 12px;
+  background: #fafafa;
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+       
+      `}</style>
     </div>
   );
-}
+};
+
+export default MarkDownReact;

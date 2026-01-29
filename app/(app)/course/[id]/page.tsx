@@ -28,7 +28,7 @@ function page() {
                 .then((res) => {
                     // console.log(res?.data)
                     const lessons = res?.data?.lessons
-                    
+                        //   setEditor(turnDown(res?.data?.outline))
                     setCourse(res?.data)
 
                 }).catch((err) => console.log(err)).finally(() => { })

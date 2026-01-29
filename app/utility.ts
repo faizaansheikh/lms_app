@@ -1,4 +1,8 @@
- import TurndownService from "turndown";
+import TurndownService from "turndown";
+import { marked } from "marked";
+
+import { Extension } from "@tiptap/core";
+
 
 export const slugify = (text: string) =>
     text
@@ -38,7 +42,8 @@ export const addLineBreaks = (html: string) =>
 
 
 // extensions/FontSize.ts
-import { Extension } from "@tiptap/core";
+
+
 
 export const FontSize = Extension.create({
     name: "fontSize",
@@ -63,8 +68,8 @@ export const FontSize = Extension.create({
         ];
     },
 });
-export const turnDown = (html:any) => {
-   
+export const turnDown = (html: any) => {
+
 
     const turndownService = new TurndownService();
 
@@ -106,3 +111,15 @@ export const turnDown = (html:any) => {
     const markdown = turndownService.turndown(html || `<h1>Heading</h1>`);
     return markdown
 }
+export const getHtml = (md: string) => {
+    try {
+        // marked.parse always returns string, no promise
+        const rawHtml: any = marked.parse(md, {
+            breaks: true, gfm: true
+        });
+        return rawHtml
+    } catch (err) {
+        console.error(err);
+        return "";
+    }
+};

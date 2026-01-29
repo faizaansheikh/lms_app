@@ -1,7 +1,7 @@
 'use client'
 import FormElement from '@/app/components/FormElement'
 import MarkDownReact from '@/app/components/ui/MarkDownReact';
-import { Preview } from '@/app/components/ui/Preview';
+
 import { GeneralCoreService } from '@/app/config/GeneralCoreService';
 import { turnDown } from '@/app/utility';
 import { message } from 'antd';
@@ -76,15 +76,16 @@ function LessonsForm() {
                     },
 
                 },
-    
+
             ]
         },
 
     ]
-    const handleSave = (values: any) => {
+    const handleSave = async (values: any) => {
+
         const payload = {
             ...values,
-            outline: description || '',
+            outline: description || "",
             quizid: quiz?.length > 0 ? quiz[0] : null
         }
         // console.log(payload)
@@ -112,7 +113,7 @@ function LessonsForm() {
                     setModel(res?.data)
                     setDescription(res?.data?.outline)
                     setEditor(turnDown(res?.data?.outline))
-                   
+
                     setQuiz(res?.data?.quizid ? [Number(res?.data?.quizid)] : [])
                 } else {
                     message.error(res?.message)
@@ -131,13 +132,14 @@ function LessonsForm() {
             getSingleRec(Number(params.id))
         }
     }, [])
-   
+
     return (
         <div>
 
             <FormElement title="Lessons Form" save={handleSave} setModel={setModel} model={model} elements={elems} loading={loader} />
             <div className=" max-w-none markdown">
-                <MarkDownReact setData={setDescription} data={description} edit={editor}/>
+                {/* <MarkDownReact setData={setDescription} data={description} edit={editor} /> */}
+                <MarkDownReact  onChangeHtml={(html:string)=>setDescription(html)} edit={editor}/>
             </div>
         </div>
     )

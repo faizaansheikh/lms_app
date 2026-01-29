@@ -34,15 +34,15 @@ body {
 
 /* Markdown base styles */
 .markdown h1 {
-  font-size: 2.25rem;
+  font-size: 2rem;
   font-weight: 700;
-  /* margin: 1rem 0; */
+
 }
 
 .markdown h2 {
   font-size: 1.75rem;
   font-weight: 600;
-  /* margin: 0.75rem 0; */
+
 }
 
 .markdown h3 {
@@ -60,3 +60,78 @@ body {
   padding-left: 1.5rem;
 }
 
+.markdown ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+}
+
+
+
+
+.mdr-preview h1 {
+  font-size: 2rem;
+  /* margin: 8px 0 8px; */
+  font-weight: 700;
+  
+}
+
+.mdr-preview h2 {
+  font-size: 1.5rem;
+  /* margin: 7px 0 7px; */
+  font-weight: 700;
+}
+
+.mdr-preview h3 {
+  font-size: 1.25rem;
+  /* margin: 6px 0 6px; */
+  font-weight: 700;
+}
+
+.mdr-preview p {
+  /* margin: 8px 0; */
+  line-height: 1.6;
+}
+
+.mdr-preview ul {
+  list-style: disc;
+  padding-left: 20px;
+  /* margin: 8px 0; */
+  line-height: 1;
+}
+
+.mdr-preview ol {
+  list-style: decimal;
+  padding-left: 20px;
+  margin: 8px 0;
+  line-height: 1;
+}
+
+.mdr-preview li {
+  margin-bottom: 0px;
+}
+
+.mdr-preview pre {
+  background: #111;
+  color: #fff;
+  padding: 10px;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+.mdr-preview code {
+  background: #eee;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.mdr-preview img {
+  max-width: 80%;
+  border-radius: 4px;
+  margin: 8px 0;
+}
+
+.mdr-preview a {
+  color: #2563eb;
+  text-decoration: underline;
+}
