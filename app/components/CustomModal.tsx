@@ -9,7 +9,8 @@ interface ModalProps {
     onOk?: () => void
     okText?: string,
     extraBtn?: React.ReactNode
-    loader?: any
+    loader?: any,
+    
 }
 
 const CustomModal: React.FC<ModalProps> = ({

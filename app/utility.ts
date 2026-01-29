@@ -1,3 +1,4 @@
+ import TurndownService from "turndown";
 
 export const slugify = (text: string) =>
     text
@@ -33,4 +34,75 @@ export const getUser = () => {
     return null
 }
 export const addLineBreaks = (html: string) =>
-  html.replace(/\.([A-Z])/g, '.<br/>$1');
+    html.replace(/\.([A-Z])/g, '.<br/>$1');
+
+
+// extensions/FontSize.ts
+import { Extension } from "@tiptap/core";
+
+export const FontSize = Extension.create({
+    name: "fontSize",
+
+    addGlobalAttributes() {
+        return [
+            {
+                types: ["textStyle"],
+                attributes: {
+                    fontSize: {
+                        default: null,
+                        parseHTML: element => element.style.fontSize || null,
+                        renderHTML: attributes => {
+                            if (!attributes.fontSize) return {};
+                            return {
+                                style: `font-size: ${attributes.fontSize}`,
+                            };
+                        },
+                    },
+                },
+            },
+        ];
+    },
+});
+export const turnDown = (html:any) => {
+   
+
+    const turndownService = new TurndownService();
+
+    // Optional: enable GitHub-flavored markdown
+    turndownService.addRule('gfm', {
+        filter: ['b', 'strong', 'i', 'em', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'img', 'span'],
+        replacement: (content, node) => {
+            switch (node.nodeName.toLowerCase()) {
+                case "strong":
+                case "b":
+                    return `**${content}**`;
+                case "em":
+                case "i":
+                    return `*${content}*`;
+                case "h1":
+                    return `# ${content}\n\n`;
+                case "h2":
+                    return `## ${content}\n\n`;
+                case "h3":
+                    return `### ${content}\n\n`;
+                case "li":
+                    const parent = node.parentNode;
+                    if (parent && parent.nodeName === "OL") return `${Array.from(parent.children).indexOf(node) + 1}. ${content}\n`;
+                    return `- ${content}\n`;
+                case "img":
+                    const src = node.getAttribute('src');
+                    const alt = node.getAttribute('alt') || '';
+                    return `![${alt}](${src})`;
+                case "span":
+                    return content; // for color/font-size ignore
+                default:
+                    return content;
+            }
+        },
+    });
+
+    // Example
+    // const html = `<h1>Heading</h1><p>This is <strong>bold</strong> text</p><ul><li>Item1</li><li>Item2</li></ul>`;
+    const markdown = turndownService.turndown(html || `<h1>Heading</h1>`);
+    return markdown
+}
