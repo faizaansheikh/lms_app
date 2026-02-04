@@ -39,7 +39,7 @@ function Mylookup(props: lookup) {
             .then((res) => {
                 if (res?.status === 200) {
                     const cols: any = res?.data?.data[0]
-                    const { lessons, answers, description, thumbnail, questions, password,outline, ...othersCols } = cols
+                    const { lessons, answers, description, thumbnail, questions, password, outline, ...othersCols } = cols
                     setColumn(othersCols ? Object.keys(othersCols) : [])
                     setRowData([...res?.data?.data])
                     setTotalCount(Number(res?.data?.totalRecords))
@@ -55,12 +55,21 @@ function Mylookup(props: lookup) {
         getAllRec(page, rowsPerPage)
     }
 
+    
     const handleRowClick = (x: any) => {
         setOpenModal(false)
-        setInputVal(x._id)
-        getData([x._id])
-    }
+        
+        if (Number(inputVal) === x._id) {
+            setInputVal('')
+            getData([])
+        } else {
+            setInputVal(x._id)
+            getData([x._id])
+        }
 
+
+    }
+    
     const handleCheckboxChange = (row: any, isChecked: any) => {
         if (isChecked) {
             // ✅ add row
@@ -94,6 +103,7 @@ function Mylookup(props: lookup) {
         if (params.id !== 'new') {
             const result = vals?.map((id: any) => ({ _id: id }));
             setSelectedRows(result)
+            
         }
     }, [vals])
 
@@ -114,7 +124,8 @@ function Mylookup(props: lookup) {
                     type="text"
                     placeholder={placeholder}
                     value={inputVal}
-                    readOnly
+                    onChange={(e) => setInputVal(e.target.value)}
+                    // readOnly
                     className="w-full bg-amber-50 border border-blue-200 p-2 pr-10 text-[16px] rounded-md"
                 />
 
@@ -181,7 +192,9 @@ function Mylookup(props: lookup) {
                                                 <tr onClick={() => multiple ? {} : handleRowClick(x)} className={`
                                                     border-b border-[lightgrey]
                                                     cursor-pointer transition-colors
-                                             bg-secondary hover:bg-red-200
+                                                    ${multiple ? 'bg-secondary' : selectedRows.some((item: any) => item._id === x._id) ? "bg-red-200" : "bg-secondary "}
+                                             
+                                             hover:bg-red-200
                                                 // ? 'bg-red-200 hover:bg-red-300'
                                                 // : 'bg-secondary hover:bg-secondary/80'
                                             }
@@ -196,8 +209,8 @@ function Mylookup(props: lookup) {
                                                         />
                                                     </td>}
                                                     {
-                                                        column.map((z, ind) => (
-                                                            <td className=' text-[14px] py-2 px-3 cursor-pointer ' key={ind}>{x[z]}</td>
+                                                        column.map((z: any, ind) => (
+                                                            <td className={`text-[14px] py-2 px-3 cursor-pointer  `} key={ind}>{x[z]}</td>
                                                         ))
                                                     }
 

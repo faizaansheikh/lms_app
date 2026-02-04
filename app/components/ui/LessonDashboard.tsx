@@ -16,6 +16,7 @@ import dynamic from "next/dynamic";
 import Quiz from "./Quiz";
 import { message, Tabs } from "antd";
 import LessonQuiz from './LessonQuiz';
+import LessonOutline from './LessonOutline';
 interface ld {
     data: any,
     getApi: any,
@@ -117,7 +118,7 @@ function LessonDashboard(props: ld) {
     const onChange = (key: string) => {
         setTabs(key);
     };
-
+    
 
 
     return (
@@ -159,25 +160,17 @@ function LessonDashboard(props: ld) {
                                     key: '1',
                                     label: 'Outline',
                                     children: (
-                                        <div
-                                            className="mdr-preview"
-                                            dangerouslySetInnerHTML={{ __html: video?.outline }}
-                                        />
 
+                                        video?.outline ?
+                                            <LessonOutline data={video} updateLessonProgress={updateLessonProgress}/> : 'No outline for this lesson!'
 
-
-
-                                        // <h2 className="text-lg">
-                                        //     {video?.outline ? video?.outline : 'No outline for this lesson!'}
-
-                                        // </h2>
                                     ),
                                 },
                                 {
                                     key: '2',
                                     label: 'Lecture',
                                     children: (
-                                        showVideo && <div className=' w-full  p-2'>
+                                        video?.url ? showVideo && <div className=' w-full  p-2'>
                                             <div className="flex justify-between items-center">
                                                 <p className='text-xl font-bold p-3'> {video?.title}</p>
                                                 {video?.is_completed && <p className='text-lg font-normal p-3 flex items-center justify-center gap-3'>Completed <MdOutlineDone color="green" size={25} /> </p>}
@@ -189,7 +182,8 @@ function LessonDashboard(props: ld) {
                                                 updateLessonProgress={video?.quiz ? () => { } : updateLessonProgress}
 
                                             />
-                                        </div>
+                                        </div> : 'No lecture available for this lesson!'
+
                                     ),
                                 },
                                 {

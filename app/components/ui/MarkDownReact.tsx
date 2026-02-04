@@ -37,23 +37,33 @@ const MarkDownReact = ({ onChangeHtml, edit }: Props) => {
   // Wrap selected text utility
   const wrapSelection = (before: string, after: string = "") => {
     if (!textareaRef.current) return;
+
     const textarea = textareaRef.current;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
-    const selectedText = textarea.value.substring(start, end) || "text";
+
+    // Use selected text, or empty string (not "text")
+    const selectedText = textarea.value.substring(start, end) || "";
+
     const newValue =
       textarea.value.substring(0, start) +
       before +
-      selectedText +
+      (selectedText || "text") +
       after +
       textarea.value.substring(end);
+
     setMarkdown(newValue);
     pushHistory(newValue);
 
-    textarea.selectionStart = start + before.length;
-    textarea.selectionEnd = start + before.length + selectedText.length;
+    // Set caret/selection
+    const newSelectionStart = start + before.length;
+    const newSelectionEnd = newSelectionStart + (selectedText || "text").length;
+
+    textarea.selectionStart = newSelectionStart;
+    textarea.selectionEnd = newSelectionEnd;
     textarea.focus();
   };
+
 
   // Apply color to selection
   const applyColor = (color: string) => {
@@ -76,6 +86,8 @@ const MarkDownReact = ({ onChangeHtml, edit }: Props) => {
     image: () => wrapSelection("![Alt text](image-url)", ""),
     code: () => wrapSelection("```js\n", "\n```"),
     link: () => wrapSelection("[", "](https://)"),
+    center: () => wrapSelection('<div style="text-align: center;">', '</div>')
+
   };
 
   // Update parent with sanitized HTML
@@ -121,7 +133,7 @@ const MarkDownReact = ({ onChangeHtml, edit }: Props) => {
   return (
     <div className="mdr-wrapper">
       {/* Toolbar */}
-      <div className="mdr-toolbar">
+      <div className="mdr-toolbar sticky top-0 bottom-0">
 
         <button onClick={toolbarActions.h1}>Heading</button>
         <button onClick={toolbarActions.h2}>Sub Heading</button>
@@ -129,6 +141,7 @@ const MarkDownReact = ({ onChangeHtml, edit }: Props) => {
         <button onClick={toolbarActions.italic}>I</button>
         <button onClick={toolbarActions.ul}>Bullets</button>
         <button onClick={toolbarActions.ol}>Numbers</button>
+        <button onClick={toolbarActions.center}>Center</button>
         <select
           onChange={(e) => applyFontSize(e.target.value)}
           defaultValue=""

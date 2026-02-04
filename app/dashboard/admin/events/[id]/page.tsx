@@ -2,8 +2,10 @@
 import FormElement from '@/app/components/FormElement'
 import GridTableForm from '@/app/components/GridTableForm';
 import TiptapEditor from '@/app/components/TiptapEditor';
+import MarkDownReact from '@/app/components/ui/MarkDownReact';
 import axiosInstance from '@/app/config/axiosInstance';
 import { GeneralCoreService } from '@/app/config/GeneralCoreService';
+import { turnDown } from '@/app/utility';
 import { message } from 'antd';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react'
@@ -19,6 +21,7 @@ function Course_Desc_Form() {
     const [loader, setLoader] = useState(false)
     const [course, setCourse] = useState<any>([])
     const [description, setDescription] = useState("");
+    const [editor, setEditor] = useState("");
     const [model, setModel] = useState<model>({
         test: ''
     })
@@ -85,6 +88,7 @@ function Course_Desc_Form() {
 
                     setCourse(res?.data?.course_id ? [Number(res?.data?.course_id)] : [])
                     setDescription(res?.data?.description)
+                     setEditor(turnDown(res?.data?.description))
                 } else {
                     message.error(res?.message)
                 }
@@ -104,11 +108,15 @@ function Course_Desc_Form() {
 
 
 
-
+    console.log(editor)
     return (
         <div>
             <FormElement title="Course Description Form" save={handleSave} setModel={setModel} model={model} elements={elems} loading={loader} />
-            <TiptapEditor
+            <div className=" max-w-none markdown">
+                {/* <MarkDownReact setData={setDescription} data={description} edit={editor} /> */}
+                <MarkDownReact onChangeHtml={(html: string) => setDescription(html)} edit={editor} />
+            </div>
+            {/* <TiptapEditor
                 value={description}
                 onChange={setDescription}
                 className="
@@ -126,7 +134,7 @@ function Course_Desc_Form() {
     prose-pre:font-sans
     prose-code:font-sans
   "
-            />
+            /> */}
 
         </div>
     )

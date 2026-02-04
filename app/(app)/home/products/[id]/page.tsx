@@ -1,4 +1,5 @@
 'use client'
+import CourseCurriculum from '@/app/components/CourseCurriculum';
 import ReviewSection from '@/app/components/ReviewSection';
 import CustomProd from '@/app/components/ui/CustomProd';
 import Xloader from '@/app/components/ui/Xloader';
@@ -22,6 +23,7 @@ function page() {
     const [loading, setLoading] = useState<any>(false)
     const [desc, setDesc] = useState<any>('')
     const [review, setReview] = useState<any>([])
+    const [curriculum, setCurriculum] = useState<any>([])
     const [show, setShow] = useState<any>(false)
     const router = useRouter()
 
@@ -38,6 +40,7 @@ function page() {
                     setRecord(data);
                     setReview(data?.reviews)
                     setDesc(data?.events[0]?.description);
+                    setCurriculum(data?.lessons)
                 }
 
             }).catch((err) => console.log(err)).finally(() => { })
@@ -92,7 +95,7 @@ function page() {
                     </div>
                 </section>
 
-                {/* 
+                {/*                 
                 <div className='bg-prdimary w-full h-full mt-18  px-12 lg:px-52 '>
                   
                     <p className='text-3xl'>Your Course Instructor</p>
@@ -151,27 +154,32 @@ function page() {
 
                 <div className="bg-primdary w-full my-12 md:my-0 md:mt-26 md:mb-12 px-6  sm:px-6 md:px-10 lg:px-32 text-lg">
                     <div
-                        className="
-      prose max-w-full
-      whitespace-normal
-      break-words
-      font-sans
-
-      prose-p:font-sans
-      prose-li:font-sans
-      prose-strong:font-sans
-      prose-em:font-sans
-      prose-pre:font-sans
-      prose-code:font-sans
-    "
+                        className="mdr-preview"
                         dangerouslySetInnerHTML={{ __html: desc }}
                     />
+
                 </div>
 
 
 
-
+                {curriculum.length > 0 && <CourseCurriculum data={curriculum} />}
                 <ReviewSection data={review} courseId={Number(searchParams?.get('q'))} getApi={getSingleRec} />
+
+                <style jsx>{`
+       
+.mdr-preview {
+  width: 100%;
+  min-width: 300px;
+  padding: 12px;
+//   background: #fafafa;
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+       
+      `}</style>
             </>
 
 

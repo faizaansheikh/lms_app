@@ -55,10 +55,10 @@ function LessonsForm() {
                     ChangeEv: () => { },
                     type: 'input',
 
-                    validations: {
-                        required: { value: true, message: 'Please fill this field' },
-                        minLength: { value: 3, message: 'Min length at least 3' },
-                    }
+                    // validations: {
+                    //     required: { value: true, message: 'Please fill this field' },
+                    //     minLength: { value: 3, message: 'Min length at least 3' },
+                    // }
                 },
                 {
                     col: 12,
@@ -72,6 +72,7 @@ function LessonsForm() {
                     display: 'name',
                     vals: params?.id !== 'new' ? quiz : '',
                     getData: (data: any) => {
+                        
                         setQuiz(data)
                     },
 
@@ -81,6 +82,7 @@ function LessonsForm() {
         },
 
     ]
+    
     const handleSave = async (values: any) => {
 
         const payload = {
