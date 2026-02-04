@@ -41,8 +41,8 @@ const Nav = () => {
     const showDrawer = () => setOpen(true);
     const onClose = () => setOpen(false);
 
- 
-    
+
+
 
     const menu = [
         { title: 'Home', link: '#home' },
@@ -51,7 +51,7 @@ const Nav = () => {
         { title: 'Contact Us', link: '#contact' }
     ];
 
-   
+
     return (
         <>
             <div
@@ -151,6 +151,24 @@ const Nav = () => {
                         </Link>
                     ))}
                 </ul>
+                {
+                    userrole === 'student' ?
+                        <div className="flex justify-between items-center">
+                            <span className='text-xl px-3'>{username}</span>
+                            <Popover content={<div className='text-lg '>
+                                <p className='p-1 cursor-pointer hover:bg-gray-200'>Edit profile</p>
+                                <p onClick={handleLogout} className='p-1 cursor-pointer hover:bg-gray-200'>Logout</p>
+                            </div>} title="" trigger="click" placement='bottom'>
+                                <Avatar className='cursor-pointer' size="large" icon={<UserOutlined />} />
+                            </Popover>
+                        </div>
+                        :
+                        <div className="flex justify-between items-center">
+                            <span onClick={handleLogin} className='text-primary cursor-pointer h-15 w-auto px-4 flex items-center  hover:bg-[#e9e5e5] duration-200'>Login</span>
+                            <XButton Click={handleSignup} label='Sign up' />
+                        </div>
+                }
+
             </Drawer>
         </>
     );
