@@ -86,7 +86,7 @@ const MarkDownReact = ({ onChangeHtml, edit }: Props) => {
     image: () => wrapSelection("![Alt text](image-url)", ""),
     code: () => wrapSelection("```js\n", "\n```"),
     link: () => wrapSelection("[", "](https://)"),
-    center: () => wrapSelection('<div style="text-align: center;">', '</div>')
+    center: () => wrapSelection(`<p style="text-align: center;">`, "</p>")
 
   };
 
@@ -167,6 +167,14 @@ const MarkDownReact = ({ onChangeHtml, edit }: Props) => {
             onClick={() => applyColor(color)}
           />
         ))}
+        {/* <input
+          type="color"
+          onInput={(e:any) => applyColor(e.target.value)} // fire only once user picks color
+          style={{ width: 32, height: 32, border: "none", padding: 0 }}
+          title="Pick custom color"
+        /> */}
+
+
       </div>
 
       {/* Editor + Preview */}

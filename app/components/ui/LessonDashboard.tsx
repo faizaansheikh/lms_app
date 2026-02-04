@@ -118,101 +118,127 @@ function LessonDashboard(props: ld) {
     const onChange = (key: string) => {
         setTabs(key);
     };
-    
+
 
 
     return (
 
         showQuiz ? <Quiz data={quiz} setShowQuiz={setShowQuiz} /> :
 
-            <div className='flex'>
+            <div className="flex flex-col lg:flex-row h-screen">
+                {/* Sidebar */}
+                <div className={`bg-redd-300 lg:w-64 w-full lg:h-screen h-auto border-r border-gray-400`}>
+                    {/* Home Button */}
+                    <div
+                        className="h-20 flex items-center pl-4 border-b border-gray-400 cursor-pointer"
+                        onClick={handleHome}
+                    >
+                        <IoHome className="text-primary" size={20} />
+                    </div>
 
-                <div className='bg-rded-300 w-[25%] h-screen border-r border-gray-400'>
-                    <div className='h-20 flex items-center pl-4 border-b border-gray-400 cursor-pointer' onClick={handleHome}><p><IoHome className="text-primary" size={20} /></p></div>
+                    {/* Lesson List */}
+                    <ul>
+                        {data?.map((v: any, ind: number) => (
+                            <li
+                                key={ind}
+                                className={`list-none p-4 border-t border-b border-gray-400 flex items-center gap-3 text-sm 
+            ${active === v?.lesson_id ? "bg-red-200" : ""}
+            ${v?.locked ? "cursor-not-allowed bg-gray-300" : "cursor-pointer hover:bg-red-300"}`}
+                                onClick={v?.locked ? () => { } : () => handleLinks(v)}
+                            >
+                                <span>
+                                    {v?.locked ? (
+                                        <GoRepoLocked size={20} className="text-primary mr-2" />
+                                    ) : (
+                                        <ImUnlocked size={20} className="text-primary mr-2" />
+                                    )}
+                                </span>
+                                <span>{v?.icon}</span>
+                                {v.title}
+                            </li>
+                        ))}
 
-                    {data?.map((v: any, ind: number) => (
-                        <li
-                            key={ind}
-                            className={`list-none p-4 ${active === v?.lesson_id ? "bg-red-200" : ''} border-t border-b border-gray-400 flex items-center gap-3 text-sm ${v?.locked ? 'cursor-not-allowed bg-gray-300' : 'cursor-pointer hover:bg-red-300'} `}
-                            onClick={v?.locked ? () => { } : () => handleLinks(v)}
-                        >
-                            <span className=''>{v?.locked ? <GoRepoLocked size={20} className="text-primary mr-2" /> : <ImUnlocked size={20} className="text-primary mr-2" />}</span>
-                            <span className=''>{v?.icon}</span>
-                            {v.title}
-
-                        </li>
-                    ))}
-                    {quiz && <li onClick={quiz?.locked ? () => { } : () => handleQuiz()} className={`list-none p-4 border-t border-b border-gray-400 flex items-center gap-3 text-sm ${quiz?.locked ? 'cursor-not-allowed bg-gray-300' : 'cursor-pointer hover:bg-red-300'} `}>
-                        <span className=''>{quiz?.locked ? <GoRepoLocked size={20} className="text-primary mr-2" /> : <ImUnlocked size={20} className="text-primary mr-2" />}</span>
-                        Final Exam
-                    </li>}
+                        {/* Quiz Item */}
+                        {quiz && (
+                            <li
+                                onClick={quiz?.locked ? () => { } : () => handleQuiz()}
+                                className={`list-none p-4 border-t border-b border-gray-400 flex items-center gap-3 text-sm 
+            ${quiz?.locked ? "cursor-not-allowed bg-gray-300" : "cursor-pointer hover:bg-red-300"}`}
+                            >
+                                <span>
+                                    {quiz?.locked ? (
+                                        <GoRepoLocked size={20} className="text-primary mr-2" />
+                                    ) : (
+                                        <ImUnlocked size={20} className="text-primary mr-2" />
+                                    )}
+                                </span>
+                                Final Exam
+                            </li>
+                        )}
+                    </ul>
                 </div>
 
-                <div className='w-full h-screen'>
-                    <div className='bg-redd-300 w-full h-20 border-b border-gray-400 '></div>
+                {/* Main Content */}
+                <div className="w-full flex-1 h-screen overflow-auto">
+                    {/* Top Bar */}
+                    <div className="bg-redd-200 w-full h-20 border-b border-gray-400"></div>
 
-                    <div className=' w-full  p-4'>
+                    {/* Tabs / Content */}
+                    <div className="w-full p-4">
                         <Tabs
                             activeKey={tabs}
                             onChange={onChange}
                             items={[
                                 {
-                                    key: '1',
-                                    label: 'Outline',
-                                    children: (
-
-                                        video?.outline ?
-                                            <LessonOutline data={video} updateLessonProgress={updateLessonProgress}/> : 'No outline for this lesson!'
-
+                                    key: "1",
+                                    label: "Outline",
+                                    children: video?.outline ? (
+                                        <LessonOutline data={video} updateLessonProgress={updateLessonProgress} />
+                                    ) : (
+                                        "No outline for this lesson!"
                                     ),
                                 },
                                 {
-                                    key: '2',
-                                    label: 'Lecture',
-                                    children: (
-                                        video?.url ? showVideo && <div className=' w-full  p-2'>
-                                            <div className="flex justify-between items-center">
-                                                <p className='text-xl font-bold p-3'> {video?.title}</p>
-                                                {video?.is_completed && <p className='text-lg font-normal p-3 flex items-center justify-center gap-3'>Completed <MdOutlineDone color="green" size={25} /> </p>}
+                                    key: "2",
+                                    label: "Lecture",
+                                    children: video?.url ? (
+                                        showVideo && (
+                                            <div className="w-full p-2">
+                                                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center">
+                                                    <p className="text-xl font-bold p-3">{video?.title}</p>
+                                                    {video?.is_completed && (
+                                                        <p className="text-lg font-normal p-3 flex items-center gap-3">
+                                                            Completed <MdOutlineDone color="green" size={25} />
+                                                        </p>
+                                                    )}
+                                                </div>
+                                                <VideoPlayer
+                                                    vimeoId={video?.url}
+                                                    setComplete={setComplete}
+                                                    videoDetails={video}
+                                                    updateLessonProgress={video?.quiz ? () => { } : updateLessonProgress}
+                                                />
                                             </div>
-                                            <VideoPlayer
-                                                vimeoId={video?.url}
-                                                setComplete={setComplete}
-                                                videoDetails={video}
-                                                updateLessonProgress={video?.quiz ? () => { } : updateLessonProgress}
-
-                                            />
-                                        </div> : 'No lecture available for this lesson!'
-
+                                        )
+                                    ) : (
+                                        "No lecture available for this lesson!"
                                     ),
                                 },
                                 {
-                                    key: '3',
-                                    label: 'Quiz',
-                                    children: video?.quiz ? <LessonQuiz quiz={video?.quiz} updateLessonProgress={updateLessonProgress} /> : "No quiz for this lesson!"
-
+                                    key: "3",
+                                    label: "Quiz",
+                                    children: video?.quiz ? (
+                                        <LessonQuiz quiz={video?.quiz} updateLessonProgress={updateLessonProgress} />
+                                    ) : (
+                                        "No quiz for this lesson!"
+                                    ),
                                 },
                             ]}
                         />
                     </div>
-
                 </div>
-                <style jsx>{`
-       
-.mdr-preview {
-  width: 100%;
-  min-width: 300px;
-  padding: 12px;
-  background: #fafafa;
-  overflow-y: auto;
-  overflow-x: hidden;
-  word-wrap: break-word;
-  word-break: break-word;
-  white-space: pre-wrap;
-}
-       
-      `}</style>
-            </div >
+            </div>
+
 
     )
 }

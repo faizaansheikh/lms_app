@@ -13,12 +13,29 @@ function LessonOutline({ data, updateLessonProgress }: any) {
 
     }, [])
     return (
-        <div>
+
+        <>
             <div
                 className="mdr-preview"
                 dangerouslySetInnerHTML={{ __html: data?.outline }}
             />
-        </div>
+            <style jsx>{`
+       
+.mdr-preview {
+  width: 100%;
+  min-width: 300px;
+  padding: 12px;
+  background: #fafafa;
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+       
+      `}</style>
+        </>
+
     )
 }
 

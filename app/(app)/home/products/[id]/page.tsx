@@ -53,7 +53,7 @@ function page() {
             router.push(`/checkout/${Number(searchParams?.get('q'))}`)
 
         } else {
-            message.error('You need to sign in first to enroll in this course!')
+            router.push(`/auth/signup`)
         }
     }
 
