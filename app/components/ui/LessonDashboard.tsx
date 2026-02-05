@@ -132,212 +132,214 @@ function LessonDashboard(props: ld) {
           <Spin size="large" />
         </div>
       )}
-      showQuiz ? <Quiz data={quiz} setShowQuiz={setShowQuiz} /> :
-      <div className="flex h-screen overflow-hidden relative">
+      {
+        showQuiz ? <Quiz data={quiz} setShowQuiz={setShowQuiz} /> :
+          <div className={`flex h-screen overflow-hidden relative ${loading ? "blur-sm pointer-events-none" : ""}`}>
 
-        {!isHide && (
-          <div
-            onClick={() => setIsHide(true)}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden"
-          />
-        )}
+            {!isHide && (
+              <div
+                onClick={() => setIsHide(true)}
+                className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden"
+              />
+            )}
 
-        <div
-          className={`
+            <div
+              className={`
     fixed lg:static top-0 left-0 z-50
     h-full
     bg-[whitesmoke] md:bg-transparent
     transition-transform duration-300 ease-in-out
     ${isHide ? "-translate-x-full lg:translate-x-0" : "translate-x-0"}
   `}
-        >
+            >
 
-          <div
-            className={`
+              <div
+                className={`
         h-full p-4  mb-2 overflow-hidden
         ${isHide ? "lg:w-18 px-8" : "w-100  lg:w-72"}
       `}
-          >
+              >
 
 
-            {
-              !isHide ? (
-                <>
-                  <div className='h-auto flex justify-between mt-4 mb-6 items-center'>
-                    <div
-                      className="flex items-center border-gray-400 cursor-pointer"
-                      onClick={handleHome}
-                    >
-                      <IoHome className="text-primary" size={23} />
-                    </div>
-                    <span
-                      className='text-text cursor-pointer'
-                      onClick={() => setIsHide(true)}
-                    >
-                      <GrBladesVertical size={20} />
-                    </span>
-                  </div>
+                {
+                  !isHide ? (
+                    <>
+                      <div className='h-auto flex justify-between mt-4 mb-6 items-center'>
+                        <div
+                          className="flex items-center border-gray-400 cursor-pointer"
+                          onClick={handleHome}
+                        >
+                          <IoHome className="text-primary" size={23} />
+                        </div>
+                        <span
+                          className='text-text cursor-pointer'
+                          onClick={() => setIsHide(true)}
+                        >
+                          <GrBladesVertical size={20} />
+                        </span>
+                      </div>
 
-                  <ul className="overflow-y-auto max-h-[calc(100vh-5rem)] mb-4">
-                    {data?.map((v: any, ind: number) => (
-                      <li
-                        key={ind}
-                        className={`list-none p-4 border-t border-b border-gray-400 flex items-center gap-3 text-sm 
+                      <ul className="overflow-y-auto max-h-[calc(100vh-5rem)] mb-4">
+                        {data?.map((v: any, ind: number) => (
+                          <li
+                            key={ind}
+                            className={`list-none p-4 border-t border-b border-gray-400 flex items-center gap-3 text-sm 
                     ${active === v?.lesson_id ? "bg-red-200" : ""} 
                     ${v?.locked ? "cursor-not-allowed bg-gray-300" : "cursor-pointer hover:bg-red-300"}`}
-                        onClick={v?.locked ? () => { } : () => handleLinks(v)}
-                      >
-                        <div>
-                          {v?.locked ? (
-                            <GoRepoLocked size={20} className="text-primary " />
-                          ) : (
-                            <ImUnlocked size={20} className="text-primary " />
-                          )}
-                        </div>
-
-                        <div className="truncate">{v.title}</div>
-                      </li>
-                    ))}
-
-                    {quiz && (
-                      <li
-                        onClick={quiz?.locked ? () => { } : () => handleQuiz()}
-                        className={`list-none p-4 border-t border-b border-gray-400 flex items-center gap-3 text-sm 
-                    ${quiz?.locked ? "cursor-not-allowed bg-gray-300" : "cursor-pointer hover:bg-red-300"}`}
-                      >
-                        {quiz?.locked ? (
-                          <GoRepoLocked size={20} className="text-primary " />
-                        ) : (
-                          <ImUnlocked size={20} className="text-primary " />
-                        )}
-                        Final Exam
-                      </li>
-                    )}
-
-                  </ul>
-                </>
-              ) : (
-                <div className='flex flex-col items-center justify-center'>
-                  <span
-                    className='py-4 cursor-pointer'
-                    onClick={() => setIsHide(false)}
-                  >
-                    <GrBladesVertical size={20} />
-                  </span>
-
-                  <ul className="overflow-y-auto max-h-[calc(100vh-5rem)] mt-4 ">
-                    {data?.map((x: any, ind: any) => (
-                      <li
-                        key={ind}
-                        className={`list-none p-4 border-t border-b border-gray-400 flex items-center gap-3 text-sm 
-                    ${active === x?.lesson_id ? "bg-red-200" : ""} 
-                    ${x?.locked ? "cursor-not-allowed bg-gray-300" : "cursor-pointer hover:bg-red-300"}`}
-                        onClick={x?.locked ? () => { } : () => handleLinks(x)}
-                      >
-                        {x?.locked ? (
-                          <GoRepoLocked size={20} className="text-primary " />
-                        ) : (
-                          <ImUnlocked size={20} className="text-primary " />
-                        )}
-                      </li>
-                    ))}
-
-                    {quiz && (
-                      <li
-                        onClick={quiz?.locked ? () => { } : () => handleQuiz()}
-                        className={`list-none p-4  border-t border-b border-gray-400 flex items-center gap-3 text-sm 
-                    ${quiz?.locked ? "cursor-not-allowed bg-gray-300" : "cursor-pointer hover:bg-red-300"}`}
-                      >
-                        {quiz?.locked ? (
-                          <GoRepoLocked size={20} className="text-primary " />
-                        ) : (
-                          <ImUnlocked size={20} className="text-primary " />
-                        )}
-                      </li>
-                    )}
-
-                  </ul>
-                </div>
-              )
-            }
-          </div>
-        </div>
-
-        {/* 🧱 Main Content */}
-        <div className="flex-1 flex flex-col lg:ml-0">
-
-          <header className="bg-secondary h-16 shadow px-6 flex items-center justify-between">
-
-            {/* ☰ Mobile Menu Button */}
-            <button
-              onClick={() => setIsHide(false)}
-              className="lg:hidden text-prismary"
-            >
-              <GrBladesVertical size={22} />
-            </button>
-
-          </header>
-
-
-          <main className="h-full p-4 overflow-auto bg-[#f1f1f3]">
-            <div className="flex-1 overflow-auto">
-              <div className="flex-1  overflow-auto">
-                <Tabs
-                  activeKey={tabs}
-                  onChange={onChange}
-                  items={[
-                    {
-                      key: "1",
-                      label: "Outline",
-                      children: video?.outline ? (
-                        <LessonOutline data={video} updateLessonProgress={updateLessonProgress} />
-                      ) : (
-                        "No outline for this lesson!"
-                      ),
-                    },
-                    {
-                      key: "2",
-                      label: "Lecture",
-                      children: video?.url ? (
-                        showVideo && (
-                          <div className="w-full p-2">
-                            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center">
-                              <p className="text-xl font-bold p-3">{video?.title}</p>
-                              {video?.is_completed && (
-                                <p className="text-lg font-normal p-3 flex items-center gap-3">
-                                  Completed <MdOutlineDone color="green" size={25} />
-                                </p>
+                            onClick={v?.locked ? () => { } : () => handleLinks(v)}
+                          >
+                            <div>
+                              {v?.locked ? (
+                                <GoRepoLocked size={20} className="text-primary " />
+                              ) : (
+                                <ImUnlocked size={20} className="text-primary " />
                               )}
                             </div>
-                            <VideoPlayer
-                              vimeoId={video?.url}
-                              setComplete={setComplete}
-                              videoDetails={video}
-                              updateLessonProgress={video?.quiz ? () => { } : updateLessonProgress}
-                            />
-                          </div>
-                        )
-                      ) : (
-                        "No lecture available for this lesson!"
-                      ),
-                    },
-                    {
-                      key: "3",
-                      label: "Quiz",
-                      children: video?.quiz ? (
-                        <LessonQuiz quiz={video?.quiz} updateLessonProgress={updateLessonProgress} />
-                      ) : (
-                        "No quiz for this lesson!"
-                      ),
-                    },
-                  ]}
-                />
+
+                            <div className="truncate">{v.title}</div>
+                          </li>
+                        ))}
+
+                        {quiz && (
+                          <li
+                            onClick={quiz?.locked ? () => { } : () => handleQuiz()}
+                            className={`list-none p-4 border-t border-b border-gray-400 flex items-center gap-3 text-sm 
+                    ${quiz?.locked ? "cursor-not-allowed bg-gray-300" : "cursor-pointer hover:bg-red-300"}`}
+                          >
+                            {quiz?.locked ? (
+                              <GoRepoLocked size={20} className="text-primary " />
+                            ) : (
+                              <ImUnlocked size={20} className="text-primary " />
+                            )}
+                            Final Exam
+                          </li>
+                        )}
+
+                      </ul>
+                    </>
+                  ) : (
+                    <div className='flex flex-col items-center justify-center'>
+                      <span
+                        className='py-4 cursor-pointer'
+                        onClick={() => setIsHide(false)}
+                      >
+                        <GrBladesVertical size={20} />
+                      </span>
+
+                      <ul className="overflow-y-auto max-h-[calc(100vh-5rem)] mt-4 ">
+                        {data?.map((x: any, ind: any) => (
+                          <li
+                            key={ind}
+                            className={`list-none p-4 border-t border-b border-gray-400 flex items-center gap-3 text-sm 
+                    ${active === x?.lesson_id ? "bg-red-200" : ""} 
+                    ${x?.locked ? "cursor-not-allowed bg-gray-300" : "cursor-pointer hover:bg-red-300"}`}
+                            onClick={x?.locked ? () => { } : () => handleLinks(x)}
+                          >
+                            {x?.locked ? (
+                              <GoRepoLocked size={20} className="text-primary " />
+                            ) : (
+                              <ImUnlocked size={20} className="text-primary " />
+                            )}
+                          </li>
+                        ))}
+
+                        {quiz && (
+                          <li
+                            onClick={quiz?.locked ? () => { } : () => handleQuiz()}
+                            className={`list-none p-4  border-t border-b border-gray-400 flex items-center gap-3 text-sm 
+                    ${quiz?.locked ? "cursor-not-allowed bg-gray-300" : "cursor-pointer hover:bg-red-300"}`}
+                          >
+                            {quiz?.locked ? (
+                              <GoRepoLocked size={20} className="text-primary " />
+                            ) : (
+                              <ImUnlocked size={20} className="text-primary " />
+                            )}
+                          </li>
+                        )}
+
+                      </ul>
+                    </div>
+                  )
+                }
               </div>
             </div>
-          </main>
-        </div>
 
-      </div>
+            {/* 🧱 Main Content */}
+            <div className="flex-1 flex flex-col lg:ml-0">
+
+              <header className="bg-secondary h-16 shadow px-6 flex items-center justify-between">
+
+                {/* ☰ Mobile Menu Button */}
+                <button
+                  onClick={() => setIsHide(false)}
+                  className="lg:hidden text-prismary"
+                >
+                  <GrBladesVertical size={22} />
+                </button>
+
+              </header>
+
+
+              <main className="h-full p-4 overflow-auto bg-[#f1f1f3]">
+                <div className="flex-1 overflow-auto">
+                  <div className="flex-1  overflow-auto">
+                    <Tabs
+                      activeKey={tabs}
+                      onChange={onChange}
+                      items={[
+                        {
+                          key: "1",
+                          label: "Outline",
+                          children: video?.outline ? (
+                            <LessonOutline data={video} updateLessonProgress={updateLessonProgress} />
+                          ) : (
+                            "No outline for this lesson!"
+                          ),
+                        },
+                        {
+                          key: "2",
+                          label: "Lecture",
+                          children: video?.url ? (
+                            showVideo && (
+                              <div className="w-full p-2">
+                                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center">
+                                  <p className="text-xl font-bold p-3">{video?.title}</p>
+                                  {video?.is_completed && (
+                                    <p className="text-lg font-normal p-3 flex items-center gap-3">
+                                      Completed <MdOutlineDone color="green" size={25} />
+                                    </p>
+                                  )}
+                                </div>
+                                <VideoPlayer
+                                  vimeoId={video?.url}
+                                  setComplete={setComplete}
+                                  videoDetails={video}
+                                  updateLessonProgress={video?.quiz ? () => { } : updateLessonProgress}
+                                />
+                              </div>
+                            )
+                          ) : (
+                            "No lecture available for this lesson!"
+                          ),
+                        },
+                        {
+                          key: "3",
+                          label: "Quiz",
+                          children: video?.quiz ? (
+                            <LessonQuiz quiz={video?.quiz} updateLessonProgress={updateLessonProgress} />
+                          ) : (
+                            "No quiz for this lesson!"
+                          ),
+                        },
+                      ]}
+                    />
+                  </div>
+                </div>
+              </main>
+            </div>
+
+          </div>
+      }
     </>
 
 

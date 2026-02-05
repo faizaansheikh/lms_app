@@ -50,21 +50,13 @@ function page() {
 
     return (
         <>
-            <div className="relative h-full">
-
-
-                
-
-
-                <div className=''>
-                    <LessonDashboard
-                        data={course?.lessons}
-                        quiz={course?.finalQuiz}
-                        getApi={getSingleRec}
-                        loading={loading}
-                    />
-                </div>
-
+            <div className=''>
+                <LessonDashboard
+                    data={course?.lessons}
+                    quiz={course?.finalQuiz}
+                    getApi={getSingleRec}
+                    loading={loading}
+                />
             </div>
 
         </>
