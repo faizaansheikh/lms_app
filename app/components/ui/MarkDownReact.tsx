@@ -17,9 +17,12 @@ type Props = {
 
 const MarkDownReact = ({ onChangeHtml, edit }: Props) => {
   const params = useParams();
+  const colorRef = useRef("#000000");
+
   const [markdown, setMarkdown] = useState<string>(edit || "");
   const [history, setHistory] = useState<string[]>([edit || ""]);
   const [historyIndex, setHistoryIndex] = useState(0);
+  const [color, setColor] = useState('');
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -86,8 +89,9 @@ const MarkDownReact = ({ onChangeHtml, edit }: Props) => {
     image: () => wrapSelection("![Alt text](image-url)", ""),
     code: () => wrapSelection("```js\n", "\n```"),
     link: () => wrapSelection("[", "](https://)"),
-    center: () => wrapSelection(`<p style="text-align: center;">`, "</p>")
-
+    center: () => wrapSelection(`<p style="text-align: center;">`, "</p>"),
+    color: () => applyColor(colorRef.current)
+    
   };
 
   // Update parent with sanitized HTML
@@ -129,7 +133,7 @@ const MarkDownReact = ({ onChangeHtml, edit }: Props) => {
       }
     }
   };
-
+  
   return (
     <div className="mdr-wrapper">
       {/* Toolbar */}
@@ -160,21 +164,23 @@ const MarkDownReact = ({ onChangeHtml, edit }: Props) => {
         <button onClick={toolbarActions.image}>🖼 Image</button>
 
         {/* Color picker */}
-        {colors.map((color) => (
+        {/* {colors.map((color) => (
           <button
             key={color}
             style={{ backgroundColor: color, width: 24, height: 24, padding: 0 }}
             onClick={() => applyColor(color)}
           />
-        ))}
-        {/* <input
+        ))} */}
+        <input
           type="color"
-          onInput={(e:any) => applyColor(e.target.value)} // fire only once user picks color
+          onInput={(e: any) => {
+            colorRef.current = e.target.value;
+          }} 
           style={{ width: 32, height: 32, border: "none", padding: 0 }}
           title="Pick custom color"
-        /> */}
+        />
 
-
+        <button onClick={toolbarActions.color}>Apply color</button>
       </div>
 
       {/* Editor + Preview */}
