@@ -163,8 +163,8 @@ function LessonDashboard(props: ld) {
 
           <div
             className={`
-        h-full p-4 overflow-hidden
-        ${isHide ? "lg:w-16" : "w-100  lg:w-64"}
+        h-full p-4  mb-2 overflow-hidden
+        ${isHide ? "lg:w-18 px-8" : "w-100  lg:w-64"}
       `}
           >
 
@@ -241,9 +241,9 @@ function LessonDashboard(props: ld) {
                         onClick={x?.locked ? () => { } : () => handleLinks(x)}
                       >
                         {x?.locked ? (
-                          <GoRepoLocked size={20} className="text-primary mr-2" />
+                          <GoRepoLocked size={20} className="text-primary " />
                         ) : (
-                          <ImUnlocked size={20} className="text-primary mr-2" />
+                          <ImUnlocked size={20} className="text-primary " />
                         )}
                       </li>
                     ))}
@@ -255,9 +255,9 @@ function LessonDashboard(props: ld) {
                     ${quiz?.locked ? "cursor-not-allowed bg-gray-300" : "cursor-pointer hover:bg-red-300"}`}
                       >
                         {quiz?.locked ? (
-                          <GoRepoLocked size={20} className="text-primary mr-2" />
+                          <GoRepoLocked size={20} className="text-primary " />
                         ) : (
-                          <ImUnlocked size={20} className="text-primary mr-2" />
+                          <ImUnlocked size={20} className="text-primary " />
                         )}
                       </li>
                     )}
