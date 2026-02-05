@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 function LessonOutline({ data, updateLessonProgress }: any) {
 
     useEffect(() => {
-        if (data?.url === '' && !data?.quiz && data?.locked) {
+        if (data?.url === '' && !data?.quiz && !data?.is_completed) {
             const timer = setTimeout(() => {
                 updateLessonProgress()
             }, 3000);
