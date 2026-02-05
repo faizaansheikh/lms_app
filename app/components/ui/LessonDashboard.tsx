@@ -187,7 +187,7 @@ function LessonDashboard(props: ld) {
                     </span>
                   </div>
 
-                  <ul className="overflow-y-auto max-h-[calc(100vh-5rem)]">
+                  <ul className="overflow-y-auto max-h-[calc(100vh-5rem)] mb-4">
                     {data?.map((v: any, ind: number) => (
                       <li
                         key={ind}
@@ -220,6 +220,7 @@ function LessonDashboard(props: ld) {
                         Final Exam
                       </li>
                     )}
+                      <li>hello</li>
                   </ul>
                 </>
               ) : (
@@ -231,7 +232,7 @@ function LessonDashboard(props: ld) {
                     <GrBladesVertical size={20} />
                   </span>
 
-                  <ul className="overflow-y-auto max-h-[calc(100vh-5rem)] mt-4">
+                  <ul className="overflow-y-auto max-h-[calc(100vh-5rem)] mt-4 ">
                     {data?.map((x: any, ind: any) => (
                       <li
                         key={ind}
@@ -251,7 +252,7 @@ function LessonDashboard(props: ld) {
                     {quiz && (
                       <li
                         onClick={quiz?.locked ? () => { } : () => handleQuiz()}
-                        className={`list-none p-4 border-t border-b border-gray-400 flex items-center gap-3 text-sm 
+                        className={`list-none p-4  border-t border-b border-gray-400 flex items-center gap-3 text-sm 
                     ${quiz?.locked ? "cursor-not-allowed bg-gray-300" : "cursor-pointer hover:bg-red-300"}`}
                       >
                         {quiz?.locked ? (
@@ -261,6 +262,7 @@ function LessonDashboard(props: ld) {
                         )}
                       </li>
                     )}
+                  
                   </ul>
                 </div>
               )
