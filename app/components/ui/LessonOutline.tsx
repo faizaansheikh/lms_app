@@ -6,7 +6,7 @@ function LessonOutline({ data, updateLessonProgress }: any) {
         if (data?.url === '' && !data?.quiz && !data?.is_completed) {
             const timer = setTimeout(() => {
                 updateLessonProgress()
-            }, 3000);
+            }, 5000);
 
             return () => clearTimeout(timer)
         }

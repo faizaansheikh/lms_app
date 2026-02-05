@@ -53,18 +53,15 @@ function page() {
             <div className="relative h-full">
 
 
-                {loading && (
-                    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-                        <Spin size="large" />
-                    </div>
-                )}
+                
 
 
-                <div className={`${loading ? "blur-sm pointer-events-none" : ""}`}>
+                <div className=''>
                     <LessonDashboard
                         data={course?.lessons}
                         quiz={course?.finalQuiz}
                         getApi={getSingleRec}
+                        loading={loading}
                     />
                 </div>
 

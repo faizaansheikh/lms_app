@@ -16,17 +16,17 @@ import { getUser, turnDown } from "@/app/utility";
 import { GeneralCoreService } from "@/app/config/GeneralCoreService";
 import dynamic from "next/dynamic";
 import Quiz from "./Quiz";
-import { message, Tabs } from "antd";
+import { message, Spin, Tabs } from "antd";
 import LessonQuiz from './LessonQuiz';
 import LessonOutline from './LessonOutline';
 interface ld {
   data: any,
   getApi: any,
   quiz: any,
-
+  loading: any
 }
 function LessonDashboard(props: ld) {
-  const { data, getApi, quiz } = props
+  const { data, getApi, quiz, loading } = props
   const isInitialized = useRef(false);
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -109,7 +109,7 @@ function LessonDashboard(props: ld) {
 
       setShowVideo(true);
       setActive(data[0]?.lesson_id)
-       isInitialized.current = true;
+      isInitialized.current = true;
     }
   }, [data]);
 
@@ -123,11 +123,16 @@ function LessonDashboard(props: ld) {
     setTabs(key);
   };
 
-  
+
 
   return (
-
-    showQuiz ? <Quiz data={quiz} setShowQuiz={setShowQuiz} /> :
+    <>
+      {loading && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+          <Spin size="large" />
+        </div>
+      )}
+      showQuiz ? <Quiz data={quiz} setShowQuiz={setShowQuiz} /> :
       <div className="flex h-screen overflow-hidden relative">
 
         {!isHide && (
@@ -333,6 +338,7 @@ function LessonDashboard(props: ld) {
         </div>
 
       </div>
+    </>
 
 
 
