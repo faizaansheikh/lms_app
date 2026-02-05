@@ -197,9 +197,9 @@ function LessonDashboard(props: ld) {
                         onClick={v?.locked ? () => { } : () => handleLinks(v)}
                       >
                         {v?.locked ? (
-                          <GoRepoLocked size={20} className="text-primary mr-2" />
+                          <GoRepoLocked size={20} className="text-primary " />
                         ) : (
-                          <ImUnlocked size={20} className="text-primary mr-2" />
+                          <ImUnlocked size={20} className="text-primary " />
                         )}
                         <span>{v?.icon}</span>
                         <span className="truncate">{v.title}</span>
@@ -213,14 +213,14 @@ function LessonDashboard(props: ld) {
                     ${quiz?.locked ? "cursor-not-allowed bg-gray-300" : "cursor-pointer hover:bg-red-300"}`}
                       >
                         {quiz?.locked ? (
-                          <GoRepoLocked size={20} className="text-primary mr-2" />
+                          <GoRepoLocked size={20} className="text-primary " />
                         ) : (
-                          <ImUnlocked size={20} className="text-primary mr-2" />
+                          <ImUnlocked size={20} className="text-primary " />
                         )}
                         Final Exam
                       </li>
                     )}
-                      <li>hello</li>
+                   
                   </ul>
                 </>
               ) : (
