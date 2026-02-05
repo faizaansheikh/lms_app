@@ -27,7 +27,7 @@ function page() {
                 userId: user?.id,
                 courseId: id
             }
-            setLoading(true)
+            
             GeneralCoreService('courses/lessons').Save(payload)
                 .then((res) => {
                     // console.log(res?.data)
@@ -38,11 +38,13 @@ function page() {
                 }).catch((err) => console.log(err)).finally(() => setLoading(false))
         } else {
             message.error('Please signup to continue!')
+            setLoading(false)
         }
     }
 
 
     useEffect(() => {
+        setLoading(true)
         getSingleRec(Number(searchParams?.get('q')))
 
     }, [])
