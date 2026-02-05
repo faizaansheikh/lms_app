@@ -164,7 +164,7 @@ function LessonDashboard(props: ld) {
           <div
             className={`
         h-full p-4  mb-2 overflow-hidden
-        ${isHide ? "lg:w-18 px-8" : "w-100  lg:w-64"}
+        ${isHide ? "lg:w-18 px-8" : "w-100  lg:w-72"}
       `}
           >
 
@@ -172,7 +172,7 @@ function LessonDashboard(props: ld) {
             {
               !isHide ? (
                 <>
-                  <div className='h-10 flex justify-between mt-4 mb-6 items-center'>
+                  <div className='h-auto flex justify-between mt-4 mb-6 items-center'>
                     <div
                       className="flex items-center border-gray-400 cursor-pointer"
                       onClick={handleHome}
