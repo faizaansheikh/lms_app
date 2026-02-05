@@ -4,47 +4,23 @@ import { FiFileText } from "react-icons/fi";
 import { FaPlayCircle } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { getUser } from "../utility";
+import { useRouter, useSearchParams } from "next/navigation";
 
-const curriculum = [
-  {
-    title: "Introduction",
-    lessons: [
-      { title: "Welcome", type: "file" },
-    ],
-  },
-  {
-    title: "Study Guide",
-    lessons: [
-      { title: "Download Now", type: "file" },
-      { title: "Abbreviation Cheat Sheet", type: "file" },
-    ],
-  },
-  {
-    title: "Medication Technician Video",
-    lessons: [
-      { title: "New Lecture", duration: "42:21", type: "video" },
-    ],
-  },
-  {
-    title: "Checking A Blood Sugar via Finger Stick (Capillary Blood Glucose)",
-    lessons: [
-      { title: "Blood Sugar Video", duration: "4:09", type: "video" },
-    ],
-  },
-  {
-    title: "Applying & Measuring Ted Hose",
-    lessons: [
-      { title: "Ted Hose", duration: "6:11", type: "video" },
-    ],
-  },
-];
+
 
 export default function CourseCurriculum({ data }: any) {
-  const [user, setUser] = useState({})
-  useEffect(() => {
-    const userd = getUser()
-    setUser(userd)
-  }, [])
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const handleStart = () => {
+    const user = getUser()
+    if (user) {
+      router.push(`/checkout/${Number(searchParams?.get('q'))}`)
+
+    } else {
+      router.push(`/auth/signup`)
+    }
+  }
+ 
   return (
     <div className="w-full  lg:px-62 p-6 mx-auto ">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">
@@ -75,9 +51,9 @@ export default function CourseCurriculum({ data }: any) {
               </span>
             </div>
 
-            {/* <button className={`${user ? "bg-red-600 hover:bg-red-700 cursor-pointer" : "bg-red-300 cursor-not-allowed"} text-white text-xs px-4 py-1.5 rounded`}>
+            <button onClick={handleStart} className={`bg-red-600 hover:bg-red-700 cursor-pointer text-white text-xs px-4 py-1.5 rounded`}>
               Start
-            </button> */}
+            </button>
           </div>
         ))}
 

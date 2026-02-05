@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 function LessonOutline({ data, updateLessonProgress }: any) {
 
     useEffect(() => {
-        if (data?.url === '' && !data?.quiz) {
+        if (data?.url === '' && !data?.quiz && data?.locked) {
             const timer = setTimeout(() => {
                 updateLessonProgress()
             }, 3000);
@@ -25,7 +25,7 @@ function LessonOutline({ data, updateLessonProgress }: any) {
   width: 100%;
   min-width: 300px;
   padding: 12px;
-  background: #fafafa;
+//   background: #fafafa;
   overflow-y: auto;
   overflow-x: hidden;
   word-wrap: break-word;
