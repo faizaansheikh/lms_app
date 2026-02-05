@@ -11,7 +11,7 @@ function LessonOutline({ data, updateLessonProgress }: any) {
             return () => clearTimeout(timer)
         }
 
-    }, [])
+    }, [data])
     return (
 
         <>
