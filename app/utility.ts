@@ -77,7 +77,7 @@ export const turnDown = (html: any) => {
     turndownService.addRule('gfm', {
         filter: ['b', 'strong', 'i', 'em', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'img', 'span', 'div'],
         replacement: (content, node) => {
-            console.log(node.nodeName.toLowerCase(), content)
+          
             switch (node.nodeName.toLowerCase()) {
                 case "strong":
                 case "b":

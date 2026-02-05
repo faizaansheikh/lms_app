@@ -64,7 +64,7 @@ export default function Checkout() {
             setRecord({ ...record, price: insPrice || null });
         }
     }, [installment])
-    console.log(record?.price)
+    
     return (
         <div className="min-h-screen bg-gray-50 flex justify-center p-6">
             <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-8">

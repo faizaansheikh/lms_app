@@ -132,7 +132,7 @@ function Course_lessonsForm() {
             getSingleRec(Number(params.id))
         }
     }, [])
-    console.log(course, lessons, quiz);
+   
 
     return (
         <div>

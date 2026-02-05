@@ -108,7 +108,7 @@ function Course_Desc_Form() {
 
 
 
-    console.log(editor)
+  
     return (
         <div>
             <FormElement title="Course Description Form" save={handleSave} setModel={setModel} model={model} elements={elems} loading={loader} />

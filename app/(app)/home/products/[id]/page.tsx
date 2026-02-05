@@ -162,7 +162,7 @@ function page() {
 
 
 
-                {curriculum.length > 0 && <CourseCurriculum data={curriculum} />}
+                {curriculum?.length > 0 && <CourseCurriculum data={curriculum} />}
                 <ReviewSection data={review} courseId={Number(searchParams?.get('q'))} getApi={getSingleRec} />
 
                 <style jsx>{`
