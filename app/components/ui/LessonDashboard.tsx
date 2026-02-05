@@ -6,23 +6,7 @@ import { GoRepoLocked } from "react-icons/go";
 import { MdOutlineDone } from "react-icons/md";
 import { GrBladesVertical } from "react-icons/gr";
 import { IoHome } from "react-icons/io5";
-import { RxDashboard } from "react-icons/rx";
-import { MdOutlineLightMode } from "react-icons/md";
-import { IoMoon } from "react-icons/io5";
-import { GoSignOut } from "react-icons/go";
-import { FaRegUserCircle } from "react-icons/fa";
-import { Popover } from 'antd';
-import { useTheme } from 'next-themes';
-import { removeAuthToken } from '@/app/components/authToken';
-import { CiViewTable } from "react-icons/ci";
-import { FaUsers } from "react-icons/fa";
-import { MdOutlinePlayLesson } from "react-icons/md";
-import { GiProgression } from "react-icons/gi";
-import { RiAccountBox2Fill } from "react-icons/ri";
-import { SiQuizlet } from "react-icons/si";
-import { MdReviews } from "react-icons/md";
-import { GrCertificate } from "react-icons/gr";
-import { IoIosArrowRoundForward } from "react-icons/io";
+
 const VideoPlayer = dynamic(() => import('./VideoPlayer'), {
   ssr: false,
   loading: () => <p>Loading video...</p>
@@ -196,13 +180,15 @@ function LessonDashboard(props: ld) {
                     ${v?.locked ? "cursor-not-allowed bg-gray-300" : "cursor-pointer hover:bg-red-300"}`}
                         onClick={v?.locked ? () => { } : () => handleLinks(v)}
                       >
-                        {v?.locked ? (
-                          <GoRepoLocked size={20} className="text-primary " />
-                        ) : (
-                          <ImUnlocked size={20} className="text-primary " />
-                        )}
-                        <span>{v?.icon}</span>
-                        <span className="truncate">{v.title}</span>
+                        <div>
+                          {v?.locked ? (
+                            <GoRepoLocked size={20} className="text-primary " />
+                          ) : (
+                            <ImUnlocked size={20} className="text-primary " />
+                          )}
+                        </div>
+
+                        <div className="truncate">{v.title}</div>
                       </li>
                     ))}
 
@@ -220,7 +206,7 @@ function LessonDashboard(props: ld) {
                         Final Exam
                       </li>
                     )}
-                   
+
                   </ul>
                 </>
               ) : (
@@ -262,7 +248,7 @@ function LessonDashboard(props: ld) {
                         )}
                       </li>
                     )}
-                  
+
                   </ul>
                 </div>
               )
