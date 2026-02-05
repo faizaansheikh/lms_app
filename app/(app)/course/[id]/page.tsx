@@ -20,13 +20,14 @@ function page() {
 
 
     const getSingleRec = (id: number) => {
-        setLoading(true)
+
         const user = getUser()
         if (user) {
             const payload = {
                 userId: user?.id,
                 courseId: id
             }
+            setLoading(true)
             GeneralCoreService('courses/lessons').Save(payload)
                 .then((res) => {
                     // console.log(res?.data)
@@ -37,7 +38,6 @@ function page() {
                 }).catch((err) => console.log(err)).finally(() => setLoading(false))
         } else {
             message.error('Please signup to continue!')
-            setLoading(false)
         }
     }
 
@@ -52,14 +52,14 @@ function page() {
         <>
             <div className="relative h-full">
 
-        
+
                 {loading && (
                     <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
                         <Spin size="large" />
                     </div>
                 )}
 
-      
+
                 <div className={`${loading ? "blur-sm pointer-events-none" : ""}`}>
                     <LessonDashboard
                         data={course?.lessons}
