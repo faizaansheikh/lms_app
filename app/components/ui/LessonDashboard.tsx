@@ -46,7 +46,7 @@ function LessonDashboard(props: ld) {
     is_completed: false
   })
   const handleLinks = async (x: any) => {
-    setIsHide(!isHide)
+    // setIsHide(!isHide)
     setTabs(tabs)
     setActive(x?.lesson_id)
     setVideo({
