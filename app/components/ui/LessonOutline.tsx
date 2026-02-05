@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-
+import { MdOutlineDone } from "react-icons/md";
 function LessonOutline({ data, updateLessonProgress }: any) {
 
     useEffect(() => {
@@ -15,7 +15,16 @@ function LessonOutline({ data, updateLessonProgress }: any) {
     return (
 
         <>
-            <div
+           
+            <div className="flex flex-col lg:flex-row justify-end items-start lg:items-center">
+           
+                {data?.is_completed && (
+                    <p className="text-lg font-normal p-3 flex items-center gap-3">
+                        Completed <MdOutlineDone color="green" size={25} />
+                    </p>
+                )}
+            </div>
+             <div
                 className="mdr-preview"
                 dangerouslySetInnerHTML={{ __html: data?.outline }}
             />
