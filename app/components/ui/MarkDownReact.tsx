@@ -38,6 +38,36 @@ const MarkDownReact = ({ onChangeHtml, edit }: Props) => {
   };
 
   // Wrap selected text utility
+  // const wrapSelection = (before: string, after: string = "") => {
+  //   if (!textareaRef.current) return;
+
+  //   const textarea = textareaRef.current;
+  //   const start = textarea.selectionStart;
+  //   const end = textarea.selectionEnd;
+
+  //   // Use selected text, or empty string (not "text")
+  //   const selectedText = textarea.value.substring(start, end) || "";
+
+  //   const newValue =
+  //     textarea.value.substring(0, start) +
+  //     before +
+  //     (selectedText || "text") +
+  //     after +
+  //     textarea.value.substring(end);
+
+  //   setMarkdown(newValue);
+  //   pushHistory(newValue);
+
+  //   // Set caret/selection
+  //   const newSelectionStart = start + before.length;
+  //   const newSelectionEnd = newSelectionStart + (selectedText || "text").length;
+
+  //   requestAnimationFrame(() => {
+  //     textarea.focus();
+  //     textarea.selectionStart = start + before.length;
+  //     textarea.selectionEnd = textarea.selectionStart + selectedText.length;
+  //   });
+  // };
   const wrapSelection = (before: string, after: string = "") => {
     if (!textareaRef.current) return;
 
@@ -45,26 +75,24 @@ const MarkDownReact = ({ onChangeHtml, edit }: Props) => {
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
 
-    // Use selected text, or empty string (not "text")
-    const selectedText = textarea.value.substring(start, end) || "";
+    const selectedText = textarea.value.substring(start, end) || "text";
 
     const newValue =
       textarea.value.substring(0, start) +
       before +
-      (selectedText || "text") +
+      selectedText +
       after +
       textarea.value.substring(end);
 
     setMarkdown(newValue);
     pushHistory(newValue);
 
-    // Set caret/selection
-    const newSelectionStart = start + before.length;
-    const newSelectionEnd = newSelectionStart + (selectedText || "text").length;
-
-    textarea.selectionStart = newSelectionStart;
-    textarea.selectionEnd = newSelectionEnd;
-    textarea.focus();
+    // 🔥 IMPORTANT: wait for React render
+    requestAnimationFrame(() => {
+      textarea.focus();
+      textarea.selectionStart = start + before.length;
+      textarea.selectionEnd = textarea.selectionStart + selectedText.length;
+    });
   };
 
 
@@ -89,9 +117,9 @@ const MarkDownReact = ({ onChangeHtml, edit }: Props) => {
     image: () => wrapSelection("![Alt text](image-url)", ""),
     code: () => wrapSelection("```js\n", "\n```"),
     link: () => wrapSelection("[", "](https://)"),
-    center: () => wrapSelection(`<p style="text-align: center;">`, "</p>"),
+    center: () => wrapSelection(`<div style="text-align: center;">`, "</div>"),
     color: () => applyColor(colorRef.current)
-    
+
   };
 
   // Update parent with sanitized HTML
@@ -133,7 +161,7 @@ const MarkDownReact = ({ onChangeHtml, edit }: Props) => {
       }
     }
   };
-  
+
   return (
     <div className="mdr-wrapper">
       {/* Toolbar */}
@@ -175,7 +203,7 @@ const MarkDownReact = ({ onChangeHtml, edit }: Props) => {
           type="color"
           onInput={(e: any) => {
             colorRef.current = e.target.value;
-          }} 
+          }}
           style={{ width: 32, height: 32, border: "none", padding: 0 }}
           title="Pick custom color"
         />

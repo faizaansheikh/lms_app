@@ -75,8 +75,9 @@ export const turnDown = (html: any) => {
 
     // Optional: enable GitHub-flavored markdown
     turndownService.addRule('gfm', {
-        filter: ['b', 'strong', 'i', 'em', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'img', 'span'],
+        filter: ['b', 'strong', 'i', 'em', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'img', 'span', 'div'],
         replacement: (content, node) => {
+            console.log(node.nodeName.toLowerCase(), content)
             switch (node.nodeName.toLowerCase()) {
                 case "strong":
                 case "b":
@@ -98,8 +99,21 @@ export const turnDown = (html: any) => {
                     const src = node.getAttribute('src');
                     const alt = node.getAttribute('alt') || '';
                     return `![${alt}](${src})`;
-                case "span":
-                    return content; // for color/font-size ignore
+                case "span": {
+                    const style = node.getAttribute("style");
+                    if (style) {
+                        return `<span style="${style}">${content}</span>`;
+                    }
+                    return content;
+                } 
+                case "div": {
+                    const style = node.getAttribute("style");
+                    if (style) {
+                        return `<div style="${style}">${content}</div>`;
+                    }
+                    return content;
+                }
+
                 default:
                     return content;
             }
