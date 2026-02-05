@@ -1,6 +1,6 @@
 
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from "next/navigation";
 import { GoRepoLocked } from "react-icons/go";
 import { MdOutlineDone } from "react-icons/md";
@@ -27,6 +27,7 @@ interface ld {
 }
 function LessonDashboard(props: ld) {
   const { data, getApi, quiz } = props
+  const isInitialized = useRef(false);
   const searchParams = useSearchParams()
   const router = useRouter()
   const [showVideo, setShowVideo] = useState<any>(false)
@@ -46,7 +47,7 @@ function LessonDashboard(props: ld) {
   })
   const handleLinks = async (x: any) => {
     setIsHide(!isHide)
-    setTabs('1')
+    setTabs(tabs)
     setActive(x?.lesson_id)
     setVideo({
       id: x?.lesson_id,
@@ -90,13 +91,13 @@ function LessonDashboard(props: ld) {
       .then((res) => {
         if (res?.status === 201) {
           getApi(Number(searchParams?.get('q')))
-          setTabs('1')
+          setTabs(tabs)
         }
       }).catch((err) => console.log(err)).finally(() => { })
   }
 
   useEffect(() => {
-    if (data && data.length > 0) {
+    if (!isInitialized.current && data && data.length > 0) {
       setVideo({
         id: data[0]?.lesson_id,
         title: data[0]?.title,
@@ -108,6 +109,7 @@ function LessonDashboard(props: ld) {
 
       setShowVideo(true);
       setActive(data[0]?.lesson_id)
+       isInitialized.current = true;
     }
   }, [data]);
 
@@ -121,7 +123,7 @@ function LessonDashboard(props: ld) {
     setTabs(key);
   };
 
-
+  
 
   return (
 
