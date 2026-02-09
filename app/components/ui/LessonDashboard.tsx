@@ -171,8 +171,13 @@ function LessonDashboard(props: ld) {
     } else {
       const index = data?.findIndex((item: any) => item.lesson_id === video?.id);
       const nextItem = index !== -1 ? data[index + 1] : undefined;
-      setActive(nextItem?.lesson_id)
-      handleLinks(nextItem)
+      if (nextItem) {
+        setActive(nextItem?.lesson_id)
+        handleLinks(nextItem)
+      } else {
+        router.push('/dashboard/client')
+      }
+
 
     }
 
