@@ -45,7 +45,7 @@ function Course_lessonsForm() {
 
                 },
                 {
-                    col: 8,
+                    col: 16,
                     label: 'Lessons',
                     key: 'lesson_id',
                     placeholder: 'Add Lessons',
@@ -60,22 +60,22 @@ function Course_lessonsForm() {
                     },
 
                 },
-                {
-                    col: 8,
-                    label: 'Final Exam Quiz',
-                    key: 'quiz',
-                    placeholder: 'Select Quiz',
-                    type: 'lookup',
-                    multiple: false,
-                    formName: 'quiz',
-                    required: true,
-                    display: 'name',
-                    vals: params?.id !== 'new' ? quiz : '',
-                    getData: (data: any) => {
-                        setQuiz(data)
-                    },
+                // {
+                //     col: 8,
+                //     label: 'Final Exam Quiz',
+                //     key: 'quiz',
+                //     placeholder: 'Select Quiz',
+                //     type: 'lookup',
+                //     multiple: false,
+                //     formName: 'quiz',
+                //     required: true,
+                //     display: 'name',
+                //     vals: params?.id !== 'new' ? quiz : '',
+                //     getData: (data: any) => {
+                //         setQuiz(data)
+                //     },
 
-                },
+                // },
 
 
             ]
@@ -116,7 +116,7 @@ function Course_lessonsForm() {
                 if (res?.status === 200) {
                     setLessons(res?.data?.lessonId)
                     setCourse([res?.data?.courseId])
-                    setQuiz(res?.data?.quizId ? [Number(res?.data?.quizId)] : [])
+                    // setQuiz(res?.data?.quizId ? [Number(res?.data?.quizId)] : [])
                 } else {
                     message.error(res?.message)
                 }

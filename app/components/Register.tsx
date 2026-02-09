@@ -58,7 +58,7 @@ function Register(props: registerProps) {
 
                 if (res?.status === 200) {
                     const cols: any = res?.data?.data[0]
-                    const { lessons, answers, questions, password, description, outline, ...othersCols } = cols
+                    const { lessons, answers, questions, password, description, outline, quizid, ...othersCols } = cols
                     setColumn(othersCols ? Object.keys(othersCols) : [])
                     setRowData(res?.data ? [...res?.data?.data] : [])
                     setTotalCount(Number(res?.data?.totalRecords))
@@ -75,10 +75,10 @@ function Register(props: registerProps) {
     }
     const reminderUser = () => {
         setBtnLoad(true)
-       
+
         const payload = {
-            userId:remData?.user_id,
-            amount:remData?.payment
+            userId: remData?.user_id,
+            amount: remData?.payment
         }
         GeneralCoreService('users/email').Save(payload)
             .then((res: any) => {
