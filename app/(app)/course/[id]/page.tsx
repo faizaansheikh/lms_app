@@ -16,6 +16,7 @@ function page() {
 
     const searchParams = useSearchParams()
     const [course, setCourse] = useState<any>([])
+    const [order, setOrder] = useState<any>(null)
     const [loading, setLoading] = useState<any>(false)
 
 
@@ -27,12 +28,14 @@ function page() {
                 userId: user?.id,
                 courseId: id
             }
-            
+
             GeneralCoreService('courses/lessons').Save(payload)
                 .then((res) => {
                     // console.log(res?.data)
                     const lessons = res?.data?.lessons
-                    //   setEditor(turnDown(res?.data?.outline))
+                    const max = lessons?.map((x: any) => x.lesson_order) || [];
+                    setOrder(Math.max(...max));
+
                     setCourse(res?.data)
 
                 }).catch((err) => console.log(err)).finally(() => setLoading(false))
@@ -48,7 +51,7 @@ function page() {
         getSingleRec(Number(searchParams?.get('q')))
 
     }, [])
-
+  
 
     return (
         <>
@@ -56,6 +59,7 @@ function page() {
                 <LessonDashboard
                     data={course?.lessons}
                     quiz={course?.finalQuiz}
+                    order={order}
                     getApi={getSingleRec}
                     loading={loading}
                 />

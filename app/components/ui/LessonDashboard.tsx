@@ -26,10 +26,11 @@ interface ld {
   data: any,
   getApi: any,
   quiz: any,
-  loading: any
+  loading: any,
+  order: any
 }
 function LessonDashboard(props: ld) {
-  const { data, getApi, quiz, loading } = props
+  const { data, getApi, quiz, loading, order } = props
   const isInitialized = useRef(false);
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -46,7 +47,8 @@ function LessonDashboard(props: ld) {
     url: "",
     outline: "",
     quiz: null,
-    is_completed: false
+    is_completed: false,
+    order: 0
   })
   const handleLinks = async (x: any) => {
 
@@ -58,7 +60,8 @@ function LessonDashboard(props: ld) {
       url: x?.url,
       outline: x?.outline,
       quiz: x?.quiz,
-      is_completed: x?.is_completed
+      is_completed: x?.is_completed,
+      order: x?.lesson_order
     })
 
     setShowVideo(false);
@@ -120,7 +123,8 @@ function LessonDashboard(props: ld) {
         url: data[0]?.url,
         outline: data[0]?.outline,
         quiz: data[0]?.quiz,
-        is_completed: data[0]?.is_completed
+        is_completed: data[0]?.is_completed,
+        order: data[0]?.lesson_order
       })
 
       setShowVideo(true);
@@ -140,6 +144,7 @@ function LessonDashboard(props: ld) {
     setTabs(key);
   };
   const handleComplete = () => {
+
     if (!video?.is_completed) {
       updateLessonProgress()
     } else {
@@ -372,50 +377,51 @@ function LessonDashboard(props: ld) {
 
               <header className="bg-secondary h-16 shadow px-6 flex items-center justify-between">
 
-             
+
                 <button
                   onClick={() => setIsHide(false)}
                   className="lg:hidden text-prismary"
                 >
-                  <LuListCollapse size={22} color='red'/>
+                  <LuListCollapse size={22} color='red' />
                 </button>
 
               </header>
 
 
               <main className={`h-full px-4 py-6 overflow-auto bg-[#f1f1f3] `}>
-              
 
-               
-                  <div className="text-2xl font-bold flex justify-between items-center gap-4   border-b border-gray-400">
-                    <span className='mt-1 flex items-center gap-4'>{video.url ? <MdOutlineOndemandVideo size={25} /> : <IoMdBook size={25} />}  {video.title}</span>
-                   
-                    {video?.is_completed ? (
-                      <p className="text-lg font-normal p-3 flex items-center gap-3">
-                        Completed <MdOutlineDone color="green" size={25} />
-                      </p>
-                    ) : <p></p>}
-                  </div>
 
-                  {(video?.url && showVideo) && (
-                    <div className="w-full py-6">
 
-                      <VideoPlayer
-                        vimeoId={video?.url}
-                        setComplete={setComplete}
-                        videoDetails={video}
-                        updateLessonProgress={video?.quiz ? () => { } : updateLessonProgress}
-                      />
-                    </div>
-                  )}
-                  <LessonOutline data={video} updateLessonProgress={updateLessonProgress} />
-                  {
-                    video?.quiz && <LessonQuiz
-                      quiz={video.quiz}
-                      updateLessonProgress={updateLessonProgress}
+                <div className="text-2xl font-bold flex justify-between items-center gap-4   border-b border-gray-400">
+                  <span className='mt-1 flex items-center gap-4'>{video.url ? <MdOutlineOndemandVideo size={25} /> : <IoMdBook size={25} />}  {video.title}</span>
+
+                  {video?.is_completed ? (
+                    <p className="text-lg font-normal p-3 flex items-center gap-3">
+                      Completed <MdOutlineDone color="green" size={25} />
+                    </p>
+                  ) : <p></p>}
+                </div>
+
+                {(video?.url && showVideo) && (
+                  <div className="w-full py-6">
+
+                    <VideoPlayer
+                      vimeoId={video?.url}
+                      setComplete={setComplete}
+                      videoDetails={video}
+                      updateLessonProgress={video?.quiz ? () => { } : updateLessonProgress}
                     />
-                  }
-                  {(!video?.quiz && !video?.url) && (
+                  </div>
+                )}
+                <LessonOutline data={video} updateLessonProgress={updateLessonProgress} />
+                {
+                  video?.quiz && <LessonQuiz
+                    quiz={video.quiz}
+                    updateLessonProgress={updateLessonProgress}
+                  />
+                }
+                {
+                  video?.order !== order ? (!video?.quiz && !video?.url) && (
                     <div className="flex justify-center mb-4">
                       <button
                         onClick={handleComplete}
@@ -425,11 +431,22 @@ function LessonDashboard(props: ld) {
                         <span><MdNavigateNext size={22} /></span>
                       </button>
                     </div>
-                  )}
+                  ) :
+                    <div className="flex justify-center mb-4">
+                      <button
+                        onClick={() => setShowQuiz(true)}
+                        className="flex items-center justify-center gap-4 cursor-pointer hover:bg-red-700 text-[16px] rounded-lg text-white bg-red-600 font-semibold px-5 py-3"
+                      >
+                        Go for Final Exam
+                        <span><MdNavigateNext size={22} /></span>
+                      </button>
+                    </div>
+                }
 
 
 
-                
+
+
               </main>
             </div>
 
