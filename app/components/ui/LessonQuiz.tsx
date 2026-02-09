@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Progress, Button, message } from "antd";
 
-const LessonQuiz = ({ quiz, updateLessonProgress }: any) => {
+const LessonQuiz = ({ quiz, updateLessonProgress}: any) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [answers, setAnswers] = useState<any>({});
     const [submitted, setSubmitted] = useState(false);
@@ -42,13 +42,13 @@ const LessonQuiz = ({ quiz, updateLessonProgress }: any) => {
             } else {
                 message.error('Please watch the lecture again!')
             }
-        }else{
+        } else {
             message.warning('You have already completed this quiz!')
         }
 
     }
 
- 
+
     return (
         <div className="w-full mx-auto px-4">
 

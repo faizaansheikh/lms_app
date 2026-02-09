@@ -95,6 +95,29 @@ function LessonDashboard(props: ld) {
 
   const handleHome = () => router.push('/dashboard/client')
 
+  const handleEnrollment = () => {
+
+    const userInfo = getUser()
+    if (userInfo) {
+
+      const coursId = Number(searchParams?.get('q')) || null
+      let payload = {
+        user_id: userInfo?.id,
+        course_id: coursId,
+        status: 'Completed'
+      }
+      GeneralCoreService('enrollment/update').Save(payload)
+        .then((res) => {
+
+
+
+        }).catch((err) => console.log(err)).finally(() => { })
+    } else {
+      message.error('You need to sign in first to enroll in this course!')
+    }
+  }
+
+
   const updateLessonProgress = () => {
     const user = getUser()
     const payload = {
@@ -108,9 +131,11 @@ function LessonDashboard(props: ld) {
           getApi(Number(searchParams?.get('q')))
           const index = data?.findIndex((item: any) => item.lesson_id === video?.id);
           const nextItem = index !== -1 ? data[index + 1] : undefined;
-          setActive(nextItem?.lesson_id)
-          handleLinks(nextItem)
-
+          nextItem && setActive(nextItem?.lesson_id)
+          nextItem && handleLinks(nextItem)
+          if (video?.order === order) {
+            handleEnrollment()
+          }
         }
       }).catch((err) => console.log(err)).finally(() => { })
   }
@@ -137,14 +162,7 @@ function LessonDashboard(props: ld) {
 
 
 
-
-
-
-  const onChange = (key: string) => {
-    setTabs(key);
-  };
   const handleComplete = () => {
-
     if (!video?.is_completed) {
       updateLessonProgress()
     } else {
@@ -154,8 +172,6 @@ function LessonDashboard(props: ld) {
       handleLinks(nextItem)
 
     }
-
-
 
   }
 
@@ -308,7 +324,7 @@ function LessonDashboard(props: ld) {
                           </li>
                         ))}
 
-                        {quiz && (
+                        {/* {quiz && (
                           <li
                             onClick={quiz?.locked ? () => { } : () => handleQuiz()}
                             className={`list-none p-4 border-t border-b border-gray-400 flex items-center gap-3 text-sm 
@@ -321,7 +337,7 @@ function LessonDashboard(props: ld) {
                             )}
                             Final Exam
                           </li>
-                        )}
+                        )} */}
 
                       </ul>
                     </>
@@ -418,29 +434,20 @@ function LessonDashboard(props: ld) {
                   video?.quiz && <LessonQuiz
                     quiz={video.quiz}
                     updateLessonProgress={updateLessonProgress}
+
                   />
                 }
-                {
-                  video?.order !== order ? (!video?.quiz && !video?.url) && (
-                    <div className="flex justify-center mb-4">
-                      <button
-                        onClick={handleComplete}
-                        className="flex items-center justify-center gap-4 cursor-pointer hover:bg-red-700 text-[16px] rounded-lg text-white bg-red-600 font-semibold px-5 py-3"
-                      >
-                        Complete and Continue
-                        <span><MdNavigateNext size={22} /></span>
-                      </button>
-                    </div>
-                  ) :
-                    <div className="flex justify-center mb-4">
-                      <button
-                        onClick={() => setShowQuiz(true)}
-                        className="flex items-center justify-center gap-4 cursor-pointer hover:bg-red-700 text-[16px] rounded-lg text-white bg-red-600 font-semibold px-5 py-3"
-                      >
-                        Go for Final Exam
-                        <span><MdNavigateNext size={22} /></span>
-                      </button>
-                    </div>
+                {(!video?.quiz && !video?.url) && (
+                  <div className="flex justify-center mb-4">
+                    <button
+                      onClick={handleComplete}
+                      className="flex items-center justify-center gap-4 cursor-pointer hover:bg-red-700 text-[16px] rounded-lg text-white bg-red-600 font-semibold px-5 py-3"
+                    >
+                      Complete and Continue
+                      <span><MdNavigateNext size={22} /></span>
+                    </button>
+                  </div>
+                )
                 }
 
 
