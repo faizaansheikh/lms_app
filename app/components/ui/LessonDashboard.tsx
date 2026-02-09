@@ -108,8 +108,10 @@ function LessonDashboard(props: ld) {
       }
       GeneralCoreService('enrollment/update').Save(payload)
         .then((res) => {
-
-
+      
+          if(res){
+            router.push('/dashboard/client')
+          }
 
         }).catch((err) => console.log(err)).finally(() => { })
     } else {
