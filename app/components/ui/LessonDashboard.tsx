@@ -7,6 +7,7 @@ import { MdOutlineDone } from "react-icons/md";
 import { GrBladesVertical } from "react-icons/gr";
 import { IoHome } from "react-icons/io5";
 import { MdNavigateNext } from "react-icons/md";
+import { LuListCollapse } from "react-icons/lu";
 const VideoPlayer = dynamic(() => import('./VideoPlayer'), {
   ssr: false,
   loading: () => <p>Loading video...</p>
@@ -48,7 +49,7 @@ function LessonDashboard(props: ld) {
     is_completed: false
   })
   const handleLinks = async (x: any) => {
-    // setIsHide(!isHide)
+
     setTabs('1')
     setActive(x?.lesson_id)
     setVideo({
@@ -61,6 +62,15 @@ function LessonDashboard(props: ld) {
     })
 
     setShowVideo(false);
+    if (window.innerWidth >= 1024) {
+      // Desktop
+      setIsHide(false);
+    } else {
+      // Mobile / Tablet
+      setIsHide(true);
+    }
+
+
     setTimeout(() => {
       setShowVideo(true);
     }, 200);
@@ -161,11 +171,8 @@ function LessonDashboard(props: ld) {
           </div>
 
           {(video?.url && showVideo) && (
-            <div className="w-full p-2">
-              <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center">
-                <p className="text-xl font-bold p-3">{video?.title}</p>
+            <div className="w-full py-6">
 
-              </div>
               <VideoPlayer
                 vimeoId={video?.url}
                 setComplete={setComplete}
@@ -201,6 +208,24 @@ function LessonDashboard(props: ld) {
 
 
   ].filter(Boolean);
+
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        // Desktop
+        setIsHide(false);
+      } else {
+        // Mobile / Tablet
+        setIsHide(true);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
 
   return (
@@ -253,7 +278,7 @@ function LessonDashboard(props: ld) {
                           className='text-text cursor-pointer'
                           onClick={() => setIsHide(true)}
                         >
-                          <GrBladesVertical size={20} />
+                          <LuListCollapse size={20} />
                         </span>
                       </div>
 
@@ -301,7 +326,7 @@ function LessonDashboard(props: ld) {
                         className='py-4 cursor-pointer'
                         onClick={() => setIsHide(false)}
                       >
-                        <GrBladesVertical size={20} />
+                        <LuListCollapse size={20} />
                       </span>
 
                       <ul className="overflow-y-auto max-h-[calc(100vh-5rem)] mt-4 ">
@@ -347,28 +372,64 @@ function LessonDashboard(props: ld) {
 
               <header className="bg-secondary h-16 shadow px-6 flex items-center justify-between">
 
-                {/* ☰ Mobile Menu Button */}
+             
                 <button
                   onClick={() => setIsHide(false)}
                   className="lg:hidden text-prismary"
                 >
-                  <GrBladesVertical size={22} />
+                  <LuListCollapse size={22} color='red'/>
                 </button>
 
               </header>
 
 
-              <main className={`h-full p-4 overflow-auto bg-[#f1f1f3]  `}>
-                <div className="flex-1 overflow-auto">
-                  <div className={`flex-1  overflow-auto ${loading ? "blur pointer-events-none" : ""}`}>
+              <main className={`h-full px-4 py-6 overflow-auto bg-[#f1f1f3] `}>
+              
 
-                    <Tabs
-                      activeKey={tabs}
-                      onChange={onChange}
-                      items={items}
-                    />
+               
+                  <div className="text-2xl font-bold flex justify-between items-center gap-4   border-b border-gray-400">
+                    <span className='mt-1 flex items-center gap-4'>{video.url ? <MdOutlineOndemandVideo size={25} /> : <IoMdBook size={25} />}  {video.title}</span>
+                   
+                    {video?.is_completed ? (
+                      <p className="text-lg font-normal p-3 flex items-center gap-3">
+                        Completed <MdOutlineDone color="green" size={25} />
+                      </p>
+                    ) : <p></p>}
                   </div>
-                </div>
+
+                  {(video?.url && showVideo) && (
+                    <div className="w-full py-6">
+
+                      <VideoPlayer
+                        vimeoId={video?.url}
+                        setComplete={setComplete}
+                        videoDetails={video}
+                        updateLessonProgress={video?.quiz ? () => { } : updateLessonProgress}
+                      />
+                    </div>
+                  )}
+                  <LessonOutline data={video} updateLessonProgress={updateLessonProgress} />
+                  {
+                    video?.quiz && <LessonQuiz
+                      quiz={video.quiz}
+                      updateLessonProgress={updateLessonProgress}
+                    />
+                  }
+                  {(!video?.quiz && !video?.url) && (
+                    <div className="flex justify-center mb-4">
+                      <button
+                        onClick={handleComplete}
+                        className="flex items-center justify-center gap-4 cursor-pointer hover:bg-red-700 text-[16px] rounded-lg text-white bg-red-600 font-semibold px-5 py-3"
+                      >
+                        Complete and Continue
+                        <span><MdNavigateNext size={22} /></span>
+                      </button>
+                    </div>
+                  )}
+
+
+
+                
               </main>
             </div>
 
