@@ -21,11 +21,12 @@ interface headerProps {
     rowsPerPage: any
     page: any
     getAllRec: any
+    setTotalCount:any
 }
 function XHeader(props: headerProps) {
     const router = useRouter()
     const path = usePathname()
-    const { title, selectedRows, rowData, setColumns, column, setLoader, setRowData, rowsPerPage, page, getAllRec } = props
+    const { title, selectedRows, rowData, setColumns, column, setLoader, setRowData, rowsPerPage, page, getAllRec,setTotalCount } = props
     const [opt, setOpt] = useState([])
     const [rowVal, setRowVal] = useState('')
     const [colVal, setColVal] = useState('')
@@ -44,6 +45,7 @@ function XHeader(props: headerProps) {
             const response = await axiosInstance.post(`/${title}/search?col=${colVal}&row=${rowVal}`)
             const res = { data: response?.data, status: response.status }
             setRowData(res?.data)
+            setTotalCount(res?.data?.length)
 
         } catch (err: any) {
             message.error('Error searching column!')

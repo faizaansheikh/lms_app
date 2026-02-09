@@ -164,7 +164,7 @@ function Register(props: registerProps) {
                         title={formName || ''}
                         setLoader={setLoader}
                         selectedRows={selectedRow}
-                        rowData={rowData} setRowData={setRowData}
+                        rowData={rowData} setRowData={setRowData} setTotalCount={setTotalCount}
                         setColumns={setColumn}
                         column={column}
                         rowsPerPage={rowsPerPage}
