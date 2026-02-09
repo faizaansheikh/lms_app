@@ -6,11 +6,12 @@ import { GoRepoLocked } from "react-icons/go";
 import { MdOutlineDone } from "react-icons/md";
 import { GrBladesVertical } from "react-icons/gr";
 import { IoHome } from "react-icons/io5";
-
+import { MdNavigateNext } from "react-icons/md";
 const VideoPlayer = dynamic(() => import('./VideoPlayer'), {
   ssr: false,
   loading: () => <p>Loading video...</p>
 })
+import { MdOutlineOndemandVideo } from "react-icons/md";
 import { ImUnlocked } from "react-icons/im";
 import { getUser, turnDown } from "@/app/utility";
 import { GeneralCoreService } from "@/app/config/GeneralCoreService";
@@ -18,6 +19,7 @@ import dynamic from "next/dynamic";
 import Quiz from "./Quiz";
 import { message, Spin, Tabs } from "antd";
 import LessonQuiz from './LessonQuiz';
+import { IoMdBook } from "react-icons/io";
 import LessonOutline from './LessonOutline';
 interface ld {
   data: any,
@@ -42,7 +44,7 @@ function LessonDashboard(props: ld) {
     title: "",
     url: "",
     outline: "",
-    quiz: {},
+    quiz: null,
     is_completed: false
   })
   const handleLinks = async (x: any) => {
@@ -91,7 +93,11 @@ function LessonDashboard(props: ld) {
       .then((res) => {
         if (res?.status === 201) {
           getApi(Number(searchParams?.get('q')))
-          setTabs(tabs)
+          const index = data?.findIndex((item: any) => item.lesson_id === video?.id);
+          const nextItem = index !== -1 ? data[index + 1] : undefined;
+          setActive(nextItem?.lesson_id)
+          handleLinks(nextItem)
+
         }
       }).catch((err) => console.log(err)).finally(() => { })
   }
@@ -109,6 +115,7 @@ function LessonDashboard(props: ld) {
 
       setShowVideo(true);
       setActive(data[0]?.lesson_id)
+
       isInitialized.current = true;
     }
   }, [data]);
@@ -122,7 +129,78 @@ function LessonDashboard(props: ld) {
   const onChange = (key: string) => {
     setTabs(key);
   };
+  const handleComplete = () => {
+    if (!video?.is_completed) {
+      updateLessonProgress()
+    } else {
+      const index = data?.findIndex((item: any) => item.lesson_id === video?.id);
+      const nextItem = index !== -1 ? data[index + 1] : undefined;
+      setActive(nextItem?.lesson_id)
+      handleLinks(nextItem)
 
+    }
+
+
+
+  }
+
+  const items: any = [
+    {
+      key: "1",
+      label: '',
+      children:
+        <>
+          <div className="text-2xl font-bold flex justify-between items-center gap-4  ">
+            <span className='mt-1'>{video.url ? <MdOutlineOndemandVideo size={25} /> : <IoMdBook size={25} />}</span>
+            {video.title}
+            {video?.is_completed ? (
+              <p className="text-lg font-normal p-3 flex items-center gap-3">
+                Completed <MdOutlineDone color="green" size={25} />
+              </p>
+            ) : <p></p>}
+          </div>
+
+          {(video?.url && showVideo) && (
+            <div className="w-full p-2">
+              <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center">
+                <p className="text-xl font-bold p-3">{video?.title}</p>
+
+              </div>
+              <VideoPlayer
+                vimeoId={video?.url}
+                setComplete={setComplete}
+                videoDetails={video}
+                updateLessonProgress={video?.quiz ? () => { } : updateLessonProgress}
+              />
+            </div>
+          )}
+          <LessonOutline data={video} updateLessonProgress={updateLessonProgress} />
+          {
+            video?.quiz && <LessonQuiz
+              quiz={video.quiz}
+              updateLessonProgress={updateLessonProgress}
+            />
+          }
+          {(!video?.quiz && !video?.url) && (
+            <div className="flex justify-center mb-4">
+              <button
+                onClick={handleComplete}
+                className="flex items-center justify-center gap-4 cursor-pointer hover:bg-red-700 text-[16px] rounded-lg text-white bg-red-600 font-semibold px-5 py-3"
+              >
+                Complete and Continue
+                <span><MdNavigateNext size={22} /></span>
+              </button>
+            </div>
+          )}
+
+
+
+        </>
+
+    },
+
+
+  ].filter(Boolean);
 
 
   return (
@@ -156,7 +234,7 @@ function LessonDashboard(props: ld) {
               <div
                 className={`
         h-full p-4  mb-2 overflow-hidden
-        ${isHide ? "lg:w-18 px-8" : "w-100  lg:w-72"}
+        ${isHide ? "lg:w-18 px-8" : "w-100  lg:w-78"}
       `}
               >
 
@@ -185,7 +263,7 @@ function LessonDashboard(props: ld) {
                             key={ind}
                             className={`list-none p-4 border-t border-b border-gray-400 flex items-center gap-3 text-sm 
                     ${active === v?.lesson_id ? "bg-red-200" : ""} 
-                    ${v?.locked ? "cursor-not-allowed bg-gray-300" : "cursor-pointer hover:bg-red-300"}`}
+                    ${v?.locked ? "cursor-not-allowed bg-gray-200" : "cursor-pointer hover:bg-red-300"}`}
                             onClick={v?.locked ? () => { } : () => handleLinks(v)}
                           >
                             <div>
@@ -196,7 +274,7 @@ function LessonDashboard(props: ld) {
                               )}
                             </div>
 
-                            <div className="truncate">{v.title}</div>
+                            <div className="truncate flex items-center gap-2 text-gray-700"><span>{v.url ? <MdOutlineOndemandVideo size={20} /> : <IoMdBook size={20} />}</span> {v.title}</div>
                           </li>
                         ))}
 
@@ -283,56 +361,11 @@ function LessonDashboard(props: ld) {
               <main className={`h-full p-4 overflow-auto bg-[#f1f1f3]  `}>
                 <div className="flex-1 overflow-auto">
                   <div className={`flex-1  overflow-auto ${loading ? "blur pointer-events-none" : ""}`}>
-                    
+
                     <Tabs
                       activeKey={tabs}
                       onChange={onChange}
-                      items={[
-                        {
-                          key: "1",
-                          label: "Outline",
-                          children: video?.outline ? (
-                            <LessonOutline data={video} updateLessonProgress={updateLessonProgress} />
-                          ) : (
-                            "No outline for this lesson!"
-                          ),
-                        },
-                        {
-                          key: "2",
-                          label: "Lecture",
-                          children: video?.url ? (
-                            showVideo && (
-                              <div className="w-full p-2">
-                                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center">
-                                  <p className="text-xl font-bold p-3">{video?.title}</p>
-                                  {video?.is_completed && (
-                                    <p className="text-lg font-normal p-3 flex items-center gap-3">
-                                      Completed <MdOutlineDone color="green" size={25} />
-                                    </p>
-                                  )}
-                                </div>
-                                <VideoPlayer
-                                  vimeoId={video?.url}
-                                  setComplete={setComplete}
-                                  videoDetails={video}
-                                  updateLessonProgress={video?.quiz ? () => { } : updateLessonProgress}
-                                />
-                              </div>
-                            )
-                          ) : (
-                            "No lecture available for this lesson!"
-                          ),
-                        },
-                        {
-                          key: "3",
-                          label: "Quiz",
-                          children: video?.quiz ? (
-                            <LessonQuiz quiz={video?.quiz} updateLessonProgress={updateLessonProgress} />
-                          ) : (
-                            "No quiz for this lesson!"
-                          ),
-                        },
-                      ]}
+                      items={items}
                     />
                   </div>
                 </div>
