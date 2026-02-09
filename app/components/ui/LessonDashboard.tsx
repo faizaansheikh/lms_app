@@ -108,9 +108,10 @@ function LessonDashboard(props: ld) {
       }
       GeneralCoreService('enrollment/update').Save(payload)
         .then((res) => {
-      
-          if(res){
+
+          if (res) {
             router.push('/dashboard/client')
+            message.success('Course completed successfully!')
           }
 
         }).catch((err) => console.log(err)).finally(() => { })
