@@ -1,4 +1,4 @@
-import { addLineBreaks } from '@/app/utility';
+import { addLineBreaks, getUser } from '@/app/utility';
 import { message } from 'antd';
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -7,24 +7,38 @@ import { FaInstagram } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { FaTiktok } from "react-icons/fa6";
 import ReviewSection from '../ReviewSection';
+import { useApi } from '@/app/context/ApiContext';
 function Btn({ title, click }: any) {
     return <button className='bg-primary px-9 py-3 text-white cursor-pointer ' onClick={click}>
         {title}
     </button>
 }
 function CustomProd({ desc, review, getApi }: any) {
-
+    const enrolledCourses = useApi()
     const searchParams = useSearchParams()
     const router = useRouter()
     const handleEnrollment = () => {
+        const userInfo = getUser()
+        const data = enrolledCourses?.data?.map((x: any) => x._id) || []
 
-        const userInfo = localStorage.getItem('userInfo')
+
         if (userInfo) {
-            router.push(`/checkout/${Number(searchParams?.get('q'))}`)
+            const id = Number(searchParams?.get('q'))
+
+            if (data.includes(id)) {
+                message.warning('You are already enrolled in this course!')
+            } else {
+                router.push(`/checkout/${Number(searchParams?.get('q'))}`)
+            }
+
 
         } else {
-            message.error('You need to sign in first to enroll in this course!')
+             message.error('You need to sign in first to enroll in this course!')
         }
+
+
+
+      
     }
     return (
         <div className='bg-gray-100 w-full h-auto  mt-12'>

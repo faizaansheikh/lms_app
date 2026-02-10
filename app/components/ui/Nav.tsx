@@ -10,10 +10,12 @@ import { UserOutlined } from '@ant-design/icons';
 import { removeAuthToken } from "../authToken";
 import XButton from "../XButton";
 import Link from "next/link";
+import { getUser } from "@/app/utility";
 const Nav = () => {
     const path = usePathname()
     const router = useRouter()
     const [open, setOpen] = useState(false);
+    const [flag, setFlag] = useState(false);
     const [username, setUsername] = useState('')
     const [userrole, setUserRole] = useState('')
     const handleLogin = () => router.push('/auth/login')
@@ -21,20 +23,25 @@ const Nav = () => {
     const handleHome = () => router.push('/home')
     const handleBrowse = () => router.push('/home/products')
     const handleLogout = () => {
+
         localStorage.removeItem('userInfo')
         localStorage.removeItem('apiData')
+        sessionStorage.removeItem('coursesData')
+
         removeAuthToken()
+        // window.location.href = '/home'
         router.push('/home')
-        window.location.reload();
+        
 
     }
     useEffect(() => {
+        
         try {
-            const userInfo = localStorage.getItem('userInfo');
+            const userInfo = getUser()
             if (userInfo) {
-                const user = JSON.parse(userInfo);
-                setUsername(user?.name || '');
-                setUserRole(user?.role || '');
+             
+                setUsername(userInfo?.name || '');
+                setUserRole(userInfo?.role || '');
             }
         } catch (error) {
             console.error('Invalid localStorage data', error);
@@ -46,7 +53,7 @@ const Nav = () => {
 
 
 
-
+  
     const menu = [
         { title: 'Home', link: 'home' },
         { title: 'Programs', link: 'programs' },

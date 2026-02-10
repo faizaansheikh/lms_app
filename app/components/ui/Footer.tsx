@@ -18,6 +18,7 @@ function Footer() {
     GeneralCoreService('courses').GetAll()
       .then((res) => {
         setData(res?.data)
+        sessionStorage.setItem("coursesData", JSON.stringify(res.data));
       }).catch((err) => console.log(err)).finally(() => { })
   }
 
@@ -25,13 +26,20 @@ function Footer() {
   const handleLinks = (flag: any) => {
     if (flag === 'terms') {
       router.push('/home/terms')
-    }else if(flag === 'privacy'){
+    } else if (flag === 'privacy') {
       router.push('/home/privacy')
     }
 
   }
   useEffect(() => {
-    getRec()
+    const savedData = sessionStorage.getItem("coursesData");
+
+    if (savedData) {
+      setData(JSON.parse(savedData));
+    } else {
+
+      getRec();
+    }
 
   }, [])
   return (
