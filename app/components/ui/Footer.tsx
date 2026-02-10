@@ -8,9 +8,11 @@ import { MdOutlineSupportAgent } from "react-icons/md";
 import { FaUserGraduate } from "react-icons/fa6";
 import { SiGamedeveloper } from "react-icons/si";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 function Footer() {
+  const router = useRouter()
   const [data, setData] = useState([])
- 
+
   const getRec = () => {
 
     GeneralCoreService('courses').GetAll()
@@ -20,7 +22,14 @@ function Footer() {
   }
 
 
+  const handleLinks = (flag: any) => {
+    if (flag === 'terms') {
+      router.push('/home/terms')
+    }else if(flag === 'privacy'){
+      router.push('/home/privacy')
+    }
 
+  }
   useEffect(() => {
     getRec()
 
@@ -74,12 +83,12 @@ function Footer() {
         <div className='mt-8 md:mt-0'>
           <h2 className="text-xl md:text-2xl mb-2 ">Company</h2>
           <p className="py-1">About Us</p>
-          <p className="py-1">Blog</p>
-          <p className="py-1">Refer and Earn</p>
+          {/* <p className="py-1">Blog</p>
+          <p className="py-1">Refer and Earn</p> */}
           <p className="py-1">State Restrictions</p>
           <p className="py-1">Student/Refund Policy</p>
-          <p className="py-1">Privacy Policy</p>
-          <p className="py-1">Terms and Conditions </p>
+          <p className="py-1 cursor-pointer hover:underline" onClick={() => handleLinks('privacy')}>Privacy Policy</p>
+          <p className="py-1 cursor-pointer hover:underline" onClick={() => handleLinks('terms')}>Terms and Conditions </p>
 
         </div>
 
@@ -96,10 +105,10 @@ function Footer() {
 
       <div style={{ backgroundColor: '#dbebf2' }} className='w-full h-[50px] text-[#122f60] font-semibold flex justify-between px-6 md:px-22 items-center  py-10'>
         <p>
-         Copyright © 2025 Chrissy Medical Academy. All Rights reserved
+          Copyright © 2025 Chrissy Medical Academy. All Rights reserved
 
         </p>
-          <p></p>
+        <p></p>
       </div>
     </div>
   )

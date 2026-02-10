@@ -31,6 +31,7 @@ interface ld {
 }
 function LessonDashboard(props: ld) {
   const { data, getApi, quiz, loading, order } = props
+
   const isInitialized = useRef(false);
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -183,60 +184,7 @@ function LessonDashboard(props: ld) {
 
   }
 
-  const items: any = [
-    {
-      key: "1",
-      label: '',
-      children:
-        <>
-          <div className="text-2xl font-bold flex justify-between items-center gap-4  ">
-            <span className='mt-1'>{video.url ? <MdOutlineOndemandVideo size={25} /> : <IoMdBook size={25} />}</span>
-            {video.title}
-            {video?.is_completed ? (
-              <p className="text-lg font-normal p-3 flex items-center gap-3">
-                Completed <MdOutlineDone color="green" size={25} />
-              </p>
-            ) : <p></p>}
-          </div>
 
-          {(video?.url && showVideo) && (
-            <div className="w-full py-6">
-
-              <VideoPlayer
-                vimeoId={video?.url}
-                setComplete={setComplete}
-                videoDetails={video}
-                updateLessonProgress={video?.quiz ? () => { } : updateLessonProgress}
-              />
-            </div>
-          )}
-          <LessonOutline data={video} updateLessonProgress={updateLessonProgress} />
-          {
-            video?.quiz && <LessonQuiz
-              quiz={video.quiz}
-              updateLessonProgress={updateLessonProgress}
-            />
-          }
-          {(!video?.quiz && !video?.url) && (
-            <div className="flex justify-center mb-4">
-              <button
-                onClick={handleComplete}
-                className="flex items-center justify-center gap-4 cursor-pointer hover:bg-red-700 text-[16px] rounded-lg text-white bg-red-600 font-semibold px-5 py-3"
-              >
-                Complete and Continue
-                <span><MdNavigateNext size={22} /></span>
-              </button>
-            </div>
-          )}
-
-
-
-        </>
-
-    },
-
-
-  ].filter(Boolean);
 
 
   useEffect(() => {
@@ -412,57 +360,93 @@ function LessonDashboard(props: ld) {
               </header>
 
 
-              <main className={`h-full px-4 py-6 overflow-auto bg-[#f1f1f3] `}>
+              {
+                data?.length > 0 ? <main className={`h-full px-4 py-6 overflow-auto bg-[#f1f1f3] `}>
 
 
 
-                <div className="text-2xl font-bold flex justify-between items-center gap-4   border-b border-gray-400">
-                  <span className='mt-1 flex items-center gap-4'>{video.url ? <MdOutlineOndemandVideo size={25} /> : <IoMdBook size={25} />}  {video.title}</span>
+                  <div className="text-2xl font-bold flex justify-between items-center gap-4   border-b border-gray-400">
+                    <span className='mt-1 flex items-center gap-4'>{video.url ? <MdOutlineOndemandVideo size={25} /> : <IoMdBook size={25} />}  {video.title}</span>
 
-                  {video?.is_completed ? (
-                    <p className="text-lg font-normal p-3 flex items-center gap-3">
-                      Completed <MdOutlineDone color="green" size={25} />
-                    </p>
-                  ) : <p></p>}
-                </div>
-
-                {(video?.url && showVideo) && (
-                  <div className="w-full py-6">
-
-                    <VideoPlayer
-                      vimeoId={video?.url}
-                      setComplete={setComplete}
-                      videoDetails={video}
-                      updateLessonProgress={video?.quiz ? () => { } : updateLessonProgress}
-                    />
+                    {video?.is_completed ? (
+                      <p className="text-lg font-normal p-3 flex items-center gap-3">
+                        Completed <MdOutlineDone color="green" size={25} />
+                      </p>
+                    ) : <p></p>}
                   </div>
-                )}
-                <LessonOutline data={video} updateLessonProgress={updateLessonProgress} />
-                {
-                  video?.quiz && <LessonQuiz
-                    quiz={video.quiz}
-                    updateLessonProgress={updateLessonProgress}
 
-                  />
-                }
-                {(!video?.quiz && !video?.url) && (
-                  <div className="flex justify-center mb-4">
-                    <button
-                      onClick={handleComplete}
-                      className="flex items-center justify-center gap-4 cursor-pointer hover:bg-red-700 text-[16px] rounded-lg text-white bg-red-600 font-semibold px-5 py-3"
+                  {(video?.url && showVideo) && (
+                    <div className="w-full py-6">
+
+                      <VideoPlayer
+                        vimeoId={video?.url}
+                        setComplete={setComplete}
+                        videoDetails={video}
+                        updateLessonProgress={video?.quiz ? () => { } : updateLessonProgress}
+                      />
+                    </div>
+                  )}
+                  <LessonOutline data={video} updateLessonProgress={updateLessonProgress} />
+                  {
+                    video?.quiz && <LessonQuiz
+                      quiz={video.quiz}
+                      updateLessonProgress={updateLessonProgress}
+
+                    />
+                  }
+                  {(!video?.quiz && !video?.url) && (
+                    <div className="flex justify-center mb-4">
+                      <button
+                        onClick={handleComplete}
+                        className="flex items-center justify-center gap-4 cursor-pointer hover:bg-red-700 text-[16px] rounded-lg text-white bg-red-600 font-semibold px-5 py-3"
+                      >
+                        Complete and Continue
+                        <span><MdNavigateNext size={22} /></span>
+                      </button>
+                    </div>
+                  )
+                  }
+
+
+
+
+
+                </main> :
+
+                  <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
+                 
+                    <svg
+                      className="w-16 h-16 text-gray-400 mb-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
-                      Complete and Continue
-                      <span><MdNavigateNext size={22} /></span>
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8c-2.21 0-4 1.79-4 4 0 .34.04.67.12.99M12 8c2.21 0 4 1.79 4 4 0 .34-.04.67-.12.99M12 8V4m0 0C9.79 4 8 5.79 8 8v1m8-5v1m0 0c2.21 0 4 1.79 4 4v1"
+                      />
+                    </svg>
+
+                    
+                    <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                      No lessons found
+                    </h2>
+                    <p className="text-gray-500">
+                      There are no lessons available for this course yet.
+                    </p>
+
+                  
+                    <button  onClick={handleHome} className="mt-6 px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition cursor-pointer">
+                      Browse Other Courses
                     </button>
                   </div>
-                )
-                }
 
 
 
-
-
-              </main>
+              }
             </div>
 
           </div>

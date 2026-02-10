@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Progress, Button, message } from "antd";
-
-const LessonQuiz = ({ quiz, updateLessonProgress}: any) => {
+import { MdNavigateNext } from "react-icons/md";
+const LessonQuiz = ({ quiz, updateLessonProgress }: any) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [answers, setAnswers] = useState<any>({});
     const [submitted, setSubmitted] = useState(false);
+    const [pass, setPass] = useState(false);
+    const [perc, setPerc] = useState(0);
 
     const total = quiz.questions.length;
     const currentQuestion = quiz.questions[currentIndex];
@@ -25,7 +27,7 @@ const LessonQuiz = ({ quiz, updateLessonProgress}: any) => {
 
 
     const percentage = Math.round((correctCount / total) * 100);
-    const passed = percentage >= 60;
+    const passed = percentage >= 79;
 
     const handleReset = () => {
         setCurrentIndex(0);
@@ -36,9 +38,11 @@ const LessonQuiz = ({ quiz, updateLessonProgress}: any) => {
         if (quiz.locked) {
             setSubmitted(true)
             if (passed) {
-                message.success('🎉 Passed! Score: 80%')
+                message.success(`🎉 Passed! Score: ${percentage}%`)
                 handleReset()
-                updateLessonProgress()
+                setPass(true)
+                setPerc(percentage)
+                // updateLessonProgress()
             } else {
                 message.error('Please watch the lecture again!')
             }
@@ -47,7 +51,9 @@ const LessonQuiz = ({ quiz, updateLessonProgress}: any) => {
         }
 
     }
-
+    const handleComplete = () => {
+        updateLessonProgress()
+    }
 
     return (
         <div className="w-full mx-auto px-4">
@@ -141,8 +147,33 @@ const LessonQuiz = ({ quiz, updateLessonProgress}: any) => {
                             Attempt Again
                         </Button>
                     </div>}
+
+
+
                 </>
             )}
+
+            {
+                pass && <>
+                    <div
+                        className={`mt-4 p-4 rounded text-center font-semibold bg-green-100 text-green-700`}
+                    >
+                        🎉 Passed! Score: ${perc}%
+                    </div>
+                    <div className="flex justify-center my-4">
+                        <button
+                            onClick={handleComplete}
+                            className="flex items-center justify-center gap-4 cursor-pointer hover:bg-red-700 text-[16px] rounded-lg text-white bg-red-600 font-semibold px-5 py-3"
+                        >
+                            Complete and Continue
+                            <span><MdNavigateNext size={22} /></span>
+                        </button>
+                    </div>
+
+
+                </>
+            }
+
 
         </div>
     );

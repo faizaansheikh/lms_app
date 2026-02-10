@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { LessonsProvider } from "./context/LessonContext";
+import { ApiProvider } from "./context/ApiContext";
 
 
 
@@ -32,10 +33,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         cz-shortcut-listen="true"
       >
-        <LessonsProvider>
+        <ApiProvider>{children}</ApiProvider>
 
-          {children}
-        </LessonsProvider>
+         
 
       </body>
     </html>

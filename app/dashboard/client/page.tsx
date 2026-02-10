@@ -10,35 +10,21 @@ import { useEffect, useState } from "react";
 import { MdOutlineGamepad } from "react-icons/md";
 import { FaBookOpen } from "react-icons/fa";
 import { FaCertificate } from "react-icons/fa6";
+import { useApi } from "@/app/context/ApiContext";
 function page() {
+    const { data, setData } = useApi()
+
     const router = useRouter()
-    const [loader, setLoader] = useState(false)
-    const [data, setData] = useState([])
+    const [loading, setLoading] = useState<any>(true);
     const [userInfo, setUserInfo] = useState<any>({})
-    const getUserCourses = () => {
-        const user = getUser()
-        if (user) {
-            setLoader(true)
-            setUserInfo(user)
-            GeneralCoreService('enrollment/courses').GetAll(null, user?.id)
-                .then((res) => {
-                    if (res?.data) {
-                        setData(res?.data)
-                    }
 
-
-                }).catch((err) => console.log('err', err))
-                .finally(() => setLoader(false))
-        }
-
-    }
 
     const handleCertificate = (x: any) => {
-        
+
         const userInfo = getUser()
         if (userInfo) {
 
-          
+
             let payload = {
                 user_id: userInfo?.id,
                 course_id: x?._id,
@@ -59,6 +45,40 @@ function page() {
 
     }
 
+    const getUserCourses = () => {
+        const user = getUser();
+
+        if (!user) {
+            message.error("User not found");
+            setLoading(false);
+            return;
+        }
+
+        setLoading(true);
+        const savedData = localStorage.getItem("apiData");
+        if (savedData) {
+            setData(JSON.parse(savedData));
+        }
+
+        GeneralCoreService("enrollment/courses")
+            .GetAll(null, user.id)
+            .then((res) => {
+                if (res?.data) {
+                    setData(res.data);
+                    localStorage.setItem("apiData", JSON.stringify(res.data));
+                }
+            })
+            .catch((err) => {
+
+                if (!data.length && savedData) {
+                    setData(JSON.parse(savedData));
+                } else {
+                    message.error("Failed to fetch courses");
+                }
+            })
+            .finally(() => setLoading(false));
+
+    }
 
 
     const handleCourse = (product: any) => {
@@ -71,11 +91,11 @@ function page() {
     }
 
     useEffect(() => {
-        getUserCourses()
-    }, [])
+        getUserCourses();
+    }, []);
     return (
         <>
-            <div className="mt-12 px-14 md:px-42">
+            <div className="mt-12 px-14 md:px-42" id='home'>
 
                 <p className="text-center text-2xl md:text-3xl font-bold">Welcome back {userInfo?.name}. Let's learn something today! </p>
                 <p className=" text-xl py-2 mt-4 font-bold">My library</p>
@@ -83,11 +103,11 @@ function page() {
                     className={`w-full p-6 bg-gray-200 ${data?.length ? "h-auto" : "h-[300px] flex flex-col justify-center items-center"
                         }`}
                 >
-                    {loader ? (
+                    {loading ? (
                         <Spin size="large" />
                     ) : data?.length ? (
                         <Row gutter={[16, 16]}>
-                            {data.map((x: any, i) => (
+                            {data?.map((x: any, i: any) => (
                                 <Col key={i} xs={24} sm={24} md={12} lg={12}>
                                     <div className="flex flex-col sm:flex-row w-full min-h-[140px] bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
 

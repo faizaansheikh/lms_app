@@ -13,6 +13,7 @@ export default function Page() {
       localStorage.removeItem('userInfo')
     }
   }
+  
   useEffect(() => {
     getToken()
   }, [])

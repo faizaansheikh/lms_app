@@ -5,8 +5,9 @@ import CustomProd from '@/app/components/ui/CustomProd';
 import Xloader from '@/app/components/ui/Xloader';
 import XButton from '@/app/components/XButton'
 import { GeneralCoreService } from '@/app/config/GeneralCoreService';
+import { useApi } from '@/app/context/ApiContext';
 import { useLessonContext } from '@/app/context/LessonContext';
-import { addLineBreaks, slugify } from '@/app/utility';
+import { addLineBreaks, getUser, slugify } from '@/app/utility';
 import { message, Spin } from 'antd';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
@@ -18,6 +19,8 @@ interface SingleData {
 }
 
 function page() {
+    const enrolledCourses = useApi()
+
     const searchParams = useSearchParams()
     const [record, setRecord] = useState<any>({})
     const [loading, setLoading] = useState<any>(false)
@@ -25,6 +28,7 @@ function page() {
     const [review, setReview] = useState<any>([])
     const [curriculum, setCurriculum] = useState<any>([])
     const [show, setShow] = useState<any>(false)
+
     const router = useRouter()
 
     const getSingleRec = (id: number) => {
@@ -47,21 +51,36 @@ function page() {
     }
 
     const handleCheckOut = () => {
+        const user = getUser()
 
-        const userInfo = localStorage.getItem('userInfo')
-        if (userInfo) {
-            router.push(`/checkout/${Number(searchParams?.get('q'))}`)
+        const data = enrolledCourses?.data?.map((x: any) => x._id) || []
+
+
+        if (user) {
+            const id = Number(searchParams?.get('q'))
+
+            if (data.includes(id)) {
+                message.warning('You are already enrolled in this course!')
+            } else {
+                router.push(`/checkout/${Number(searchParams?.get('q'))}`)
+            }
+
 
         } else {
             router.push(`/auth/signup`)
         }
     }
 
+
+
+
+
+
     useEffect(() => {
+
         getSingleRec(Number(searchParams?.get('q')))
 
     }, [])
-
     if (loading) {
         return <Xloader />
     }

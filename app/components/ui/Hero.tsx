@@ -24,7 +24,7 @@ const Hero = () => {
 
   return (
 
-    <div>
+    <div id="home">
 
       {/* autoplay */}
       <Carousel autoplaySpeed={2000} effect="scrollx" dots draggable arrows   >

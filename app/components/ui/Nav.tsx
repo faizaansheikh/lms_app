@@ -4,13 +4,14 @@ import React, { useEffect, useState } from "react";
 import { CloseOutlined } from '@ant-design/icons'
 import { Avatar, Drawer, Popover } from "antd";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { UserOutlined } from '@ant-design/icons';
 import { removeAuthToken } from "../authToken";
 import XButton from "../XButton";
 import Link from "next/link";
 const Nav = () => {
+    const path = usePathname()
     const router = useRouter()
     const [open, setOpen] = useState(false);
     const [username, setUsername] = useState('')
@@ -21,8 +22,10 @@ const Nav = () => {
     const handleBrowse = () => router.push('/home/products')
     const handleLogout = () => {
         localStorage.removeItem('userInfo')
+        localStorage.removeItem('apiData')
         removeAuthToken()
         router.push('/home')
+        window.location.reload();
 
     }
     useEffect(() => {
@@ -45,10 +48,10 @@ const Nav = () => {
 
 
     const menu = [
-        { title: 'Home', link: '#home' },
-        { title: 'Programs', link: '#programs' },
+        { title: 'Home', link: 'home' },
+        { title: 'Programs', link: 'programs' },
         // { title: 'Blogs', link: '#blogs' },
-        { title: 'Contact Us', link: '#contact' }
+        { title: 'Contact Us', link: 'contact' }
     ];
 
 
@@ -71,8 +74,20 @@ const Nav = () => {
 
                 <ul className="hidden md:flex items-center justify-center" >
                     {menu.map((x, i) => (
-                        <Link href={x.link} key={i}>
+                        <Link href={'/'} key={i}>
                             <li
+                                onClick={(e) => {
+                                    const arr = path?.split('/')
+                                    if (arr?.includes('products') && x.link === 'home') {
+                                        router.push('/home')
+                                    } else {
+                                        e.preventDefault();
+                                        const section = document.getElementById(x.link);
+                                        section?.scrollIntoView({ behavior: "smooth" });
+                                    }
+
+
+                                }}
                                 className={`list-none px-4 text-[17px] relative nav-list cursor-pointer text-grey text-gray-800 cursor-pointer transition-all duration-400 hover:text-primary
                                 }`}
                             // onClick={() => handleLinks(x)}
@@ -142,7 +157,18 @@ const Nav = () => {
                     {menu.map((x, i) => (
                         <Link href={x.link} key={i}>
                             <li
-                                onClick={onClose}
+                                onClick={(e) => {
+                                    setOpen(false)
+                                    const arr = path?.split('/')
+                                    if (arr?.includes('products') && x.link === 'home') {
+                                        router.push('/home')
+                                    } else {
+                                        e.preventDefault();
+                                        const section = document.getElementById(x.link);
+                                        section?.scrollIntoView({ behavior: "smooth" });
+                                    }
+                                }}
+
                                 className="list-none px-4 py-[6px] my-2 text-black text-[17px] cursor-pointer"
                             >
                                 {x.title}

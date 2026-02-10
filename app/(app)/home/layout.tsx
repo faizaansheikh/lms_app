@@ -1,16 +1,16 @@
 
-// import '@ant-design/v5-patch-for-react-19';
+
 
 import Footer from '@/app/components/ui/Footer';
-import Nav from '@/app/components/ui/Nav';
+
+import Nav from '@/app/components/ui/Nav'
 import React from 'react'
 function layout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-
-
+    
     return (
         <div className="flex flex-col min-h-screen">
 
@@ -21,7 +21,7 @@ function layout({
 
             <main className="flex-1">
                 {children}
-            </main>        
+            </main>
             <footer>
                 <Footer />
             </footer>
