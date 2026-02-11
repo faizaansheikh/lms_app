@@ -107,7 +107,7 @@ export default function Payment({ amount, installment, query }: any) {
   return (
     // <Elements stripe={stripePromise}>
     //   <CheckoutForm amount={amount} installment={installment} query={query} />
-    // </Elements>
+    // </Elements>d
 
     <PaymentForm
       
