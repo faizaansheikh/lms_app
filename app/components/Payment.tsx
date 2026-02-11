@@ -110,9 +110,11 @@ export default function Payment({ amount, installment, query }: any) {
     // </Elements>
 
     <PaymentForm
-
-      applicationId="sandbox-sq0idb-r9prvt6ofFhmy_KtAbMqxA"
-      locationId="L5JEWYWESR79W"
+      
+      // applicationId="sandbox-sq0idb-r9prvt6ofFhmy_KtAbMqxA"
+      // locationId="L5JEWYWESR79W"
+      applicationId="sq0idp-W6uerueUdIMBwlmbeWEpgw"
+      locationId="LDNZ220F0X3YV"
 
       cardTokenizeResponseReceived={async (token: any, buyer) => {
         try {
