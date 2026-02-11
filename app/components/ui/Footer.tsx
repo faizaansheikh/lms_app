@@ -9,6 +9,7 @@ import { FaUserGraduate } from "react-icons/fa6";
 import { SiGamedeveloper } from "react-icons/si";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { slugify } from "@/app/utility";
 function Footer() {
   const router = useRouter()
   const [data, setData] = useState([])
@@ -28,7 +29,19 @@ function Footer() {
       router.push('/home/terms')
     } else if (flag === 'privacy') {
       router.push('/home/privacy')
+    } else if (flag === 'about') {
+      router.push(`/home/info?q=about`)
+    } else if (flag === 'refund') {
+      router.push(`/home/info?q=refund`)
     }
+
+  }
+
+  const handleCourses = (product: any) => {
+    
+    const slug = slugify(product?.title) || ''
+    router.push(`/home/products/${slug}?q=${product._id}`)
+    
 
   }
   useEffect(() => {
@@ -46,18 +59,11 @@ function Footer() {
     <div id="contact">
       <div
         style={{ backgroundColor: '#122f60' }}
-        className="w-full h-auto text-white py-12   flex flex-col md:flex-row flex-wrap justify-around items-start pl-12 md:pl-0"
+        className="w-full h-auto text-white py-8   flex flex-col lg:flex-row flex-wrap justify-around items-start pl-10 lg:pl-0"
       >
-        {/* <div className="w-full flex flex-wrap"> */}
-        {/* Left Side: Contact Info */}
-        {/* flex-grow md:flex-[2] w-full md:w-1/3 pl-4 md:pl-0 */}
-        {/* <div className="flex flex-row justify-start items-center text-white py-12 
-                        
-                          "> */}
 
 
-
-        <div className=''>
+        <div className='w-[380px]'>
           <Image
             src='/logo.png'
             alt='logo'
@@ -65,19 +71,23 @@ function Footer() {
             height={150}
 
           />
-          <p className="text-xl md:text-2xl" >Chrissy Medical Academy</p>
+          {/* <p className="text-xl md:text-xl" >Chrissy Medical Academy</p> */}
+          <p className="text-[14px]">The world needs more healthcare heroes. Start your journey toward becoming
+            a CNA with our 100% online training. We provide the tools and confidence you
+            need to pass your state exam, allowing you to begin lending a helping hand to
+            patients without the stress of a traditional classroom schedule.</p>
         </div>
 
 
 
-        <div className='w-[247px] mt-8 md:mt-0'>
+        <div className='w-[247px] mt-8 md:mt-8'>
           <h2 className="text-xl md:text-2xl mb-2">Health Care Programs</h2>
           <ul>
             {data?.map((x: any, i) => (
               <a key={i} className=''>
                 <li
-                  className={`py-1`}
-                // onClick={() => handleLinks(x)}
+                  className={`py-1 cursor-pointer hover:underline`}
+                  onClick={() => handleCourses(x)}
                 >
                   {x?.title}
                 </li>
@@ -88,19 +98,16 @@ function Footer() {
 
         </div>
 
-        <div className='mt-8 md:mt-0'>
+        <div className='mt-8 md:mt-8'>
           <h2 className="text-xl md:text-2xl mb-2 ">Company</h2>
-          <p className="py-1">About Us</p>
-          {/* <p className="py-1">Blog</p>
-          <p className="py-1">Refer and Earn</p> */}
-          <p className="py-1">State Restrictions</p>
-          <p className="py-1">Student/Refund Policy</p>
+          <p className="py-1 cursor-pointer hover:underline" onClick={() => handleLinks('about')}>About Us</p>
+          <p className="py-1 cursor-pointer hover:underline" onClick={() => handleLinks('refund')}>Student/Refund Policy</p>
           <p className="py-1 cursor-pointer hover:underline" onClick={() => handleLinks('privacy')}>Privacy Policy</p>
           <p className="py-1 cursor-pointer hover:underline" onClick={() => handleLinks('terms')}>Terms and Conditions </p>
 
         </div>
 
-        <div className='mt-8 md:mt-0'>
+        <div className='mt-8 md:mt-8'>
           <h2 className="text-xl md:text-2xl mb-2 ">Contact Us</h2>
           <h2 className="flex items-center gap-2 py-2"><span><MdOutlineSupportAgent size={28} /></span>Support <br />855-596-6891 </h2>
           <h2 className="flex items-center gap-2 py-2"><span><FaUserGraduate size={25} /></span>Admissions <br />855-596-6891 </h2>

@@ -49,11 +49,11 @@ function page() {
         const user = getUser();
 
         if (!user) {
-            message.error("User not found");
+            message.error("");
             setLoading(false);
             return;
         }
-
+        setUserInfo(user?.name)
         setLoading(true);
         const savedData = localStorage.getItem("apiData");
         if (savedData) {
@@ -66,6 +66,7 @@ function page() {
                 if (res?.data) {
                     setData(res.data);
                     localStorage.setItem("apiData", JSON.stringify(res.data));
+
                 }
             })
             .catch((err) => {
@@ -97,7 +98,7 @@ function page() {
         <>
             <div className="mt-12 px-14 md:px-42" id='home'>
 
-                <p className="text-center text-2xl md:text-3xl font-bold">Welcome back {userInfo?.name}. Let's learn something today! </p>
+                <p className="text-center text-2xl md:text-3xl font-bold">Welcome back {userInfo ? `${userInfo}.` : ','} Let's learn something today! </p>
                 <p className=" text-xl py-2 mt-4 font-bold">My library</p>
                 <div
                     className={`w-full p-6 bg-gray-200 ${data?.length ? "h-auto" : "h-[300px] flex flex-col justify-center items-center"

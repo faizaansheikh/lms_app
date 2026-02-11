@@ -21,9 +21,10 @@ function page() {
 
 
     const getSingleRec = (id: number) => {
-
         const user = getUser()
+        setLoading(true)
         if (user) {
+
             const payload = {
                 userId: user?.id,
                 courseId: id
@@ -51,7 +52,7 @@ function page() {
         getSingleRec(Number(searchParams?.get('q')))
 
     }, [])
-  
+
 
     return (
         <>
