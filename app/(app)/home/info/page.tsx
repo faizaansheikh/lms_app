@@ -1,13 +1,14 @@
 
 import AboutRefundPage from '@/app/components/AboutRefundPage'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 function page() {
-  return (
-    <div>
-        <AboutRefundPage/>
-    </div>
-  )
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <AboutRefundPage />
+        </Suspense>
+
+    )
 }
 
 export default page
