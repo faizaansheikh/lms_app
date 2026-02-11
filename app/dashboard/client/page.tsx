@@ -49,7 +49,7 @@ function page() {
         const user = getUser();
 
         if (!user) {
-            message.error("");
+          
             setLoading(false);
             return;
         }
