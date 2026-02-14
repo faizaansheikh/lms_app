@@ -104,48 +104,44 @@ export default function Payment({ amount, installment, query }: any) {
       message.error('You need to sign in first to enroll in this course!')
     }
   }
+
+  const sendPayment = async (token:any) => {
+    try {
+      const { data } = await axiosInstance.post("/create-payment-intent", {
+        token: token.token,
+        amount: amount, // test amount
+      });
+
+      if (data.success) {
+        message.success("Payment succeeded:", data.data);
+        handleEnrollment()
+      } else {
+        message.error("Payment failed:", data.message);
+      }
+    } catch (err: any) {
+      console.log(err.message || err);
+      message.error(
+        
+        "Something went wrong. Please try again."
+      );
+    }
+  }
   return (
     // <Elements stripe={stripePromise}>
     //   <CheckoutForm amount={amount} installment={installment} query={query} />
     // </Elements>d
 
     <PaymentForm
-      
+
       // applicationId="sandbox-sq0idb-r9prvt6ofFhmy_KtAbMqxA"
       // locationId="L5JEWYWESR79W"
+
+      //production
       applicationId="sq0idp-W6uerueUdIMBwlmbeWEpgw"
       locationId="LDNZ220F0X3YV"
 
-      cardTokenizeResponseReceived={async (token: any, buyer) => {
-        try {
-          const { data } = await axiosInstance.post("/create-payment-intent", {
-            token: token.token,
-            amount: amount, // test amount
-          });
+      cardTokenizeResponseReceived={ (token: any, buyer) => sendPayment(token)}
 
-          if (data.success) {
-            message.success("Payment succeeded:", data.data);
-            handleEnrollment()
-          } else {
-            message.error("Payment failed:", data.message);
-          }
-        } catch (err: any) {
-          console.error(err.message || err);
-        }
-      }}
-
-    // createVerificationDetails={() => ({
-    //   amount: '1.00',
-    //   billingContact: {
-    //     addressLines: ['123 Main Street', 'Apartment 1'],
-    //     familyName: 'Doe',
-    //     givenName: 'John',
-    //     countryCode: 'GB',
-    //     city: 'London',
-    //   },
-    //   currencyCode: 'GBP',
-    //   intent: 'CHARGE',
-    // })}
 
 
     >

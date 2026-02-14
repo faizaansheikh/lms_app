@@ -59,11 +59,11 @@ function Footer() {
     <div id="contact">
       <div
         style={{ backgroundColor: '#122f60' }}
-        className="w-full h-auto text-white py-8   flex flex-col lg:flex-row flex-wrap justify-around items-start pl-10 lg:pl-0"
+        className="w-full h-auto text-white py-8   flex flex-col lg:flex-row flex-wrap justify-around items-start px-8 lg:pl-0"
       >
 
 
-        <div className='w-[380px]'>
+        <div className='w-auto lg:w-[320px]'>
           <Image
             src='/logo.png'
             alt='logo'
